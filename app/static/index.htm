@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> 
+<html class="no-js" lang="es"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parametro - Grupo Andrade</title>
+    <meta name='description' content='Grupo Andrade' />
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900italic' rel='stylesheet' type='text/css'>
+
+    <!--Hojas de estilos-->
+    <link href="css/bootstrap.css" rel="stylesheet" />
+    <link href="css/main.css" rel="stylesheet" />
+
+    <link href="css/body.css" rel="stylesheet" />
+
+    <!--Loading-->
+    <link href="css/toastr.css" rel="stylesheet" />
+    <link href="css/angular-busy.css" rel="stylesheet" />
+
+    <!--Librearias JQuery y Bootstrap-->
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+
+    <script src="js/socket.io.js"></script>
+
+    <base href='/'>
+</head>
+<body ng-app="registrationModule">
+    <div ng-view></div>
+
+    <!--Interface de usuario-->
+    <script src="js/toastr.min.js"></script>
+
+    <!-- Librerias Angular-->
+    <script src="js/angular.min.js"></script>
+    <script src="js/angular-route.min.js"></script>
+    <script src="js/angular-ui/ui-bootstrap-tpls.min.js"></script>
+    <script src="js/angular-local-storage.min.js"></script>
+
+    <!--Entidades-->
+    <script src="Entity/TipoProceso.js"></script>
+
+    <!--Funciones Comunes-->
+    <script src="confront.js"></script>
+    <script src="helpers.js"></script>
+
+    <!--<script src="~/AngularJS/common.js"></script>-->
+    <!--Angular NG-Grid-->
+    <script src="js/ng-grid.js"></script>
+
+    <!--Angular Busy-->
+    <script src="js/angular-busy.js"></script>
+
+    <!--Librería para realizar querys-->
+    <script src="js/linq.js"></script>
+
+    <!--Librerias de aplicación angular-->
+    <script src="AngularJS/RegistrationModule.js"></script>
+
+    <!--librerias de componenetes-->
+    <script src="AngularJS/alertFactory.js"></script>
+
+    <!--Controllers-->
+    <script src="AngularJS/Parametro/parametroRepository.js"></script>
+    <script src="AngularJS/Mancomunado/mancomunadoRepository.js"></script>
+    <script src="AngularJS/Filtro/filtroRepository.js"></script>       
+    <script src="AngularJS/Parametro/parametroController.js"></script>
+   
+
+</body>
+</html>
