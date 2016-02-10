@@ -1,1 +1,0 @@
-var parametroUrl=global_settings.urlCORS+"/api/escalamientoapi/";registrationModule.factory("parametroRepository",function(r){return{getEscalamiento:function(t,a,e,o,n,i){return r.get(parametroUrl+"1|"+t+"|"+a+"|"+e+"|"+o+"|"+n+"|"+i)},getAprobadores:function(t,a,e,o){return r.get(parametroUrl+"3|"+t+"|"+a+"|"+e+"|"+o)},update:function(t){return r.post(parametroUrl+"2|"+t)}}});

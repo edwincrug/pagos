@@ -1,0 +1,1 @@
+registrationModule.controller("parametroController",function(o,r,t,e,l,n){});

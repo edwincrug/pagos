@@ -13,100 +13,56 @@
 		"outputStyle": 1,
 		"syntaxCheckerStyle": 1
 		},
-	"\/AngularJS\/Filtro\/filtroRepository.js": {
-		"fileType": 64,
-		"ignore": 0,
-		"ignoreWasSetByUser": 0,
-		"inputAbbreviatedPath": "\/AngularJS\/Filtro\/filtroRepository.js",
-		"outputAbbreviatedPath": "\/AngularJS\/Filtro\/min\/filtroRepository-min.js",
-		"outputPathIsOutsideProject": 0,
-		"outputPathIsSetByUser": 0,
-		"outputStyle": 1,
-		"syntaxCheckerStyle": 1
-		},
-	"\/AngularJS\/Mancomunado\/mancomunadoRepository.js": {
-		"fileType": 64,
-		"ignore": 0,
-		"ignoreWasSetByUser": 0,
-		"inputAbbreviatedPath": "\/AngularJS\/Mancomunado\/mancomunadoRepository.js",
-		"outputAbbreviatedPath": "\/AngularJS\/Mancomunado\/min\/mancomunadoRepository-min.js",
-		"outputPathIsOutsideProject": 0,
-		"outputPathIsSetByUser": 0,
-		"outputStyle": 1,
-		"syntaxCheckerStyle": 1
-		},
-	"\/AngularJS\/Parametro\/min\/notificacionController-min.js": {
-		"fileType": 64,
-		"ignore": 0,
-		"ignoreWasSetByUser": 0,
-		"inputAbbreviatedPath": "\/AngularJS\/Parametro\/min\/notificacionController-min.js",
-		"outputAbbreviatedPath": "\/AngularJS\/Parametro\/min\/min\/notificacionController-min-min.js",
-		"outputPathIsOutsideProject": 0,
-		"outputPathIsSetByUser": 0,
-		"outputStyle": 1,
-		"syntaxCheckerStyle": 1
-		},
-	"\/AngularJS\/Parametro\/min\/notificacionRepository-min.js": {
-		"fileType": 64,
-		"ignore": 0,
-		"ignoreWasSetByUser": 0,
-		"inputAbbreviatedPath": "\/AngularJS\/Parametro\/min\/notificacionRepository-min.js",
-		"outputAbbreviatedPath": "\/AngularJS\/Parametro\/min\/min\/notificacionRepository-min-min.js",
-		"outputPathIsOutsideProject": 0,
-		"outputPathIsSetByUser": 0,
-		"outputStyle": 1,
-		"syntaxCheckerStyle": 1
-		},
-	"\/AngularJS\/Parametro\/min\/parametroController-min.js": {
+	"\/AngularJS\/min\/RegistrationModule-min.js": {
 		"fileType": 64,
 		"ignore": 1,
 		"ignoreWasSetByUser": 0,
-		"inputAbbreviatedPath": "\/AngularJS\/Parametro\/min\/parametroController-min.js",
-		"outputAbbreviatedPath": "\/AngularJS\/Parametro\/min\/min\/parametroController-min-min.js",
+		"inputAbbreviatedPath": "\/AngularJS\/min\/RegistrationModule-min.js",
+		"outputAbbreviatedPath": "\/AngularJS\/min\/min\/RegistrationModule-min-min.js",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0,
 		"outputStyle": 1,
 		"syntaxCheckerStyle": 1
 		},
-	"\/AngularJS\/Parametro\/min\/parametroRepository-min.js": {
+	"\/AngularJS\/Pago\/min\/pagoController-min.js": {
 		"fileType": 64,
 		"ignore": 1,
 		"ignoreWasSetByUser": 0,
-		"inputAbbreviatedPath": "\/AngularJS\/Parametro\/min\/parametroRepository-min.js",
-		"outputAbbreviatedPath": "\/AngularJS\/Parametro\/min\/min\/parametroRepository-min-min.js",
+		"inputAbbreviatedPath": "\/AngularJS\/Pago\/min\/pagoController-min.js",
+		"outputAbbreviatedPath": "\/AngularJS\/Pago\/min\/min\/pagoController-min-min.js",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0,
 		"outputStyle": 1,
 		"syntaxCheckerStyle": 1
 		},
-	"\/AngularJS\/Parametro\/parametroController.js": {
+	"\/AngularJS\/Pago\/min\/pagoRepository-min.js": {
 		"fileType": 64,
-		"ignore": 0,
+		"ignore": 1,
 		"ignoreWasSetByUser": 0,
-		"inputAbbreviatedPath": "\/AngularJS\/Parametro\/parametroController.js",
-		"outputAbbreviatedPath": "\/AngularJS\/Parametro\/min\/parametroController-min.js",
+		"inputAbbreviatedPath": "\/AngularJS\/Pago\/min\/pagoRepository-min.js",
+		"outputAbbreviatedPath": "\/AngularJS\/Pago\/min\/min\/pagoRepository-min-min.js",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0,
 		"outputStyle": 1,
 		"syntaxCheckerStyle": 1
 		},
-	"\/AngularJS\/Parametro\/parametroRepository-dist.js": {
+	"\/AngularJS\/Pago\/pagoController.js": {
 		"fileType": 64,
 		"ignore": 0,
 		"ignoreWasSetByUser": 0,
-		"inputAbbreviatedPath": "\/AngularJS\/Parametro\/parametroRepository-dist.js",
-		"outputAbbreviatedPath": "\/AngularJS\/Parametro\/min\/parametroRepository-dist-min.js",
+		"inputAbbreviatedPath": "\/AngularJS\/Pago\/pagoController.js",
+		"outputAbbreviatedPath": "\/AngularJS\/Pago\/min\/pagoController-min.js",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0,
 		"outputStyle": 1,
 		"syntaxCheckerStyle": 1
 		},
-	"\/AngularJS\/Parametro\/parametroRepository.js": {
+	"\/AngularJS\/Pago\/pagoRepository.js": {
 		"fileType": 64,
 		"ignore": 0,
 		"ignoreWasSetByUser": 0,
-		"inputAbbreviatedPath": "\/AngularJS\/Parametro\/parametroRepository.js",
-		"outputAbbreviatedPath": "\/AngularJS\/Parametro\/min\/parametroRepository-min.js",
+		"inputAbbreviatedPath": "\/AngularJS\/Pago\/pagoRepository.js",
+		"outputAbbreviatedPath": "\/AngularJS\/Pago\/min\/pagoRepository-min.js",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0,
 		"outputStyle": 1,
@@ -123,11 +79,11 @@
 		"outputStyle": 1,
 		"syntaxCheckerStyle": 1
 		},
-	"\/AngularJS\/Templates\/Parametro.html": {
+	"\/AngularJS\/Templates\/Pago.html": {
 		"fileType": 8192,
 		"ignore": 0,
 		"ignoreWasSetByUser": 0,
-		"inputAbbreviatedPath": "\/AngularJS\/Templates\/Parametro.html",
+		"inputAbbreviatedPath": "\/AngularJS\/Templates\/Pago.html",
 		"outputAbbreviatedPath": "No Output Path",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0
@@ -224,11 +180,83 @@
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0
 		},
+	"\/css\/nodo.css": {
+		"fileType": 16,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"inputAbbreviatedPath": "\/css\/nodo.css",
+		"outputAbbreviatedPath": "No Output Path",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0
+		},
+	"\/css\/roundabout.css": {
+		"fileType": 16,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"inputAbbreviatedPath": "\/css\/roundabout.css",
+		"outputAbbreviatedPath": "No Output Path",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0
+		},
+	"\/css\/search.css": {
+		"fileType": 16,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"inputAbbreviatedPath": "\/css\/search.css",
+		"outputAbbreviatedPath": "No Output Path",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0
+		},
+	"\/css\/sidebar\/body.css": {
+		"fileType": 16,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"inputAbbreviatedPath": "\/css\/sidebar\/body.css",
+		"outputAbbreviatedPath": "No Output Path",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0
+		},
+	"\/css\/sidebar\/component copia.css": {
+		"fileType": 16,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"inputAbbreviatedPath": "\/css\/sidebar\/component copia.css",
+		"outputAbbreviatedPath": "No Output Path",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0
+		},
+	"\/css\/sidebar\/component.css": {
+		"fileType": 16,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"inputAbbreviatedPath": "\/css\/sidebar\/component.css",
+		"outputAbbreviatedPath": "No Output Path",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0
+		},
+	"\/css\/sidebar\/normalize.css": {
+		"fileType": 16,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"inputAbbreviatedPath": "\/css\/sidebar\/normalize.css",
+		"outputAbbreviatedPath": "No Output Path",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0
+		},
 	"\/css\/Site.css": {
 		"fileType": 16,
 		"ignore": 0,
 		"ignoreWasSetByUser": 0,
 		"inputAbbreviatedPath": "\/css\/Site.css",
+		"outputAbbreviatedPath": "No Output Path",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0
+		},
+	"\/css\/smart_wizard.css": {
+		"fileType": 16,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"inputAbbreviatedPath": "\/css\/smart_wizard.css",
 		"outputAbbreviatedPath": "No Output Path",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0
@@ -265,6 +293,24 @@
 		"ignore": 0,
 		"ignoreWasSetByUser": 0,
 		"inputAbbreviatedPath": "\/css\/ui-grid.min.css",
+		"outputAbbreviatedPath": "No Output Path",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0
+		},
+	"\/css\/windows8.css": {
+		"fileType": 16,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"inputAbbreviatedPath": "\/css\/windows8.css",
+		"outputAbbreviatedPath": "No Output Path",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0
+		},
+	"\/css\/wizard.css": {
+		"fileType": 16,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"inputAbbreviatedPath": "\/css\/wizard.css",
 		"outputAbbreviatedPath": "No Output Path",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0
@@ -9010,6 +9056,50 @@
 		"outputStyle": 1,
 		"syntaxCheckerStyle": 1
 		},
+	"\/js\/sidebar\/classie.js": {
+		"fileType": 64,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"inputAbbreviatedPath": "\/js\/sidebar\/classie.js",
+		"outputAbbreviatedPath": "\/js\/sidebar\/min\/classie-min.js",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"outputStyle": 1,
+		"syntaxCheckerStyle": 1
+		},
+	"\/js\/sidebar\/min\/sidebarEffects-min.js": {
+		"fileType": 64,
+		"ignore": 1,
+		"ignoreWasSetByUser": 0,
+		"inputAbbreviatedPath": "\/js\/sidebar\/min\/sidebarEffects-min.js",
+		"outputAbbreviatedPath": "\/js\/sidebar\/min\/min\/sidebarEffects-min-min.js",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"outputStyle": 1,
+		"syntaxCheckerStyle": 1
+		},
+	"\/js\/sidebar\/modernizr.custom.js": {
+		"fileType": 64,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"inputAbbreviatedPath": "\/js\/sidebar\/modernizr.custom.js",
+		"outputAbbreviatedPath": "\/js\/sidebar\/min\/modernizr.custom-min.js",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"outputStyle": 1,
+		"syntaxCheckerStyle": 1
+		},
+	"\/js\/sidebar\/sidebarEffects.js": {
+		"fileType": 64,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"inputAbbreviatedPath": "\/js\/sidebar\/sidebarEffects.js",
+		"outputAbbreviatedPath": "\/js\/sidebar\/min\/sidebarEffects-min.js",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"outputStyle": 1,
+		"syntaxCheckerStyle": 1
+		},
 	"\/js\/socket.io.js": {
 		"fileType": 64,
 		"ignore": 0,
@@ -9102,22 +9192,6 @@
 		"shouldRunAutoprefixer": 0,
 		"shouldRunBless": 0,
 		"useLibsass": false
-		},
-	"\/sass\/chat.sass": {
-		"createSourceMap": 0,
-		"debugStyle": 0,
-		"decimalPrecision": 10,
-		"fileType": 2,
-		"ignore": 0,
-		"ignoreWasSetByUser": 0,
-		"inputAbbreviatedPath": "\/sass\/chat.sass",
-		"outputAbbreviatedPath": "\/css\/chat.css",
-		"outputPathIsOutsideProject": 0,
-		"outputPathIsSetByUser": 0,
-		"outputStyle": 0,
-		"shouldRunAutoprefixer": 0,
-		"shouldRunBless": 0,
-		"useLibsass": false
 		}
 	},
 "hooks": [
@@ -9127,9 +9201,9 @@
 	},
 "projectAttributes": {
 	"bowerAbbreviatedPath": "",
-	"displayValue": "parametro",
+	"displayValue": "pagos",
 	"displayValueWasSetByUser": 1,
-	"iconImageName": "compass_darkGray"
+	"iconImageName": "harddrive_yellow"
 	},
 "projectSettings": {
 	"alwaysUseExternalServer": 0,

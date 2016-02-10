@@ -1,0 +1,1 @@
+var registrationModule=angular.module("registrationModule",["ngRoute","cgBusy","ui.bootstrap","LocalStorageModule"]).config(function(o,l){o.when("/",{templateUrl:"/AngularJS/Templates/Pago.html",controller:"pagoController"}),l.html5Mode(!0)});registrationModule.run(function(o){o["var"]="full"});

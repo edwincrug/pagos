@@ -1,15 +1,15 @@
-﻿var registrationModule = angular.module("registrationModule", ["ngRoute", "ngGrid", "cgBusy", "ui.bootstrap", "LocalStorageModule"])
+﻿var registrationModule = angular.module("registrationModule", ["ngRoute", "cgBusy", "ui.bootstrap", "LocalStorageModule"])
 .config(function ($routeProvider, $locationProvider) {
 
     $routeProvider.when('/', {
-        templateUrl: '/AngularJS/Templates/Parametro.html',
-        controller: 'parametroController'
+        templateUrl: '/AngularJS/Templates/Pago.html',
+        controller: 'pagoController'
     });
 
     $locationProvider.html5Mode(true);
 });
 
 registrationModule.run(function ($rootScope) {
-    $rootScope.empleado = "";
-    $rootScope.cliente = "";
+    $rootScope.var = "full";
+
 })
