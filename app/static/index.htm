@@ -101,7 +101,7 @@
   </div>
 
   <!-- Collect the nav links, forms, and other content for toggling -->
-  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" ng-controller="empleadoController" ng-init="init()">
     <ul class="nav navbar-nav">
     </ul>
     <ul class="nav navbar-nav navbar-right">
@@ -110,13 +110,13 @@
           <span class="blanco" >{{ empleado.nombre }}</span>  
           <img src="image/profile/man.jpg" id="avatar">
           <span class="caret blanco" id="nombreEmpleado"></span>
-      </a>
-      <ul class="dropdown-menu">
+        </a>
+        <ul class="dropdown-menu">
           <li class="seleccionable"><a ng-click="Salir()">Salir</a></li>
-      </ul>
-  </li>
-</ul>
-</div><!-- /.navbar-collapse -->
+        </ul>
+      </li>
+    </ul>
+  </div><!-- /.navbar-collapse -->
 
 </div><!-- /.container-fluid -->
 
@@ -159,6 +159,8 @@
 <script src="helpers.js"></script>
 
 <!--Controllers-->
+<script src="AngularJS/Empleado/empleadoRepository.js"></script>
+<script src="AngularJS/Empleado/empleadoController.js"></script>
 <script src="AngularJS/Pago/pagoRepository.js"></script>
 <script src="AngularJS/Pago/pagoController.js"></script>
 

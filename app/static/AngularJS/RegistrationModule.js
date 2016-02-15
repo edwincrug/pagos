@@ -6,6 +6,7 @@
         controller: 'pagoController'
     });
 
+
     $locationProvider.html5Mode(true);
 });
 
