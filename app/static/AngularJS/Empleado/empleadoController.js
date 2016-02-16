@@ -31,7 +31,7 @@ registrationModule.controller("empleadoController", function ($scope, $filter, $
     };
 $scope.Salir = function () {
 
-	alertFactory.info('has salido');
+	alertFactory.info($scope.empleado + 'exit user');
 
 }
 
