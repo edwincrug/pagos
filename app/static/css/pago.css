@@ -1,7 +1,55 @@
-<<<<<<< Updated upstream
-.panelEncabezado{margin-right:50px;margin-left:50px}
-.grid {width: 1000px;height: 500px;}
+#container {
+  margin-top: 300px;
+  width: 90%;
+  margin-right: 5%;
+  margin-left: 5%; }
 
-=======
-.panelEncabezado{display:inline-block;width:400px;float:left;padding-left:15px}.panelTotales{display:inline-block;width:400px;float:right;padding-right:15px}#top{width:90%;margin-right:5%;margin-left:5%;border:2px solid red}#title{width:100%;text-align:center;display:block}#clsPagar{display:inline-block;width:50%;border:2px solid red}#clsComplemento{display:inline-block;width:49%;border:2px solid green}
->>>>>>> Stashed changes
+.panelEncabezado {
+  display: inline-block;
+  width: 400px;
+  float: left;
+  padding-left: 15px; }
+
+.panelTotales {
+  display: inline-block;
+  width: 500px;
+  float: right;
+  padding-right: 15px;
+  margin-top: 30px;
+  position: relative; }
+
+#top {
+  width: 90%;
+  margin-right: 5%;
+  margin-left: 5%; }
+
+#title {
+  width: 100%;
+  text-align: center;
+  display: block; }
+
+#clsPagar {
+  display: inline-block;
+  width: 60%;
+  text-align: right; }
+
+#clsComplemento {
+  position: absolute;
+  right: 0;
+  margin-top: -46px;
+  width: 39%;
+  text-align: left;
+  margin-right: 10px;
+  padding-left: 6px; }
+
+#clsMainLabel {
+  font-size: 14px; }
+
+.clsDetailText {
+  font-size: 20px; }
+
+.clsDetailLabel {
+  font-size: 12px; }
+
+#clsPagarText {
+  font-size: 30px; }

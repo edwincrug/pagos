@@ -4,37 +4,39 @@
 	<section id="top">
 		<h1 id="title">Programación de Pagos</h1>
 
-		<div style="width:30%; padding:10px;" class="row panelEncabezado"  >
+		<div class="row panelEncabezado">
 			<div class="panel panel-info">
 			  <!-- Default panel contents -->
-			  <div class="panel-heading" style="width:100%; padding:10px;"><b>Información general</b>
-			  <br>Saldo en banco : {{scencabezado.saldoBanco}}
+			  <div class="panel-heading">Información general</div>
+			  <div class="panel-body">
+			  			  <br>Saldo en banco : {{scencabezado.saldoBanco}}
 			  <br>Saldo en caja : {{scencabezado.saldoCaja}}
 			  <br>Cobranza esperada : {{scencabezado.cobranzaEsperada}}
 			  <br>Flujo de efectivo : {{scencabezado.flujoEfectivo}}
 	  		  <br>Disponible : {{scencabezado.disponible}}
-
+			  </div>			  
 			</div>
-		</div>
-		<div class="row panelTotales">
+</div>
+				<div class="row panelTotales">
 			<div id="clsPagar">
-				<span id="clsPagarLabel">Total a Pagar</span> 	<span id="clsPagarText"> $ 1,234.00 </span> 
+				<span id="clsMainLabel">Total a Pagar</span><span id="clsPagarText"> $ 1,234.00 </span> 
 			</div>
 			<div id="clsComplemento">
-				<div class="clsTotal">
-			 		<span id="clsTotalLabel">Cartera vencida</span> <span id="clsTotalText">$ 1,500.00 </span>
+				<div id="clsTotal">
+			 		<span class="clsDetailLabel">Cartera vencida</span> <span class="clsDetailText">$ 1,500.00 </span>
 				</div>
 				<div class="clsPendiente">
-			 		<span id="clsPendienteLabel">Reprogramado</span> <span id="clsPendienteText"> $ 166.00 </span>
+			 		<span class="clsDetailLabel">Reprogramado</span> <span class="clsDetailText"> $ 166.00 </span>
 				</div>
 			</div>
 
 		</div>
+
 	</section>
 		
 	<section id="container">
 	 	
-    <div id="grid1" ui-grid="gridOptions" ui-grid-grouping ui-grid-edit ui-grid-selection ui-grid-cellNav class="grid" style="width: 1500px;"></div>
+    <div id="grid1" ui-grid="gridOptions" ui-grid-grouping ui-grid-edit ui-grid-selection ui-grid-cellNav class="grid"></div>
 
 	</section>
 
