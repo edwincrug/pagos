@@ -7,13 +7,95 @@
 		<div class="row panelEncabezado">
 			<div class="panel panel-info">
 			  <!-- Default panel contents -->
-			  <div class="panel-heading">Información general</div>
+			  <div class="panel-heading">
+			  Detalle
+			  <div class="flujo" tooltip="Último flujo de efectivo">
+			  	Flujo de Efectivo
+			  	<span class="glyphicon glyphicon-time" aria-hidden="true"></span>
+			  	12/02/16 13:50
+			  </div>
+			  	
+			  </div>
 			  <div class="panel-body">
-			  			  <br>Saldo en banco : {{scencabezado.saldoBanco}}
-			  <br>Saldo en caja : {{scencabezado.saldoCaja}}
-			  <br>Cobranza esperada : {{scencabezado.cobranzaEsperada}}
-			  <br>Flujo de efectivo : {{scencabezado.flujoEfectivo}}
-	  		  <br>Disponible : {{scencabezado.disponible}}
+			  			<div class="rows">
+			  				<div class="resTexto">
+			  					Saldo en banco
+			  				</div>
+			  				<div class="resSigno">
+			  					<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+			  				</div>
+			  				<div class="resMonto">
+			  					{{scencabezado.saldoBanco}}
+			  				</div>
+			  			</div>
+			  			<div class="rows">
+			  				<div class="resTexto">
+			  					Saldo en caja
+			  				</div>
+			  				<div class="resSigno">
+			  					<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+			  				</div>
+			  				<div class="resMonto">
+			  					{{scencabezado.saldoCaja}}
+			  				</div>
+			  			</div>
+			  						  			<div class="rows">
+			  				<div class="resTexto">
+			  					Cobranza esperada
+			  				</div>
+			  				<div class="resSigno">
+			  					<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+			  				</div>
+			  				<div class="resMonto">
+			  					{{scencabezado.cobranzaEsperada}}
+			  				</div>
+			  			</div>
+			  						  			<div class="rows">
+			  				<div class="resTexto">
+			  					Flujo de efectivo
+			  				</div>
+			  				<div class="resSigno">
+			  					<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+			  				</div>
+			  				<div class="resMonto">
+			  					{{scencabezado.flujoEfectivo}}
+			  				</div>
+			  			</div>
+			  			<div class="rows"> <div class="raya"></div></div>
+			  			<div class="rows">
+			  				<div class="resTexto">
+			  					Disponible
+			  				</div>
+			  				<div class="resSigno">
+			  					
+			  				</div>
+			  				<div class="resMonto">
+			  					{{scencabezado.disponible}}
+			  				</div>
+			  			</div>
+			  			<div class="rows">
+			  				<div class="resTexto">
+			  					Total a Pagar
+			  				</div>
+			  				<div class="resSigno">
+			  					<span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+			  				</div>
+			  				<div class="resMonto">
+			  					$1,244.00
+			  				</div>
+			  			</div>
+			  			<div class="rows"> <div class="raya"></div></div>
+			  			<div class="rows">
+			  				<div class="resTexto">
+			  					Balance Final
+			  				</div>
+			  				<div class="resSigno">
+			  					
+			  				</div>
+			  				<div class="resMonto">
+			  					$ 123.00
+			  				</div>
+			  			</div>
 			  </div>			  
 			</div>
 </div>
@@ -28,6 +110,9 @@
 				<div class="clsPendiente">
 			 		<span class="clsDetailLabel">Reprogramado</span> <span class="clsDetailText"> $ 166.00 </span>
 				</div>
+				<div class="clsPendiente">
+			 		<span class="clsDetailLabel">Porcentaje pagado</span> <span class="clsDetailText"> 88% </span>
+				</div>
 			</div>
 
 		</div>
@@ -38,6 +123,10 @@
 	 	
     <div id="grid1" ui-grid="gridOptions" ui-grid-grouping ui-grid-edit ui-grid-selection ui-grid-cellNav class="grid"></div>
 
+	</section>
+	<section id="accion">
+		<button type="button" class="btn btn-primary">Guardar</button>
+		<button type="button" class="btn btn-success disabled">Aprobar</button>
 	</section>
 
 </div>
