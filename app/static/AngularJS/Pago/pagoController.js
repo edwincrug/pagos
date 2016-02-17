@@ -19,16 +19,19 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
             {
 			    
 			    $scope.gridOptions.data = response.data;
-                 //$scope.gridOptions.data = $scope.data;
-                for (var i = 0; i < data.length; i++)
+                 $scope.data = response.data;
+                 $scope.carteraVencida = 0;
+                for (var i = 0; i < $scope.data.length; i++)
                 {
-                     data[i].Pagar = data[i].monto;
-                     if (data[i].ordenBloqueada=='False')
+                     $scope.data[i].Pagar = $scope.data[i].saldo;
+                     if ($scope.data[i].ordenBloqueada=='False')
                     {
-                        data[i].Pagar = 0;
+                        $scope.data[i].Pagar = 0;
                     }
+                    $scope.carteraVencida = $scope.carteraVencida + $scope.data[i].saldo
                 }
-                $scope.gridOptions.data = data;
+                $scope.gridOptions.data = $scope.data;
+                $scope.cantidadTotal = 0;
 			    alertFactory.success('Se lleno el grid.');
 
   			}, function errorCallback(response) {
@@ -89,7 +92,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         enableGroupHeaderSelection: true,
         treeRowHeaderAlwaysVisible: false,
         showColumnFooter: true,
-        showGridFooter: false,
+        showGridFooter: true,
         cellEditableCondition: function($scope) {
             // put your enable-edit code here, using values from $scope.row.entity and/or $scope.col.colDef as you desire
             return $scope.row.entity.ordenBloqueada; // in this example, we'll only allow active rows to be edited
@@ -108,13 +111,13 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
          { name: 'cartera', width: '20%' },
          { name: 'monto', displayName: 'Monto', width: '25%', cellFilter: 'currency' },
          { name: 'saldo', displayName: 'Monto', width: '10%', cellFilter: 'currency' },
-         // {
-         //     field: 'saldo', displayName: 'Pagar (total)', width: '15%', cellFilter: 'currency', aggregationType: uiGridConstants.aggregationTypes.sum,
-         //     treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
-         //     customTreeAggregationFinalizerFn: function (aggregation) {
-         //         aggregation.rendered = aggregation.value;
-         //     }
-         // },
+         {
+             field: 'Pagar', displayName: 'Pagar (total)', width: '15%', cellFilter: 'currency', aggregationType: uiGridConstants.aggregationTypes.sum,
+             treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
+             customTreeAggregationFinalizerFn: function (aggregation) {
+                 aggregation.rendered = aggregation.value;
+             }
+         },
          { name: 'moneda', width: '5%' },
          { name: 'fechaVencimiento', displayName: 'fechaVencimiento', type: 'date', cellFilter: 'date:"yyyy-MM-dd"', width: '10%' },
          { name: 'fechaPromesaPago', displayName: 'fechaPromesaPago', type: 'date', cellFilter: 'date:"yyyy-MM-dd"', width: '10%' },
@@ -135,7 +138,8 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
             $scope.gridApi = gridApi;
             // $scope.gridApi.grid.registerColumnsProcessor( setGroupValues, 410 );
             $scope.gridApi.selection.on.rowSelectionChanged($scope, function (rowChanged) {
-                if (typeof (rowChanged.treeLevel) !== 'undefined' && rowChanged.treeLevel > -1) {
+                if (typeof (rowChanged.treeLevel) !== 'undefined' && rowChanged.treeLevel > -1) 
+                {
                     // this is a group header
                     children = $scope.gridApi.treeBase.getRowChildren(rowChanged);
                     children.forEach(function (child) {
@@ -146,7 +150,29 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                         }
                     });
                 }
+                 else
+                        if (rowChanged.isSelected) {
+                            //alert(rowChanged.entity.Pagar);
+                            $scope.cantidadTotal = Math.round($scope.cantidadTotal * 100) / 100 + Math.round(rowChanged.entity.Pagar * 100) / 100;
+                        }
+                        else
+                            $scope.cantidadTotal = Math.round($scope.cantidadTotal * 100) / 100 - Math.round(rowChanged.entity.Pagar * 100) / 100;
             });
+
+            gridApi.selection.on.rowSelectionChangedBatch($scope, function (rows) {
+
+                //alert(rows.length);
+                rows.forEach(function (row) {
+                    if (row.isSelected) {
+                        $scope.cantidadTotal = Math.round($scope.cantidadTotal * 100) / 100 + Math.round(row.entity.Pagar * 100) / 100;
+                        //alert(row.entity.Pagar);
+                    }                        
+                    else
+                        $scope.cantidadTotal = Math.round($scope.cantidadTotal * 100) / 100 - Math.round(row.entity.Pagar * 100) / 100;
+                });
+                
+            });
+
         }
     }
 

@@ -101,17 +101,17 @@
 </div>
 				<div class="row panelTotales">
 			<div id="clsPagar">
-				<span id="clsMainLabel">Total a Pagar</span><span id="clsPagarText"> $ 1,234.00 </span> 
+				<span id="clsMainLabel">Total a Pagar</span><span id="clsPagarText"> {{cantidadTotal | currency}} </span> 
 			</div>
 			<div id="clsComplemento">
 				<div id="clsTotal">
-			 		<span class="clsDetailLabel">Cartera vencida</span> <span class="clsDetailText">$ 1,500.00 </span>
+			 		<span class="clsDetailLabel">Cartera vencida</span> <span class="clsDetailText">{{carteraVencida | currency}}</span>
 				</div>
 				<div class="clsPendiente">
-			 		<span class="clsDetailLabel">Reprogramado</span> <span class="clsDetailText"> $ 166.00 </span>
+			 		<span class="clsDetailLabel">Reprogramado</span> <span class="clsDetailText"> {{ (carteraVencida - cantidadTotal) | currency }} </span>
 				</div>
 				<div class="clsPendiente">
-			 		<span class="clsDetailLabel">Porcentaje pagado</span> <span class="clsDetailText"> 88% </span>
+			 		<span class="clsDetailLabel">Porcentaje pagado</span> <span class="clsDetailText"> {{ ((cantidadTotal * 100) / carteraVencida ) | number:0 }} </span>
 				</div>
 			</div>
 
