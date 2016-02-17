@@ -1,29 +1,27 @@
 <link href="../../css/pago.css" rel="stylesheet" />
-	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.js"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-touch.js"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-animate.js"></script>
-    <script src="http://ui-grid.info/docs/grunt-scripts/csv.js"></script>
-    <script src="http://ui-grid.info/docs/grunt-scripts/pdfmake.js"></script>
-    <script src="http://ui-grid.info/docs/grunt-scripts/vfs_fonts.js"></script>
-    <script src="http://ui-grid.info/release/ui-grid.js"></script>
-    <script src="../../AngularJS/Pago/gridPagos.js"></script>
-    <link rel="stylesheet" href="http://ui-grid.info/release/ui-grid.css" type="text/css">
+	
 <div cg-busy="myPromise" ng-init="init()" resize>
 	<section id="top">
 		<h1>Programación de Pagos</h1>
 
-		<div class="row panelEncabezado">
+		<div style="width:30%; padding:10px;" class="row panelEncabezado"  >
 			<div class="panel panel-info">
 			  <!-- Default panel contents -->
-			  <div class="panel-heading">Información general</div>
-			  <div class="panel-body">Detalle</div>
+			  <div class="panel-heading" style="width:100%; padding:10px;"><b>Información general</b>
+			  <br>Saldo en banco : {{scencabezado.saldoBanco}}
+			  <br>Saldo en caja : {{scencabezado.saldoCaja}}
+			  <br>Cobranza esperada : {{scencabezado.cobranzaEsperada}}
+			  <br>Flujo de efectivo : {{scencabezado.flujoEfectivo}}
+	  		  <br>Disponible : {{scencabezado.disponible}}
+
 			</div>
 		</div>
 	</section>
+		
 	<section id="container">
-	 	<div ng-controller="MainCtrl">
-	        <div id="grid1" ui-grid="gridOptions" ui-grid-grouping ui-grid-edit ui-grid-selection ui-grid-cellNav class="grid" style="width: 1500px;"></div>
-	    </div>
+	 	
+    <div id="grid1" ui-grid="gridOptions" ui-grid-grouping ui-grid-edit ui-grid-selection ui-grid-cellNav class="grid" style="width: 1500px;"></div>
+
 	</section>
 
 </div>
