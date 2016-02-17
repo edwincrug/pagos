@@ -2,13 +2,15 @@
   margin-top: 300px;
   width: 90%;
   margin-right: 5%;
-  margin-left: 5%; }
+  margin-left: 5%;
+}
 
 .panelEncabezado {
   display: inline-block;
   width: 400px;
   float: left;
-  padding-left: 15px; }
+  padding-left: 15px;
+}
 
 .panelTotales {
   display: inline-block;
@@ -16,22 +18,26 @@
   float: right;
   padding-right: 15px;
   margin-top: 30px;
-  position: relative; }
+  position: relative;
+}
 
 #top {
   width: 90%;
   margin-right: 5%;
-  margin-left: 5%; }
+  margin-left: 5%;
+}
 
 #title {
   width: 100%;
   text-align: center;
-  display: block; }
+  display: block;
+}
 
 #clsPagar {
   display: inline-block;
   width: 60%;
-  text-align: right; }
+  text-align: right;
+}
 
 #clsComplemento {
   position: absolute;
@@ -40,16 +46,21 @@
   width: 39%;
   text-align: left;
   margin-right: 10px;
-  padding-left: 6px; }
+  padding-left: 6px;
+}
 
 #clsMainLabel {
-  font-size: 14px; }
+  font-size: 14px;
+}
 
 .clsDetailText {
-  font-size: 20px; }
+  font-size: 20px;
+}
 
 .clsDetailLabel {
-  font-size: 12px; }
+  font-size: 12px;
+}
 
 #clsPagarText {
-  font-size: 30px; }
+  font-size: 30px;
+}
