@@ -1,3 +1,7 @@
+<<<<<<< Updated upstream
 .panelEncabezado{margin-right:50px;margin-left:50px}
 .grid {width: 1000px;height: 500px;}
 
+=======
+.panelEncabezado{display:inline-block;width:400px;float:left;padding-left:15px}.panelTotales{display:inline-block;width:400px;float:right;padding-right:15px}#top{width:90%;margin-right:5%;margin-left:5%;border:2px solid red}#title{width:100%;text-align:center;display:block}#clsPagar{display:inline-block;width:50%;border:2px solid red}#clsComplemento{display:inline-block;width:49%;border:2px solid green}
+>>>>>>> Stashed changes

@@ -2,7 +2,7 @@
 	
 <div cg-busy="myPromise" ng-init="init()" resize>
 	<section id="top">
-		<h1>Programación de Pagos</h1>
+		<h1 id="title">Programación de Pagos</h1>
 
 		<div style="width:30%; padding:10px;" class="row panelEncabezado"  >
 			<div class="panel panel-info">
@@ -15,6 +15,20 @@
 	  		  <br>Disponible : {{scencabezado.disponible}}
 
 			</div>
+		</div>
+		<div class="row panelTotales">
+			<div id="clsPagar">
+				<span id="clsPagarLabel">Total a Pagar</span> 	<span id="clsPagarText"> $ 1,234.00 </span> 
+			</div>
+			<div id="clsComplemento">
+				<div class="clsTotal">
+			 		<span id="clsTotalLabel">Cartera vencida</span> <span id="clsTotalText">$ 1,500.00 </span>
+				</div>
+				<div class="clsPendiente">
+			 		<span id="clsPendienteLabel">Reprogramado</span> <span id="clsPendienteText"> $ 166.00 </span>
+				</div>
+			</div>
+
 		</div>
 	</section>
 		
