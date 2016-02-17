@@ -14,7 +14,7 @@
 						<span class="glyphicon glyphicon-time" aria-hidden="true"></span>
 						12/02/16 13:50
 					</div>
-					
+
 				</div>
 				<div class="panel-body">
 					<div class="rows">
@@ -25,7 +25,7 @@
 							<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
 						</div>
 						<div class="resMonto">
-							{{scencabezado.saldoBanco}}
+							{{scencabezado.saldoBanco | currency}}
 						</div>
 					</div>
 					<div class="rows">
@@ -36,7 +36,7 @@
 							<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
 						</div>
 						<div class="resMonto">
-							{{scencabezado.saldoCaja}}
+							{{scencabezado.saldoCaja | currency}}
 						</div>
 					</div>
 					<div class="rows">
@@ -47,7 +47,7 @@
 							<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
 						</div>
 						<div class="resMonto">
-							{{scencabezado.cobranzaEsperada}}
+							{{scencabezado.cobranzaEsperada | currency}}
 						</div>
 					</div>
 					<div class="rows">
@@ -58,7 +58,7 @@
 							<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
 						</div>
 						<div class="resMonto">
-							{{scencabezado.flujoEfectivo}}
+							{{scencabezado.flujoEfectivo | currency}}
 						</div>
 					</div>
 					<div class="rows"> <div class="raya"></div></div>
@@ -67,10 +67,10 @@
 							Disponible
 						</div>
 						<div class="resSigno">
-							
+
 						</div>
 						<div class="resMonto">
-							{{scencabezado.disponible}}
+							{{scencabezado.disponible | currency}}
 						</div>
 					</div>
 					<div class="rows">
@@ -81,7 +81,7 @@
 							<span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
 						</div>
 						<div class="resMonto">
-							$1,244.00
+							{{cantidadTotal | currency}}
 						</div>
 					</div>
 					<div class="rows"> <div class="raya"></div></div>
@@ -90,10 +90,10 @@
 							Balance Final
 						</div>
 						<div class="resSigno">
-							
+
 						</div>
-						<div class="resMonto">
-							$ 123.00
+						<div class="resMonto" ng-class="{ 'rojo': (scencabezado.disponible < cantidadTotal ) }">
+							{{ (scencabezado.disponible - cantidadTotal ) | currency }}
 						</div>
 					</div>
 				</div>			  
@@ -111,16 +111,16 @@
 					<span class="clsDetailLabel">Reprogramado</span> <span class="clsDetailText"> {{ (carteraVencida - cantidadTotal) | currency }} </span>
 				</div>
 				<div class="clsPendiente">
-					<span class="clsDetailLabel">Porcentaje pagado</span> <span class="clsDetailText"> {{ ((cantidadTotal * 100) / carteraVencida ) | number:0 }} </span>
+				<span class="clsDetailLabel">Porcentaje pagado</span> <span class="clsDetailText blue"> {{ ((cantidadTotal * 100) / carteraVencida ) | number:2 }} %</span>
 				</div>
 			</div>
 
 		</div>
 
 	</section>
-	
+
 	<section id="container">
-		
+
 		<div id="grid1" ui-grid="gridOptions" ui-grid-grouping ui-grid-edit ui-grid-selection ui-grid-cellNav class="grid"></div>
 
 	</section>
