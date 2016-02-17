@@ -29,10 +29,17 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                         $scope.data[i].Pagar = 0;
                     }
                     $scope.carteraVencida = $scope.carteraVencida + $scope.data[i].saldo
+
                 }
                 $scope.gridOptions.data = $scope.data;
                 $scope.cantidadTotal = 0;
 			    alertFactory.success('Se lleno el grid.');
+                setTimeout(function(){ 
+                   
+                    $scope.selectAll();
+
+                }, 1000);
+                
 
   			}, function errorCallback(response) {
 			    // called asynchronously if an error occurs
@@ -163,6 +170,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
                 //alert(rows.length);
                 rows.forEach(function (row) {
+
                     if (row.isSelected) {
                         $scope.cantidadTotal = Math.round($scope.cantidadTotal * 100) / 100 + Math.round(row.entity.Pagar * 100) / 100;
                         //alert(row.entity.Pagar);
@@ -173,12 +181,16 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 
             });
 
+          gridApi.selection.selectAllRows();  
+
         }
     }
 
-         
+ $scope.selectAll = function() {$scope.gridApi.selection.selectAllRows();};       
 
 })
+
+
 
 registrationModule.service('stats', function () {
 
