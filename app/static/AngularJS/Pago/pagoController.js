@@ -146,7 +146,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
          },
         { name: 'monto', displayName: 'Monto', width: '10%', cellFilter: 'currency' , enableCellEdit: false},
          { name: 'saldo', displayName: 'Saldo', width: '10%', cellFilter: 'currency' , enableCellEdit: false},
-         { name: 'documento', width: '5%', enableCellEdit: false },
+         { name: 'documento', width: '15%', enableCellEdit: false },
          { name: 'tipo', width: '5%', enableCellEdit: false },
          { name: 'tipodocto', width: '5%', enableCellEdit: false },
          { name: 'cartera', width: '5%', enableCellEdit: false },
@@ -163,7 +163,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
          // { name: 'idProveedor', width: '5%' },
          //{ name: 'annio', width: '5%' },
          // { name: 'proveedorBloqueado', width: '5%' },
-         { name: 'ordenBloqueada', width: '20%' , cellTemplate: '<button ng-click="row.entity.ordenBloqueada = !row.entity.ordenBloqueada" ng-model="row.entity.ordenBloqueada" style="{{row.entity.ordenBloqueada ? "background-color: lightgreen" : ""}}">{{ row.entity.ordenBloqueada ? "Locked" : "Unlocked" }}</button>' },
+         //{ name: 'ordenBloqueada', width: '20%' , cellTemplate: '<button ng-click="row.entity.ordenBloqueada = !row.entity.ordenBloqueada" ng-model="row.entity.ordenBloqueada" style="{{row.entity.ordenBloqueada ? "background-color: lightgreen" : ""}}">{{ row.entity.ordenBloqueada ? "Locked" : "Unlocked" }}</button>' },
          // { name: 'diasCobro', width: '5%' },
          // { name: 'aprobado', width: '5%' },
          // { name: 'contReprog', width: '5%' }
