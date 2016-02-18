@@ -33,11 +33,12 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 }
                 $scope.gridOptions.data = $scope.data;
                 $scope.cantidadTotal = 0;
+                $scope.cantidadUpdate = 0;
 			    alertFactory.success('Se lleno el grid.');
-                setTimeout(function(){ 
-                   
-                    $scope.selectAll();
-
+                
+                setTimeout(function()
+                { 
+                 $scope.selectAll();
                 }, 1000);
                 
 
@@ -80,6 +81,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                if ( typeof(aggregation.value) === 'undefined') {
                  aggregation.value = 0;
                }
+
                aggregation.value = aggregation.value + row.entity.Pagar;
              };
              column.customTreeAggregationFinalizerFn = function( aggregation ) {
@@ -97,39 +99,47 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
     $scope.gridOptions = {
         enableFiltering: true,
         enableGroupHeaderSelection: true,
-        treeRowHeaderAlwaysVisible: false,
-        showColumnFooter: true,
-        showGridFooter: true,
+        treeRowHeaderAlwaysVisible: true,
+        showColumnFooter: false,
+        showGridFooter: false,
         cellEditableCondition: function($scope) {
             // put your enable-edit code here, using values from $scope.row.entity and/or $scope.col.colDef as you desire
             return $scope.row.entity.ordenBloqueada; // in this example, we'll only allow active rows to be edited
         },
 
         columnDefs: [
-         { name: 'cuenta', width: '5%' },
-         { name: 'idProveedor', width: '5%' },
+         // { name: 'cuenta', width: '5%' },
+         // { name: 'idProveedor', width: '5%' },
          {
-           name: 'proveedor', grouping: { groupPriority: 0 }, sort: { priority: 0, direction: 'asc' }, width: '20%',
-           cellTemplate: '<div><div ng-if="!col.grouping || col.grouping.groupPriority === undefined || col.grouping.groupPriority === null || ( row.groupHeader && col.grouping.groupPriority === row.treeLevel )" class="ui-grid-cell-contents" title="TOOLTIP">{{COL_FIELD CUSTOM_FILTERS}}</div></div>'
+           name: 'proveedor', grouping: { groupPriority: 0 }, sort: { priority: 0, direction: 'asc' }, width: '20%',name: 'proveedor'
+           ,grouping: { groupPriority: 0 }, sort: { priority: 0, direction: 'asc' }, width: '20%'
+           ,cellTemplate: '<div><div ng-if="!col.grouping || col.grouping.groupPriority === undefined || col.grouping.groupPriority === null || ( row.groupHeader && col.grouping.groupPriority === row.treeLevel )" class="ui-grid-cell-contents" title="TOOLTIP">{{COL_FIELD CUSTOM_FILTERS}}</div></div>'
          },
-         { name: 'documento', width: '25%' },
-         { name: 'tipo', width: '5%' },
-         { name: 'tipodocto', width: '5%' },
-         { name: 'cartera', width: '20%' },
-         { name: 'monto', displayName: 'Monto', width: '25%', cellFilter: 'currency' },
-         { name: 'saldo', displayName: 'Monto', width: '10%', cellFilter: 'currency' },
          {
-             field: 'Pagar', displayName: 'Pagar (total)', width: '15%', cellFilter: 'currency', aggregationType: uiGridConstants.aggregationTypes.sum,
+             field: 'Pagar', displayName: 'Pagar (total)', width: '10%', cellFilter: 'currency', aggregationType: uiGridConstants.aggregationTypes.sum,
              treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
              customTreeAggregationFinalizerFn: function (aggregation) {
                  aggregation.rendered = aggregation.value;
              }
          },
+         {
+             field: 'saldoPorcentaje', displayName: 'Porcentaje %', width: '10%', aggregationType: uiGridConstants.aggregationTypes.sum,
+             treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
+             customTreeAggregationFinalizerFn: function (aggregation) {
+                 aggregation.rendered = aggregation.value;
+             }
+         },
+        { name: 'monto', displayName: 'Monto', width: '10%', cellFilter: 'currency' , pinnedLeft: true},
+         { name: 'saldo', displayName: 'Saldo', width: '10%', cellFilter: 'currency' },
+         { name: 'documento', width: '5%' },
+         { name: 'tipo', width: '5%' },
+         { name: 'tipodocto', width: '5%' },
+         { name: 'cartera', width: '5%' },
          { name: 'moneda', width: '5%' },
-         { name: 'fechaVencimiento', displayName: 'fechaVencimiento', type: 'date', cellFilter: 'date:"yyyy-MM-dd"', width: '10%' },
-         { name: 'fechaPromesaPago', displayName: 'fechaPromesaPago', type: 'date', cellFilter: 'date:"yyyy-MM-dd"', width: '10%' },
-         { name: 'fechaRecepcion', displayName: 'fechaRecepcion', type: 'date', cellFilter: 'date:"yyyy-MM-dd"', width: '10%' },
-         { name: 'fechaFactura', displayName: 'fechaFactura', type: 'date', cellFilter: 'date:"yyyy-MM-dd"', width: '10%' },
+         { name: 'fechaVencimiento', displayName: 'fechaVencimiento', type: 'date', cellFilter: 'date:"yyyy-MM-dd"', width: '5%' },
+         { name: 'fechaPromesaPago', displayName: 'fechaPromesaPago', type: 'date', cellFilter: 'date:"yyyy-MM-dd"', width: '5%' },
+         { name: 'fechaRecepcion', displayName: 'fechaRecepcion', type: 'date', cellFilter: 'date:"yyyy-MM-dd"', width: '5%' },
+         { name: 'fechaFactura', displayName: 'fechaFactura', type: 'date', cellFilter: 'date:"yyyy-MM-dd"', width: '5%' },
          { name: 'ordenCompra', width: '5%' },
          { name: 'estatus', width: '5%' },
          { name: 'anticipo', width: '5%' },
@@ -168,12 +178,12 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
             gridApi.selection.on.rowSelectionChangedBatch($scope, function (rows) {
 
-                //alert(rows.length);
-                rows.forEach(function (row) {
-
+                
+                rows.forEach(function (row,i) {
+                      i++;      
                     if (row.isSelected) {
                         $scope.cantidadTotal = Math.round($scope.cantidadTotal * 100) / 100 + Math.round(row.entity.Pagar * 100) / 100;
-                        //alert(row.entity.Pagar);
+                        
                     }                        
                     else
                         $scope.cantidadTotal = Math.round($scope.cantidadTotal * 100) / 100 - Math.round(row.entity.Pagar * 100) / 100;
@@ -181,12 +191,21 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 
             });
 
-          gridApi.selection.selectAllRows();  
+            gridApi.edit.on.afterCellEdit($scope, function (rowEntity, colDef, newValue, oldValue) 
+            {
+                $scope.cantidadUpdate = newValue - oldValue;
+                $scope.cantidadTotal = $scope.cantidadTotal + $scope.cantidadUpdate;
+                $scope.$apply();
+              });
+
+          $scope.gridApi.selection.selectAllRows();  
 
         }
     }
 
- $scope.selectAll = function() {$scope.gridApi.selection.selectAllRows();};       
+ $scope.selectAll = function() {
+    $scope.gridApi.selection.selectAllRows();
+    };       
 
 })
 
