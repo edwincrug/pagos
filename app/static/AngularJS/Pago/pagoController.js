@@ -1,4 +1,4 @@
-registrationModule.controller("pagoController", function ($scope, $http, $interval, uiGridGroupingConstants, uiGridConstants, $filter, $rootScope, localStorageService, alertFactory, pagoRepository, stats) {
+registrationModule.controller("pagoController", function ($scope, $http, $interval, uiGridGroupingConstants, uiGridConstants,$filter, $rootScope, localStorageService, alertFactory, pagoRepository, stats) {
 
    $scope.idEmpresa = 2;             
    $scope.idCuenta = 4;
@@ -38,6 +38,8 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
                 }
                 $scope.gridOptions.data = $scope.data;
+
+
                 $scope.cantidadTotal = 0;
                 $scope.cantidadUpdate = 0;
 			    alertFactory.success('Se lleno el grid.');
@@ -103,6 +105,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
     };
 
     $scope.gridOptions = {
+        enableGridMenu: true,
         enableFiltering: true,
         enableGroupHeaderSelection: true,
         treeRowHeaderAlwaysVisible: true,
@@ -114,8 +117,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         },
 
         columnDefs: [
-         // { name: 'cuenta', width: '5%' },
-         // { name: 'idProveedor', width: '5%' },
+         
          {
            name: 'proveedor', grouping: { groupPriority: 0 }, sort: { priority: 0, direction: 'asc' }, width: '20%',name: 'proveedor'
            ,grouping: { groupPriority: 0 }, sort: { priority: 0, direction: 'asc' }, width: '20%'
@@ -129,30 +131,32 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
              }
          },
          {
-             field: 'saldoPorcentaje', displayName: 'Porcentaje %', width: '10%', aggregationType: uiGridConstants.aggregationTypes.sum,
-             treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
+             field: 'saldoPorcentaje', displayName: 'Porcentaje %', width: '10%', cellFilter: 'number: 6', aggregationType: uiGridConstants.aggregationTypes.sum,
+             treeAggregationType: uiGridGroupingConstants.aggregation.SUM, enableCellEdit: false,
              customTreeAggregationFinalizerFn: function (aggregation) {
                  aggregation.rendered = aggregation.value;
              }
          },
-        { name: 'monto', displayName: 'Monto', width: '10%', cellFilter: 'currency' , pinnedLeft: true},
-         { name: 'saldo', displayName: 'Saldo', width: '10%', cellFilter: 'currency' },
-         { name: 'documento', width: '5%' },
-         { name: 'tipo', width: '5%' },
-         { name: 'tipodocto', width: '5%' },
-         { name: 'cartera', width: '5%' },
-         { name: 'moneda', width: '5%' },
-         { name: 'fechaVencimiento', displayName: 'fechaVencimiento', type: 'date', cellFilter: 'date:"yyyy-MM-dd"', width: '5%' },
-         { name: 'fechaPromesaPago', displayName: 'fechaPromesaPago', type: 'date', cellFilter: 'date:"yyyy-MM-dd"', width: '5%' },
-         { name: 'fechaRecepcion', displayName: 'fechaRecepcion', type: 'date', cellFilter: 'date:"yyyy-MM-dd"', width: '5%' },
-         { name: 'fechaFactura', displayName: 'fechaFactura', type: 'date', cellFilter: 'date:"yyyy-MM-dd"', width: '5%' },
-         { name: 'ordenCompra', width: '5%' },
-         { name: 'estatus', width: '5%' },
-         { name: 'anticipo', width: '5%' },
-         { name: 'anticipoAplicado', width: '5%' },
-         { name: 'annio', width: '5%' },
+        { name: 'monto', displayName: 'Monto', width: '10%', cellFilter: 'currency' , enableCellEdit: false},
+         { name: 'saldo', displayName: 'Saldo', width: '10%', cellFilter: 'currency' , enableCellEdit: false},
+         { name: 'documento', width: '5%', enableCellEdit: false },
+         { name: 'tipo', width: '5%', enableCellEdit: false },
+         { name: 'tipodocto', width: '5%', enableCellEdit: false },
+         { name: 'cartera', width: '5%', enableCellEdit: false },
+         { name: 'moneda', width: '5%' , enableCellEdit: false},
+         { name: 'fechaVencimiento', displayName: 'fechaVencimiento', type: 'date', cellFilter: 'date:"yyyy-MM-dd"', width: '10%'},
+         { name: 'fechaPromesaPago', displayName: 'fechaPromesaPago', type: 'date', cellFilter: 'date:"yyyy-MM-dd"', width: '10%' , enableCellEdit: false},
+         { name: 'fechaRecepcion', displayName: 'fechaRecepcion', type: 'date', cellFilter: 'date:"yyyy-MM-dd"', width: '10%', enableCellEdit: false },
+         { name: 'fechaFactura', displayName: 'fechaFactura', type: 'date', cellFilter: 'date:"yyyy-MM-dd"', width: '10%', enableCellEdit: false },
+         { name: 'ordenCompra', width: '10%', enableCellEdit: false },
+         { name: 'estatus', width: '10%', enableCellEdit: false },
+         { name: 'anticipo', width: '5%', enableCellEdit: false },
+         { name: 'anticipoAplicado', width: '5%' , enableCellEdit: false},
+         { name: 'cuenta', width: '5%'},
+         // { name: 'idProveedor', width: '5%' },
+         //{ name: 'annio', width: '5%' },
          // { name: 'proveedorBloqueado', width: '5%' },
-         // { name: 'ordenBloqueada', width: '5%' },
+         { name: 'ordenBloqueada', width: '20%' , cellTemplate: '<button ng-click="row.entity.ordenBloqueada = !row.entity.ordenBloqueada" ng-model="row.entity.ordenBloqueada" style="{{row.entity.ordenBloqueada ? "background-color: lightgreen" : ""}}">{{ row.entity.ordenBloqueada ? "Locked" : "Unlocked" }}</button>' },
          // { name: 'diasCobro', width: '5%' },
          // { name: 'aprobado', width: '5%' },
          // { name: 'contReprog', width: '5%' }
@@ -160,6 +164,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         onRegisterApi: function (gridApi) {
             $scope.gridApi = gridApi;
             // $scope.gridApi.grid.registerColumnsProcessor( setGroupValues, 410 );
+            
             $scope.gridApi.selection.on.rowSelectionChanged($scope, function (rowChanged) {
                 if (typeof (rowChanged.treeLevel) !== 'undefined' && rowChanged.treeLevel > -1) 
                 {
@@ -186,7 +191,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
                 
                 rows.forEach(function (row,i) {
-                      i++;      
+                 $scope.gridApi.selection.selectAllRows();  
                     if (row.isSelected) {
                         $scope.cantidadTotal = Math.round($scope.cantidadTotal * 100) / 100 + Math.round(row.entity.Pagar * 100) / 100;
                         
