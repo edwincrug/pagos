@@ -3,12 +3,18 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
    $scope.idEmpresa = 2;             
    $scope.idCuenta = 4;
 
-     $scope.init = function () {
+    $scope.init = function () {
         
        $scope.llenaGrid();
        $scope.llenaEncabezado();
 
     };
+
+    $scope.colapsado = false;
+    //Funcion para controlar el redimensionamiento del GRID
+    $scope.Resize = function () {
+         $scope.colapsado = !$scope.colapsado;
+    }
 
     //Funcion que carga al inicio para obtener la ficha de empleado
     $scope.llenaGrid = function () {
@@ -293,5 +299,6 @@ registrationModule.service('stats', function () {
      };
 
      return service;
+
 
 }); 

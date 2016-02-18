@@ -1306,7 +1306,8 @@ div.ui-grid-cell input.ng-valid {
 */
 /*-- END VARIABLES (DO NOT REMOVE THESE COMMENTS) --*/
 .ui-grid-row.ui-grid-row-selected > [ui-grid-row] > .ui-grid-cell {
-  background-color: #c9dde1;
+  /*background-color: #c9dde1;*/
+  background-color: rgba(51, 122, 183, 0.30);
 }
 .ui-grid-disable-selection {
   -webkit-touch-callout: none;
