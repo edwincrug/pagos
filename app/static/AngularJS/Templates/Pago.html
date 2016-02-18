@@ -59,7 +59,7 @@
 								{{scencabezado.cobranzaEsperada | currency}}
 							</div>
 						</div>
-						<div class="rows">
+<!-- 						<div class="rows">
 							<div class="resTexto">
 								Flujo de efectivo
 							</div>
@@ -69,11 +69,11 @@
 							<div class="resMonto">
 								{{scencabezado.flujoEfectivo | currency}}
 							</div>
-						</div>
+						</div> -->
 						<div class="rows"> <div class="raya"></div></div>
 						<div class="rows">
 							<div class="resTexto">
-								Disponible
+								Flujo de Efectivo
 							</div>
 							<div class="resSigno">
 
@@ -96,12 +96,12 @@
 						<div class="rows"> <div class="raya"></div></div>
 						<div class="rows">
 							<div class="resTexto">
-								Balance Final
+								Disponible
 							</div>
 							<div class="resSigno">
 
 							</div>
-							<div class="resMonto" ng-class="{ 'rojo': (scencabezado.disponible < cantidadTotal ) }">
+							<div class="resMonto disponible" ng-class="{ 'rojo': (scencabezado.disponible < cantidadTotal ) }">
 								{{ (scencabezado.disponible - cantidadTotal ) | currency }}
 							</div>
 						</div>
@@ -141,8 +141,8 @@
 
 	</section>
 	<section id="accion">
-		<button type="button" class="btn btn-primary">Guardar</button>
-		<button type="button" class="btn btn-success disabled">Aprobar</button>
+		<button type="button" class="btn btn-primary">Solicitar Autorización</button>
+		<button type="button" class="btn btn-success disabled">Autorizar</button>
 	</section>
 
 </div>
