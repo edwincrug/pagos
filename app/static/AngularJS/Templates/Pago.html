@@ -2,121 +2,131 @@
 
 <div cg-busy="myPromise" ng-init="init()" resize>
 	<section id="top">
-		<h1 id="title">Programación de Pagos</h1>
-
-		<div class="row panelEncabezado">
-			<div class="panel panel-info">
-				<!-- Default panel contents -->
-				<div class="panel-heading">
-					Detalle
-					<div class="flujo" tooltip="Último flujo de efectivo">
-						Flujo de Efectivo
-						<span class="glyphicon glyphicon-time" aria-hidden="true"></span>
-						12/02/16 13:50
-					</div>
-
-				</div>
-				<div class="panel-body">
-					<div class="rows">
-						<div class="resTexto">
-							Saldo en banco
-						</div>
-						<div class="resSigno">
-							<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-						</div>
-						<div class="resMonto">
-							{{scencabezado.saldoBanco | currency}}
-						</div>
-					</div>
-					<div class="rows">
-						<div class="resTexto">
-							Saldo en caja
-						</div>
-						<div class="resSigno">
-							<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-						</div>
-						<div class="resMonto">
-							{{scencabezado.saldoCaja | currency}}
-						</div>
-					</div>
-					<div class="rows">
-						<div class="resTexto">
-							Cobranza esperada
-						</div>
-						<div class="resSigno">
-							<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-						</div>
-						<div class="resMonto">
-							{{scencabezado.cobranzaEsperada | currency}}
-						</div>
-					</div>
-					<div class="rows">
-						<div class="resTexto">
-							Flujo de efectivo
-						</div>
-						<div class="resSigno">
-							<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-						</div>
-						<div class="resMonto">
-							{{scencabezado.flujoEfectivo | currency}}
-						</div>
-					</div>
-					<div class="rows"> <div class="raya"></div></div>
-					<div class="rows">
-						<div class="resTexto">
-							Disponible
-						</div>
-						<div class="resSigno">
-
-						</div>
-						<div class="resMonto">
-							{{scencabezado.disponible | currency}}
-						</div>
-					</div>
-					<div class="rows">
-						<div class="resTexto">
-							Total a Pagar
-						</div>
-						<div class="resSigno">
-							<span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
-						</div>
-						<div class="resMonto">
-							{{cantidadTotal | currency}}
-						</div>
-					</div>
-					<div class="rows"> <div class="raya"></div></div>
-					<div class="rows">
-						<div class="resTexto">
-							Balance Final
-						</div>
-						<div class="resSigno">
-
-						</div>
-						<div class="resMonto" ng-class="{ 'rojo': (scencabezado.disponible < cantidadTotal ) }">
-							{{ (scencabezado.disponible - cantidadTotal ) | currency }}
-						</div>
-					</div>
-				</div>			  
+	<div id="resumenColapsado" ng-hide="!colapsado">
+			<div id="colFlujoEfectivo">
+					<span class="colLabel">Total a Pagar </span><span class="colText blue" class="blue"> {{cantidadTotal | currency}} </span> 
+			</div>
+			<div id="colPagar">
+					<span class="colLabel">Flujo de Efectivo</span><span class="colText blue" class="blue"> {{scencabezado.disponible | currency}} </span> 
 			</div>
 		</div>
-		<div class="row panelTotales">
-			<div id="clsPagar">
-				<span id="clsMainLabel">Total a Pagar</span><span id="clsPagarText"> {{cantidadTotal | currency}} </span> 
-			</div>
-			<div id="clsComplemento">
-				<div id="clsTotal">
-					<span class="clsDetailLabel">Cartera vencida</span> <span class="clsDetailText">{{carteraVencida | currency}}</span>
-				</div>
-				<div class="clsPendiente">
-					<span class="clsDetailLabel">Reprogramado</span> <span class="clsDetailText"> {{ (carteraVencida - cantidadTotal) | currency }} </span>
-				</div>
-				<div class="clsPendiente">
-				<span class="clsDetailLabel">Porcentaje pagado</span> <span class="clsDetailText blue"> {{ ((cantidadTotal * 100) / carteraVencida ) | number:2 }} %</span>
-				</div>
-			</div>
+		<div class="collapse in" id="collapsePanel">
+			<h1 id="title">Programación de Pagos</h1>
+			<div class="row panelEncabezado">
+				<div class="panel panel-primary">
+					<!-- Default panel contents -->
+					<div class="panel-heading flujoHeader">
+						<div class="flujo" tooltip="Último flujo de efectivo">
+							Flujo de Efectivo
+							<span class="glyphicon glyphicon-time" aria-hidden="true"></span>
+							12/02/16 13:50
+						</div>
+					</div>
+					<div class="panel-body">
+						<div class="rows">
+							<div class="resTexto">
+								Saldo en banco
+							</div>
+							<div class="resSigno">
+								<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+							</div>
+							<div class="resMonto">
+								{{scencabezado.saldoBanco | currency}}
+							</div>
+						</div>
+						<div class="rows">
+							<div class="resTexto">
+								Saldo en caja
+							</div>
+							<div class="resSigno">
+								<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+							</div>
+							<div class="resMonto">
+								{{scencabezado.saldoCaja | currency}}
+							</div>
+						</div>
+						<div class="rows">
+							<div class="resTexto">
+								Cobranza esperada
+							</div>
+							<div class="resSigno">
+								<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+							</div>
+							<div class="resMonto">
+								{{scencabezado.cobranzaEsperada | currency}}
+							</div>
+						</div>
+						<div class="rows">
+							<div class="resTexto">
+								Flujo de efectivo
+							</div>
+							<div class="resSigno">
+								<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+							</div>
+							<div class="resMonto">
+								{{scencabezado.flujoEfectivo | currency}}
+							</div>
+						</div>
+						<div class="rows"> <div class="raya"></div></div>
+						<div class="rows">
+							<div class="resTexto">
+								Disponible
+							</div>
+							<div class="resSigno">
 
+							</div>
+							<div class="resMonto">
+								{{scencabezado.disponible | currency}}
+							</div>
+						</div>
+						<div class="rows">
+							<div class="resTexto">
+								Total a Pagar
+							</div>
+							<div class="resSigno">
+								<span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+							</div>
+							<div class="resMonto">
+								{{cantidadTotal | currency}}
+							</div>
+						</div>
+						<div class="rows"> <div class="raya"></div></div>
+						<div class="rows">
+							<div class="resTexto">
+								Balance Final
+							</div>
+							<div class="resSigno">
+
+							</div>
+							<div class="resMonto" ng-class="{ 'rojo': (scencabezado.disponible < cantidadTotal ) }">
+								{{ (scencabezado.disponible - cantidadTotal ) | currency }}
+							</div>
+						</div>
+					</div>			  
+				</div>
+			</div>
+			<div class="row panelTotales">
+				<div id="clsPagar">
+					<span id="clsMainLabel">Total a Pagar</span><span id="clsPagarText" class="blue"> {{cantidadTotal | currency}} </span> 
+				</div>
+				<div id="clsComplemento">
+					<div id="clsTotal">
+						<span class="clsDetailLabel">Cartera vencida</span> <span class="clsDetailText blue">{{carteraVencida | currency}}</span>
+					</div>
+					<div class="clsPendiente">
+						<span class="clsDetailLabel">Reprogramado</span> <span class="clsDetailText blue"> {{ (carteraVencida - cantidadTotal) | currency }} </span>
+					</div>
+					<div class="clsPendiente">
+						<span class="clsDetailLabel">Porcentaje pagado</span> <span class="clsDetailText blue"> {{ ((cantidadTotal * 100) / carteraVencida ) | number:2 }} %</span>
+					</div>
+				</div>
+
+			</div>
 		</div>
-
+		<div id="colapsar" >
+			<a class="glyphicon glyphicon-resize-small linkManual" aria-hidden="true" data-toggle="collapse" data-target="#collapsePanel" aria-expanded="false" aria-controls="collapsePanel" ng-click="Resize()" ng-hide="colapsado" tooltip="Contraer"></a>
+			<a class="glyphicon glyphicon-resize-full linkManual" aria-hidden="true" data-toggle="collapse" data-target="#collapsePanel" aria-expanded="false" aria-controls="collapsePanel" ng-click="Resize()" ng-hide="!colapsado" tooltip="Expandir"></a>
+		</div>
 	</section>
 
 	<section id="container">
