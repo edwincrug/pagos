@@ -2,12 +2,15 @@
 
 <div cg-busy="myPromise" ng-init="init()" resize>
 	<section id="top">
-	<div id="resumenColapsado" ng-hide="!colapsado">
+		<div id="resumenColapsado" ng-hide="!colapsado">
+			<div id="chkPagable2">
+				<span id="txtCartera">	Situación Cartera </span><input type="checkbox" class="switch-checkbox" checked>
+			</div>
 			<div id="colFlujoEfectivo">
-					<span class="colLabel">Total a Pagar </span><span class="colText blue" class="blue"> {{cantidadTotal | currency}} </span> 
+				<span class="colLabel">Total a Pagar </span><span class="colText blue" class="blue"> {{cantidadTotal | currency}} </span> 
 			</div>
 			<div id="colPagar">
-					<span class="colLabel">Flujo de Efectivo</span><span class="colText blue" class="blue"> {{scencabezado.disponible | currency}} </span> 
+				<span class="colLabel">Flujo de Efectivo</span><span class="colText blue" class="blue"> {{scencabezado.disponible | currency}} </span> 
 			</div>
 		</div>
 		<div class="collapse in" id="collapsePanel">
@@ -121,6 +124,9 @@
 					</div>
 				</div>
 
+			</div>
+			<div id="chkPagable1">
+				<span id="txtCartera">	Situación Cartera </span><input type="checkbox" class="switch-checkbox" checked>
 			</div>
 		</div>
 		<div id="colapsar" >

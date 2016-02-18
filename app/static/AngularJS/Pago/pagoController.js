@@ -8,6 +8,13 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
        $scope.llenaGrid();
        $scope.llenaEncabezado();
 
+       //Inicializamos el switch
+       $.fn.bootstrapSwitch.defaults.offColor = 'info';
+       $.fn.bootstrapSwitch.defaults.onText = 'Todos';
+       $.fn.bootstrapSwitch.defaults.offText = 'Pagables';
+       $('.switch-checkbox').bootstrapSwitch();
+       
+
     };
 
     $scope.colapsado = false;
