@@ -151,11 +151,11 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
          { name: 'anticipo', width: '5%' },
          { name: 'anticipoAplicado', width: '5%' },
          { name: 'annio', width: '5%' },
-         { name: 'proveedorBloqueado', width: '5%' },
-         { name: 'ordenBloqueada', width: '5%' },
-         { name: 'diasCobro', width: '5%' },
-         { name: 'aprobado', width: '5%' },
-         { name: 'contReprog', width: '5%' }
+         // { name: 'proveedorBloqueado', width: '5%' },
+         // { name: 'ordenBloqueada', width: '5%' },
+         // { name: 'diasCobro', width: '5%' },
+         // { name: 'aprobado', width: '5%' },
+         // { name: 'contReprog', width: '5%' }
         ],
         onRegisterApi: function (gridApi) {
             $scope.gridApi = gridApi;
