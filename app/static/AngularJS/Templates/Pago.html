@@ -108,10 +108,10 @@
 						<span class="clsDetailLabel">Cartera vencida</span> <span class="clsDetailText blue">{{carteraVencida | currency}}</span>
 					</div>
 					<div class="clsPendiente">
-						<span class="clsDetailLabel">No Pagable</span> <span class="clsDetailText blue"> {{ (carteraVencida - cantidadTotal) | currency }} </span>
+						<span class="clsDetailLabel">No Pagable</span> <span class="clsDetailText blue"> {{ noPagable | currency }} </span>
 					</div>
 					<div class="clsPendiente">
-						<span class="clsDetailLabel">Reprogramado</span> <span class="clsDetailText blue"> {{ (carteraVencida - cantidadTotal) | currency }} </span>
+						<span class="clsDetailLabel">Reprogramado</span> <span class="clsDetailText blue"> {{ Reprogramable | currency }} </span>
 					</div>
 					<div class="clsPendiente">
 						<span class="clsDetailLabel">Porcentaje a pagar</span> <span class="clsDetailText blue"> {{ ((cantidadTotal * 100) / carteraVencida ) | number:2 }} %</span>
@@ -120,22 +120,15 @@
 
 			</div>
 			<div id="chkPagable1">
-				<span id="txtCartera">	Situación Cartera </span><input type="checkbox" class="switch-checkbox" checked>
-				<select ng-model="filterTerm">
-					<option value="">Todos</option>
-    <option value="True">Pagable</option>
-    <option value="False">NoPagable</option>
-    
-  </select>
+				
 
   <div class="btn-group" role="group">
-  <button type="button" class="btn btn-default" ng-click="FiltrarCartera(1)">Todos</button>
-  <button type="button" class="btn btn-default"  ng-click="FiltrarCartera(2)">Pagada</button>
-  <button type="button" class="btn btn-default"  ng-click="FiltrarCartera(3)">No Pagada</button>
+  <button type="button" class="btn btn-default" ng-click="FiltrarCartera('')">Todos</button>
+  <button type="button" class="btn btn-default"  ng-click="FiltrarCartera('True')">Pagada</button>
+  <button type="button" class="btn btn-default"  ng-click="FiltrarCartera('False')">No Pagada</button>
 </div>
 
-  <input type="button" value="Filter Grid Content" ng-click="filterGrid(filterTerm)">
-  
+ 
 			</div>
 		</div>
 		<div id="colapsar" >

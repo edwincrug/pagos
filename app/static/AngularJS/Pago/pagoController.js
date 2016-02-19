@@ -19,9 +19,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
     /////////////////////////////////////////////
     //Filtrar cartera
-    $scope.FiltrarCartera = function (param) {s
-        alert(param);
-    }
+    
 
     $scope.colapsado = false;
     //Funcion para controlar el redimensionamiento del GRID
@@ -38,26 +36,34 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
             {
 			    
 			    $scope.gridOptions.data = response.data;
-                 $scope.data = response.data;
-                 $scope.carteraVencida = 0;
+                $scope.data = response.data;
+                $scope.carteraVencida = 0;
+                $scope.cantidadTotal = 0;
+                $scope.cantidadUpdate = 0;
+                $scope.noPagable = 0;
+                $scope.Reprogramable = 0;
                 for (var i = 0; i < $scope.data.length; i++)
                 {
                      $scope.data[i].Pagar = $scope.data[i].saldo;
-                     if ($scope.data[i].ordenBloqueada=='False')
+                     if ($scope.data[i].ordenBloqueada=='True')
                     {
                         $scope.data[i].Pagar = 0;
                     }
-                    $scope.carteraVencida = $scope.carteraVencida + $scope.data[i].saldo
+                     if ($scope.data[i].documentoPagable=='False')
+                    {
+                        $scope.data[i].Pagar = 0;
+                    }
+                $scope.carteraVencida = $scope.carteraVencida + $scope.data[i].saldo
 
                 }
+                $scope.noPagable = $scope.carteraVencida -$scope.cantidadTotal;
                 $scope.gridOptions.data = $scope.data;
-                $scope.cantidadTotal = $scope.carteraVencida;
-                $scope.cantidadUpdate = 0;
+                
 			    alertFactory.success('Se lleno el grid.');
                 setTimeout(function()
                 { 
                  $scope.selectAll();
-                }, 3000);
+                }, 500);
                 
 
   			}, function errorCallback(response) {
@@ -154,8 +160,8 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
          { name: 'tipodocto', width: '15%', displayName: 'Tipo Documento', enableCellEdit: false },
          { name: 'cartera', width: '15%', displayName: 'Cartera', enableCellEdit: false },
          { name: 'moneda', width: '10%' , displayName: 'Moneda', enableCellEdit: false},
-         { name: 'fechaVencimiento', displayName: 'Fecha de Vencimiento', type: 'date', cellFilter: 'date:"yyyy-MM-dd"', width: '17%'},
-         { name: 'fechaPromesaPago', displayName: 'Fecha Promesa de Pago', type: 'date', cellFilter: 'date:"yyyy-MM-dd"', width: '17%' , enableCellEdit: false},
+         { name: 'fechaVencimiento', displayName: 'Fecha de Vencimiento', type: 'date', cellFilter: 'date:"yyyy-MM-dd"', width: '17%', enableCellEdit: false},
+         { name: 'fechaPromesaPago', displayName: 'Fecha Promesa de Pago', type: 'date', cellFilter: 'date:"yyyy-MM-dd"', width: '17%'},
          { name: 'fechaRecepcion', displayName: 'Fecha Recepción', type: 'date', cellFilter: 'date:"yyyy-MM-dd"', width: '17%', enableCellEdit: false },
          { name: 'fechaFactura', displayName: 'Fecha Factura', type: 'date', cellFilter: 'date:"yyyy-MM-dd"', width: '17%', enableCellEdit: false },
          { name: 'ordenCompra', displayName: 'Orden de compra',width: '13%', enableCellEdit: false },
@@ -180,7 +186,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         onRegisterApi: function (gridApi) {
             $scope.gridApi = gridApi;
             // $scope.gridApi.grid.registerColumnsProcessor( setGroupValues, 410 );
-            
+            $scope.cantidadTotal = $scope.cantidadTotal;
             $scope.gridApi.selection.on.rowSelectionChanged($scope, function (rowChanged) {
                 if (typeof (rowChanged.treeLevel) !== 'undefined' && rowChanged.treeLevel > -1) 
                 {
@@ -195,17 +201,20 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                     });
                 }
                  else
+
                         if (rowChanged.isSelected) {
-                            //alert(rowChanged.entity.Pagar);
-                            $scope.cantidadTotal = Math.round($scope.cantidadTotal * 100) / 100 + Math.round(rowChanged.entity.Pagar * 100) / 100;
+                           $scope.Reprogramable =  Math.round($scope.Reprogramable * 100) / 100 - Math.round(rowChanged.entity.Pagar * 100) / 100;
+                           $scope.cantidadTotal = Math.round($scope.cantidadTotal * 100) / 100 + Math.round(rowChanged.entity.Pagar * 100) / 100;
                         }
-                        else
+                        else{
+                            $scope.Reprogramable = Math.round($scope.Reprogramable * 100) / 100 + Math.round(rowChanged.entity.Pagar * 100) / 100;
                             $scope.cantidadTotal = Math.round($scope.cantidadTotal * 100) / 100 - Math.round(rowChanged.entity.Pagar * 100) / 100;
+                        }
             });
 
             gridApi.selection.on.rowSelectionChangedBatch($scope, function (rows) {
 
-                
+
                 rows.forEach(function (row,i) {
                 
                     if (row.isSelected) {
@@ -233,15 +242,15 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
  $scope.selectAll = function() {
     $scope.gridApi.selection.selectAllRows();
+    
     };       
 
-$scope.filterGrid = function(value) {
+$scope.FiltrarCartera = function (value) {
     console.log(value);
     $scope.gridApi.grid.columns[21].filters[0].term=value;
     $scope.gridApi.core.notifyDataChange( uiGridConstants.dataChange.COLUMN );
     $scope.gridApi.grid.refresh();
-  };
-
+    }
 })
 
  
@@ -325,8 +334,5 @@ registrationModule.service('stats', function () {
              },
          },
      };
-
      return service;
-
-
 }); 
