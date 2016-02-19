@@ -108,10 +108,13 @@
 						<span class="clsDetailLabel">Cartera vencida</span> <span class="clsDetailText blue">{{carteraVencida | currency}}</span>
 					</div>
 					<div class="clsPendiente">
+						<span class="clsDetailLabel">No Pagable</span> <span class="clsDetailText blue"> {{ (carteraVencida - cantidadTotal) | currency }} </span>
+					</div>
+					<div class="clsPendiente">
 						<span class="clsDetailLabel">Reprogramado</span> <span class="clsDetailText blue"> {{ (carteraVencida - cantidadTotal) | currency }} </span>
 					</div>
 					<div class="clsPendiente">
-						<span class="clsDetailLabel">Porcentaje pagado</span> <span class="clsDetailText blue"> {{ ((cantidadTotal * 100) / carteraVencida ) | number:2 }} %</span>
+						<span class="clsDetailLabel">Porcentaje a pagar</span> <span class="clsDetailText blue"> {{ ((cantidadTotal * 100) / carteraVencida ) | number:2 }} %</span>
 					</div>
 				</div>
 
@@ -124,6 +127,12 @@
     <option value="False">NoPagable</option>
     
   </select>
+
+  <div class="btn-group" role="group">
+  <button type="button" class="btn btn-default" ng-click="FiltrarCartera(1)">Todos</button>
+  <button type="button" class="btn btn-default"  ng-click="FiltrarCartera(2)">Pagada</button>
+  <button type="button" class="btn btn-default"  ng-click="FiltrarCartera(3)">No Pagada</button>
+</div>
 
   <input type="button" value="Filter Grid Content" ng-click="filterGrid(filterTerm)">
   

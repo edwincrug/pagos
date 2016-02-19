@@ -17,6 +17,12 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
     };
 
+    /////////////////////////////////////////////
+    //Filtrar cartera
+    $scope.FiltrarCartera = function (param) {s
+        alert(param);
+    }
+
     $scope.colapsado = false;
     //Funcion para controlar el redimensionamiento del GRID
     $scope.Resize = function () {
