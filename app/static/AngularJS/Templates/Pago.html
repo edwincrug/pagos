@@ -7,7 +7,9 @@
 				<span id="txtCartera">	Situación Cartera </span><input type="checkbox" class="switch-checkbox" checked>
 			</div>
 			<div id="colFlujoEfectivo">
-				<span class="colLabel">Total a Pagar </span><span class="colText blue" class="blue"> {{cantidadTotal | currency}} </span> 
+				<span class="colLabel">Total a Pagar </span><span class="colText blue" class="blue"> 
+				<label id= "CantTotal"></label>
+				{{cantidadTotal | currency}} </span> 
 			</div>
 			<div id="colPagar">
 				<span class="colLabel">Flujo de Efectivo</span><span class="colText blue" class="blue"> {{scencabezado.disponible | currency}} </span> 
@@ -127,6 +129,15 @@
 			</div>
 			<div id="chkPagable1">
 				<span id="txtCartera">	Situación Cartera </span><input type="checkbox" class="switch-checkbox" checked>
+				<select ng-model="filterTerm">
+					<option value="">Todos</option>
+    <option value="True">Pagable</option>
+    <option value="False">NoPagable</option>
+    
+  </select>
+
+  <input type="button" value="Filter Grid Content" ng-click="filterGrid(filterTerm)">
+  
 			</div>
 		</div>
 		<div id="colapsar" >
