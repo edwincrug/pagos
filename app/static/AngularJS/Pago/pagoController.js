@@ -27,7 +27,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
     $scope.llenaGrid = function () {
     	
     	//Llamada a repository para obtener data
-    	pagoRepository.getDatos($scope.idEmpresa)
+    	$scope.myPromise = pagoRepository.getDatos($scope.idEmpresa)
     		.then(function successCallback(response) 
             {
 			    
@@ -49,7 +49,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
                 $scope.cantidadTotal = 0;
                 $scope.cantidadUpdate = 0;
-			    alertFactory.success('Se lleno el grid.');
+			    alertFactory.success( $scope.data.length + ' datos cargados.');
                 
                 setTimeout(function()
                 { 
@@ -75,7 +75,6 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 // this callback will be called asynchronously
                 // when the response is available
                 $scope.scencabezado = response.data;
-                alertFactory.success('Se lleno el encabezado.');
 
             }, function errorCallback(response) {
                 // called asynchronously if an error occurs

@@ -172,3 +172,9 @@
   right: 0;
   margin-right: 650px;
   margin-bottom: 2px; }
+
+.disponible {
+  font-weight: 400; }
+
+#grid1 {
+  height: 600px; }
