@@ -114,6 +114,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         treeRowHeaderAlwaysVisible: true,
         showColumnFooter: true,
         showGridFooter: true,
+        height:900,
         cellEditableCondition: function($scope) {
             // put your enable-edit code here, using values from $scope.row.entity and/or $scope.col.colDef as you desire
             return $scope.row.entity.ordenBloqueada; // in this example, we'll only allow active rows to be edited
@@ -165,6 +166,11 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
          // { name: 'aprobado', width: '5%' },
          // { name: 'contReprog', width: '5%' }
         ],
+        rowTemplate:'<div ng-class="{\'ordenBloqueada\':(row.entity.ordenBloqueada==\'True\' && ((row.entity.idEstatus < 1 || row.entity.idEstatus > 5) && row.entity.idEstatus != 20) && !row.isSelected)' + 
+                                    ',\'bloqueadaSelec\': (row.isSelected && row.entity.ordenBloqueada==\'True\') || (row.isSelected && ((row.entity.idEstatus >= 1 && row.entity.idEstatus <= 5) || row.entity.idEstatus == 20)),'+
+                                    '\'selectNormal\': (row.isSelected && row.entity.ordenBloqueada==\'False\' && ((row.entity.idEstatus < 1 || row.entity.idEstatus > 5) && row.entity.idEstatus != 20))'+
+                                    ',\'docIncompletos\': (!row.isSelected && ((row.entity.idEstatus >= 1 && row.entity.idEstatus <= 5) || row.entity.idEstatus == 20) && row.entity.ordenBloqueada==\'False\')'+
+                                    ',\'bloqDocIncom\': (!row.isSelected && ((row.entity.idEstatus >= 1 && row.entity.idEstatus <= 5) || row.entity.idEstatus == 20) && row.entity.ordenBloqueada==\'True\')}"> <div ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader == \'True\'}" ui-grid-cell></div></div>',
         onRegisterApi: function (gridApi) {
             $scope.gridApi = gridApi;
             // $scope.gridApi.grid.registerColumnsProcessor( setGroupValues, 410 );
