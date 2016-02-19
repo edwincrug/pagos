@@ -61,21 +61,10 @@
 								{{scencabezado.cobranzaEsperada | currency}}
 							</div>
 						</div>
-						<div class="rows">
-							<div class="resTexto">
-								Flujo de efectivo
-							</div>
-							<div class="resSigno">
-								<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-							</div>
-							<div class="resMonto">
-								{{scencabezado.flujoEfectivo | currency}}
-							</div>
-						</div>
 						<div class="rows"> <div class="raya"></div></div>
 						<div class="rows">
 							<div class="resTexto">
-								Disponible
+								Flujo de Efectivo
 							</div>
 							<div class="resSigno">
 
@@ -97,13 +86,13 @@
 						</div>
 						<div class="rows"> <div class="raya"></div></div>
 						<div class="rows">
-							<div class="resTexto">
-								Balance Final
+							<div class="resTexto resaltado">
+								Disponible
 							</div>
 							<div class="resSigno">
 
 							</div>
-							<div class="resMonto" ng-class="{ 'rojo': (scencabezado.disponible < cantidadTotal ) }">
+							<div class="resMonto resaltado" ng-class="{ 'rojo': (scencabezado.disponible < cantidadTotal ) }">
 								{{ (scencabezado.disponible - cantidadTotal ) | currency }}
 							</div>
 						</div>
