@@ -142,6 +142,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
          {
              field: 'Pagar', displayName: 'Pagar (total)', width: '10%', cellFilter: 'currency', aggregationType: uiGridConstants.aggregationTypes.sum,
              treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
+             editableCellTemplate: '<div><form name="inputForm"><input type="number" ng-class="\'colt\' + col.uid" ui-grid-editor ng-model="MODEL_COL_FIELD"></form></div>',
              customTreeAggregationFinalizerFn: function (aggregation) {
                  aggregation.rendered = aggregation.value;
              }
@@ -160,10 +161,10 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
          { name: 'tipodocto', width: '15%', displayName: 'Tipo Documento', enableCellEdit: false },
          { name: 'cartera', width: '15%', displayName: 'Cartera', enableCellEdit: false },
          { name: 'moneda', width: '10%' , displayName: 'Moneda', enableCellEdit: false},
-         { name: 'fechaVencimiento', displayName: 'Fecha de Vencimiento', type: 'date', cellFilter: 'date:"yyyy-MM-dd"', width: '17%', enableCellEdit: false},
-         { name: 'fechaPromesaPago', displayName: 'Fecha Promesa de Pago', type: 'date', cellFilter: 'date:"yyyy-MM-dd"', width: '17%'},
-         { name: 'fechaRecepcion', displayName: 'Fecha Recepción', type: 'date', cellFilter: 'date:"yyyy-MM-dd"', width: '17%', enableCellEdit: false },
-         { name: 'fechaFactura', displayName: 'Fecha Factura', type: 'date', cellFilter: 'date:"yyyy-MM-dd"', width: '17%', enableCellEdit: false },
+         { name: 'fechaVencimiento', displayName: 'Fecha de Vencimiento', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '17%', enableCellEdit: false},
+         { name: 'fechaPromesaPago', displayName: 'Fecha Promesa de Pago', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '17%'},
+         { name: 'fechaRecepcion', displayName: 'Fecha Recepción', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '17%', enableCellEdit: false },
+         { name: 'fechaFactura', displayName: 'Fecha Factura', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '17%', enableCellEdit: false },
          { name: 'ordenCompra', displayName: 'Orden de compra',width: '13%', enableCellEdit: false },
          { name: 'estatus', displayName: 'Estatus', width: '10%', enableCellEdit: false },
          { name: 'anticipo', displayName: 'Anticipo', width: '10%', enableCellEdit: false },
@@ -230,8 +231,64 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
             gridApi.edit.on.afterCellEdit($scope, function (rowEntity, colDef, newValue, oldValue) 
             {
                 $scope.cantidadUpdate = newValue - oldValue;
-                $scope.cantidadTotal = $scope.cantidadTotal + $scope.cantidadUpdate;
-                $scope.$apply();
+                $scope.cantidadTotal = Math.round($scope.cantidadTotal* 100) / 100 + Math.round($scope.cantidadUpdate* 100) / 100
+                $scope.Reprogramable =  Math.round($scope.Reprogramable * 100) / 100 - Math.round($scope.cantidadUpdate * 100) / 100;
+                //$scope.$apply();
+                if (colDef.name == 'fechaPromesaPago') {
+
+                    if (oldValue == '')
+                        {   
+                           if (newValue == '')
+                            {   
+                                //alertFactory.error('La fecha promesa de pago es invalida !!!');
+                            }  
+                            else
+                            {
+                                old_date = Date.now();
+                                var new_date = new Date(newValue);
+                                if (new_date < old_date)
+                                {
+                                    alertFactory.warning('La fecha promesa de pago no puede ser menor a ' + old_date + ' !!!');
+                                    rowEntity.fechaPromesaPago = old_date;
+                                }
+                            }    
+                        } 
+
+                    else{
+                         old_date = Date.now();
+                         var new_date = new Date(newValue);
+                            if (new_date < old_date)
+                            {
+                                alertFactory.warning('La fecha promesa de pago no puede ser menor a ' + old_date + '  !!!');
+                                rowEntity.fechaPromesaPago = old_date;
+                            }
+                    }        
+                    
+                } 
+                if (colDef.name == 'Pagar') {
+                    // if (isNumeric(newValue)){
+                        if (oldValue == '')
+                            {   
+                               if (newValue == '')
+                                {   
+                                    //alertFactory.warning('La fecha promesa de pago es invalida !!!');
+                                }  
+                            } 
+
+                        else{
+
+                              if (newValue > oldValue)
+                                {
+                                    alertFactory.warning('El pago no puede ser mayor a ' + oldValue + '  !!!');
+                                    rowEntity.Pagar = oldValue;
+                                }
+                            }
+                        //}    
+                    // else{
+                    //                 alertFactory.warning('El pago debe de ser númerico  !!!');
+                    //                 rowEntity.Pagar = oldValue;
+                    //     }                
+                }               
               });
 
           $scope.gridApi.selection.selectAllRows();  
@@ -251,6 +308,11 @@ $scope.FiltrarCartera = function (value) {
     $scope.gridApi.core.notifyDataChange( uiGridConstants.dataChange.COLUMN );
     $scope.gridApi.grid.refresh();
     }
+
+var isNumeric = function(obj){
+  return !Array.isArray( obj ) && (obj - parseFloat( obj ) + 1) >= 0;
+}
+
 })
 
  
