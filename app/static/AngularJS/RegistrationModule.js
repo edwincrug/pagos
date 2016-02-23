@@ -6,6 +6,11 @@
         controller: 'pagoController'
     });
 
+	$routeProvider.when('/agrupador', {
+        templateUrl: '/AngularJS/Templates/Agrupador.html',
+        controller: 'agrupadorController'
+    });
+
 
     $locationProvider.html5Mode(true);
 });
