@@ -1,5 +1,32 @@
 <link href="../../css/agrupador.css" rel="stylesheet" />
 <div cg-busy="myPromise" ng-init="init()" resize>
-	Agrupador
-	
-</div>
+
+
+
+ <div ng-controller="agrupadorController" class="container">
+
+        <h2>Agrupamiento y orden de provedores</h2>
+        <div>
+            <button type="button" ng-click="logModels()">Agrupamientos y orden</button>
+            <ul class="list logList">
+                <li ng-repeat="entry in sortingLog" class="logItem">
+                    {{entry}}
+                </li>
+            </ul>
+        </div>
+        <br>
+        <div class="floatleft">
+            <div ui-sortable="sortableOptions" class="apps-container screen floatleft" ng-model="list1" >
+                <div ui-sortable-selectable class="app" ng-repeat="app in list1 track by app.value">{{app.text}}</div>
+            </div>
+            <div ui-sortable="sortableOptions" class="apps-container screen floatleft" ng-model="list2" >
+                <div ui-sortable-selectable class="app" ng-repeat="app in list2 track by app.value">{{app.text}}</div>
+            </div>
+            <div ui-sortable="sortableOptions" class="apps-container screen floatleft" ng-model="list3" >
+                <div ui-sortable-selectable class="app" ng-repeat="app in list3 track by app.value">{{app.text}}</div>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+        
+        <div class="clear"></div>
+</div></div>
