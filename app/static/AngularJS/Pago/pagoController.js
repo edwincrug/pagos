@@ -4,22 +4,71 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
    $scope.idCuenta = 4;
 
     $scope.init = function () {
-        
-       $scope.llenaGrid();
-       $scope.llenaEncabezado();
+       //LQMA   leer parametros : id , idemployee
+       getEmpleado();
+       //getId();       
 
        //Inicializamos el switch
        $.fn.bootstrapSwitch.defaults.offColor = 'info';
        $.fn.bootstrapSwitch.defaults.onText = 'Todos';
        $.fn.bootstrapSwitch.defaults.offText = 'Pagables';
-       $('.switch-checkbox').bootstrapSwitch();
-       
+       $('.switch-checkbox').bootstrapSwitch();      
 
+    };
+
+
+    var prepagos = function(){
+        $scope.llenaGrid();
+        $scope.llenaEncabezado();
     };
 
     /////////////////////////////////////////////
     //Filtrar cartera
-    
+    //LQMA 
+    var getEmpleado = function(){
+        if(getParameterByName('employee') != ''){
+            $rootScope.currentEmployee = getParameterByName('employee');
+        }
+
+        if ($rootScope.currentEmployee == null){
+            var idEmpleado = prompt("Ingrese un número de empleado", 1);
+            $rootScope.currentEmployee = idEmpleado;
+        }
+        
+        if ($rootScope.currentEmployee != null)
+                getId();
+    };
+
+    var getId = function(){
+        if(getParameterByName('id') != ''){
+            $rootScope.currentId = getParameterByName('id');
+        }
+
+        if ($rootScope.currentId == null){
+            var id = prompt("Ingrese un número de Id", 1);
+            $rootScope.currentId = id;
+        }
+        
+        if ($rootScope.currentId != null)
+            getIdOp();
+
+    }
+
+    var getIdOp = function(){
+        if(getParameterByName('idOp') != ''){
+            $rootScope.currentIdOp = getParameterByName('idOp');
+        }
+
+        if ($rootScope.currentEmployee == null){
+            var idOp = prompt("Ingrese un número de IdOperacion", 1);
+            $rootScope.currentIdOp = idOp;
+        }
+
+        if ($rootScope.currentIdOp != null)
+            alertFactory.success('Mostramos datos Pre-autorizados');
+        else
+            prepagos();
+    };
 
     $scope.colapsado = false;
     //Funcion para controlar el redimensionamiento del GRID
@@ -305,7 +354,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 $scope.FiltrarCartera = function (value) {
     console.log(value);
     $scope.gridApi.grid.columns[21].filters[0].term=value;
-    $scope.gridApi.core.notifyDataChange( uiGridConstants.dataChange.COLUMN );
+    $scope.gridApi.core.notifyDataChange(uiGridConstants.dataChange.COLUMN);
     $scope.gridApi.grid.refresh();
     }
 
@@ -313,8 +362,55 @@ var isNumeric = function(obj){
   return !Array.isArray( obj ) && (obj - parseFloat( obj ) + 1) >= 0;
 }
 
-})
+$scope.guardar = function() {
 
+    pagoRepository.getPagosPadre($rootScope.currentEmployee)
+            .then(function successCallback(response) 
+            {        
+                var array = [];
+                var rows =  $scope.gridApi.grid.rows;
+                //var select = 0;
+                var count = 0;
+
+                rows.forEach(function (row,i) {
+
+                            var elemento = {};
+
+                             elemento.pag_id = response.data;
+                             elemento.pad_polTipo = row.entity.polTipo;//row.columns["polTipo"];
+                             elemento.pad_polAnnio = row.entity.annio;
+                             elemento.pad_polMes = row.entity.polMes;
+                             elemento.pad_polConsecutivo = row.entity.polConsecutivo;
+                             elemento.pad_polMovimiento = row.entity.polMovimiento;
+                             elemento.pad_fechaPromesaPago = (row.entity.fechaPromesaPago == ''?'01/01/1999':row.entity.fechaPromesaPago);
+                             elemento.pad_saldo = row.entity.Pagar;
+
+                                if (row.isSelected)
+                                    elemento.tab_revision = 1;
+                                else
+                                    elemento.tab_revision = 0;
+
+                             //if(count < 10000) 
+                                array.push(elemento);
+
+                             //count = count + 1;
+                            });    
+
+                 pagoRepository.setDatos(array,$rootScope.currentEmployee,response.data)
+                        .then(function successCallback(response) {
+                            
+                            alertFactory.success('Se guardaron los datos.');
+
+                        }, function errorCallback(response) {                
+                            alertFactory.error('Error al guardar Datos');
+                        }
+                    );     
+            }, function errorCallback(response) {                
+                alertFactory.error('Error al insertar en tabla padre.');
+            });
+  };//fin de funcion guardar
+
+})
  
 registrationModule.service('stats', function () {
 
