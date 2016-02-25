@@ -36,11 +36,11 @@ registrationModule.factory('pagoRepository', function ($http) {
                 //params: {id}
             });            
         },//LQMA
-        getDatosAprob: function (id) {
+        getDatosAprob: function (idPadre) {
             return $http({
               method: 'GET',
               url: pagoUrl,
-              params: { id: '5|' + id }
+              params: { id: '5|' + idPadre }
             });
            
         },
