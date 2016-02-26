@@ -8,6 +8,11 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         alertFactory.error('Ocurrio un problema');
     };
 
+    /***************************************************************************************************************
+    Funciones de incio  
+    BEGIN
+    ****************************************************************************************************************/
+
     $scope.init = function () {
        //LQMA   leer parametros : id , idemployee
        getEmpleado();
@@ -20,16 +25,16 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
        $('.switch-checkbox').bootstrapSwitch();      
 
     };
-
-    var prepagos = function(){
+    
+    var Grepagos = function(){
         $scope.llenaGrid();
         $scope.llenaEncabezado();
     };
 
     /////////////////////////////////////////////
-    //Filtrar cartera
+    //Obtiene ID de empleado
     //LQMA 
-    var getEmpleado = function(){
+    var GetEmpleado = function(){
         if(getParameterByName('employee') != ''){
             $rootScope.currentEmployee = getParameterByName('employee');
         }
@@ -47,16 +52,12 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         }
     };
 
-    var getId = function(){
+    //LQMA obtiene el ID de padre para consultar pagos por aprobar
+    var GetId = function(){
         if(getParameterByName('id') != ''){
             $rootScope.currentId = getParameterByName('id');
         }
 
-        /*if ($rootScope.currentId == null){
-            var id = prompt("Ingrese un número de Id", 1);
-            $rootScope.currentId = id;
-        }*/
-        
         if ($rootScope.currentId != null)
             getIdOp();
         else{
@@ -65,23 +66,16 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         }
     }
 
-    var getIdOp = function(){
+    //obtiene parametro de operacion para configurar el Grid en editable o no.
+    var GetIdOp = function(){
         if(getParameterByName('idOp') != ''){
             $rootScope.currentIdOp = getParameterByName('idOp');
-        }
-
-        /*if ($rootScope.currentIdOp == null){
-            var idOp = prompt("Ingrese un número de IdOperacion", 1);
-            $rootScope.currentIdOp = idOp;
-        }*/
+        }        
 
         if ($rootScope.currentIdOp != null)
-        {
-            //var gridsss = $scope.gridApi.grid;
-            //$scope.gridApi.grid.columns[1].enableCellEdit = false;
+        {            
             configuraGrid();
-            setTimeout(function(){prepagos();},500);
-            //$scope.llenaGrid();  //alertFactory.success('Mostramos datos Pre-autorizados');
+            setTimeout(function(){prepagos();},500);            
         }
         else{
             configuraGrid();
@@ -89,14 +83,37 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         }
     };
 
-    $scope.colapsado = false;
-    //Funcion para controlar el redimensionamiento del GRID
-    $scope.Resize = function () {
-         $scope.colapsado = !$scope.colapsado;
-    }
+    $scope.llenaEncabezado = function () {        
+        //Llamada a repository para obtener data
+        pagoRepository.getEncabezado($scope.idCuenta)
+            .then(function successCallback(response) {
+                // this callback will be called asynchronously
+                // when the response is available
+                $scope.scencabezado = response.data;
+                alertFactory.success('Se lleno el encabezado.');
 
-    //Funcion que carga al inicio para obtener la ficha de empleado
-    $scope.llenaGrid = function () {    	
+            }, function errorCallback(response) {
+                // called asynchronously if an error occurs
+                // or server returns response with an error status.
+                alertFactory.error('Error al obtener los datos del encabezado.');
+            }
+        );
+
+    };
+
+    /***************************************************************************************************************
+    Funciones de incio  
+    END
+    ****************************************************************************************************************/
+
+
+    /***************************************************************************************************************
+    Funciones de GRID  
+    BEGIN
+    ****************************************************************************************************************/    
+
+
+    $scope.llenaGrid = function () {        
 
         if ($rootScope.currentId != null){
             pagoRepository.getDatosAprob($rootScope.currentId)
@@ -105,12 +122,11 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
             $scope.llenaEncabezado();
         }
         else
-    	    pagoRepository.getDatos($scope.idEmpresa)
-    		.success(llenaGridSuccessCallback)
+            pagoRepository.getDatos($scope.idEmpresa)
+            .success(llenaGridSuccessCallback)
             .error(errorCallBack);
 
-    };  //Propiedades
-    
+    };  //Propiedades    
 
     var llenaGridSuccessCallback = function (data, status, headers, config) {
                 $scope.gridOptions.data = data;
@@ -142,27 +158,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 { 
                  $scope.selectAll();
                 }, 500);
-    };
-
-
-    $scope.llenaEncabezado = function () {
-        
-        //Llamada a repository para obtener data
-        pagoRepository.getEncabezado($scope.idCuenta)
-            .then(function successCallback(response) {
-                // this callback will be called asynchronously
-                // when the response is available
-                $scope.scencabezado = response.data;
-                alertFactory.success('Se lleno el encabezado.');
-
-            }, function errorCallback(response) {
-                // called asynchronously if an error occurs
-                // or server returns response with an error status.
-                alertFactory.error('Error al obtener los datos del encabezado.');
-            }
-        );
-
-    };  
+    };     
 
  var setGroupValues = function (columns, rows) {
          columns.forEach( function( column ) {
@@ -187,7 +183,8 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         return columns;
     };
 
-var configuraGrid = function(){
+//LQMA congifura e inicializa el grid
+var ConfiguraGrid = function(){
 
 $scope.gridOptions = {
         enableGridMenu: true,
@@ -367,8 +364,7 @@ $scope.gridOptions = {
 }//funcion
 
  $scope.selectAll = function() {
-    $scope.gridApi.selection.selectAllRows();
-    
+    $scope.gridApi.selection.selectAllRows();    
     };       
 
 $scope.FiltrarCartera = function (value) {
@@ -382,14 +378,31 @@ var isNumeric = function(obj){
   return !Array.isArray( obj ) && (obj - parseFloat( obj ) + 1) >= 0;
 }
 
-$scope.guardar = function() {
+
+    /***************************************************************************************************************
+    Funciones de GRID  
+    END
+    ****************************************************************************************************************/
+
+    $scope.colapsado = false;
+    //Funcion para controlar el redimensionamiento del GRID
+    $scope.Resize = function () {
+         $scope.colapsado = !$scope.colapsado;
+    }  
+
+/***************************************************************************************************************
+    Funciones de guardado de datos
+    BEGIN
+****************************************************************************************************************/
+
+//LQMA funcion para guardar datos del grid (se implementara para guardar Ingresos bancos, otros , Transferencias)
+$scope.Guardar = function() {
 
     pagoRepository.getPagosPadre($rootScope.currentEmployee)
             .then(function successCallback(response) 
             {        
                 var array = [];
                 var rows =  $scope.gridApi.grid.rows;
-                //var select = 0;
                 var count = 0;
 
                 rows.forEach(function (row,i) {
@@ -397,7 +410,7 @@ $scope.guardar = function() {
                             var elemento = {};
 
                              elemento.pag_id = response.data;
-                             elemento.pad_polTipo = row.entity.polTipo;//row.columns["polTipo"];
+                             elemento.pad_polTipo = row.entity.polTipo;
                              elemento.pad_polAnnio = row.entity.annio;
                              elemento.pad_polMes = row.entity.polMes;
                              elemento.pad_polConsecutivo = row.entity.polConsecutivo;
@@ -410,10 +423,8 @@ $scope.guardar = function() {
                                 else
                                     elemento.tab_revision = 0;
 
-                             //if(count < 10000) 
                                 array.push(elemento);
 
-                             //count = count + 1;
                             });    
 
                  pagoRepository.setDatos(array,$rootScope.currentEmployee,response.data)
@@ -429,6 +440,11 @@ $scope.guardar = function() {
                 alertFactory.error('Error al insertar en tabla padre.');
             });
   };//fin de funcion guardar
+
+/***************************************************************************************************************
+    Funciones de guardado de datos
+    END
+****************************************************************************************************************/
 
 })
  
