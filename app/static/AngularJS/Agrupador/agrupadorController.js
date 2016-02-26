@@ -18,23 +18,23 @@ $scope.llenaAgrupadores = function () {
         agrupadorRepository.getAgrupadores($scope.idEmpresa)
             .then(function successCallback(response) 
             {
-                $scope.agrupador = response.data;
+                $scope.model = response.data;
                 
                 var tmpList = [];
-                for (var j = 0; j <= (($scope.agrupador.length)-1); j++) 
+                for (var j = 0; j <= (($scope.model.length)-1); j++) 
                     {
                         tmpList.push
                         ({
-                            pca_idAgrupador: $scope.agrupador[j].pca_idAgrupador,
-                            pca_idEmpresa: $scope.agrupador[j].pca_idEmpresa,
-                            pca_nombre: $scope.agrupador[j].pca_nombre,
-                            pca_descripcion: $scope.agrupador[j].pca_descripcion,
-                            pca_orden: $scope.agrupador[j].pca_orden,
-                            pca_estatus: $scope.agrupador[j].pca_estatus,
+                            pca_idAgrupador: $scope.model[j].pca_idAgrupador,
+                            pca_idEmpresa: $scope.model[j].pca_idEmpresa,
+                            pca_nombre: $scope.model[j].pca_nombre,
+                            pca_descripcion: $scope.model[j].pca_descripcion,
+                            pca_orden: $scope.model[j].pca_orden,
+                            pca_estatus: $scope.model[j].pca_estatus,
                             lista: 'list' + (j)
                          });
                     }     
-                    $scope.agrupador = tmpList
+                    $scope.model = tmpList
                     $scope.llenaProvedores();
             }
 
@@ -55,7 +55,6 @@ $scope.llenaProvedores = function () {
                 $scope.proveedores = response.data;
                 
 
-                var numAgrupadores = $scope.agrupador.length;
                 var tmpList = [];
                 var tmpprov = [];
                 for (var j = 0; j <= (($scope.proveedores.length)-1); j++) 
@@ -75,7 +74,7 @@ $scope.llenaProvedores = function () {
                $scope.list4 = [];
                $scope.list5 = tmpList[0];
      
-               $scope.rawScreens = [$scope.list1,$scope.list2,$scope.list3,$scope.list4]
+               $scope.rawScreens = [$scope.list1,$scope.list2,$scope.list3,$scope.list4,$scope.list5]
             }
 
         , function errorCallback(response) {
