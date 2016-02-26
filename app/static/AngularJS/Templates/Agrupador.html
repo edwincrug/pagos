@@ -17,9 +17,9 @@
         <br>
         <div class="floatleft">
 
-        <div ng-repeat="model in agrupador" class="screen floatleft">
-            <div ui-sortable="sortableOptions" class="apps-container screen floatleft" ng-model="list1">{{model.pca_nombre}}
-                <div ui-sortable-selectable class="app" ng-repeat="app in list1 track by app.value" >{{app.text}}</div>
+        <div ng-repeat="agrupador in agrupadores" class="screen floatleft">
+            <div ui-sortable="sortableOptions" class="apps-container screen floatleft" ng-model="agrupador.lista">{{agrupador.titulo}}
+                <div ui-sortable-selectable class="app" ng-repeat="item in agrupador.lista track by item.id" >{{item.nombre}}</div>
             </div>
         </div>
 

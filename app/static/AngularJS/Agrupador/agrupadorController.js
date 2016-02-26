@@ -14,35 +14,56 @@ $scope.init = function () {
 
 $scope.llenaAgrupadores = function () {
         
-        //Llamada a repository para obtener data
-        agrupadorRepository.getAgrupadores($scope.idEmpresa)
-            .then(function successCallback(response) 
-            {
-                $scope.model = response.data;
-                
-                var tmpList = [];
-                for (var j = 0; j <= (($scope.model.length)-1); j++) 
-                    {
-                        tmpList.push
-                        ({
-                            pca_idAgrupador: $scope.model[j].pca_idAgrupador,
-                            pca_idEmpresa: $scope.model[j].pca_idEmpresa,
-                            pca_nombre: $scope.model[j].pca_nombre,
-                            pca_descripcion: $scope.model[j].pca_descripcion,
-                            pca_orden: $scope.model[j].pca_orden,
-                            pca_estatus: $scope.model[j].pca_estatus,
-                            lista: 'list' + (j)
-                         });
-                    }     
-                    $scope.model = tmpList
-                    $scope.llenaProvedores();
-            }
+    $scope.agrupadores = [
+        { titulo: 'Lista 1', lista: [ 
+                                    { id: 1, nombre: 'Prov 1' },
+                                    { id: 2, nombre: 'Prov 2' } ] },
+        { titulo: 'Lista 2', lista: null },
+        { titulo: 'Lista 3', lista: [ 
+                                    { id: 5, nombre: 'Prov 5' },
+                                    { id: 6, nombre: 'Prov 6' } ] }
+    ];
 
-        , function errorCallback(response) {
+    setTimeout(function(){ 
+
+        $scope.agrupadores[1].lista = [ 
+                                    { id: 3, nombre: 'Prov 3' },
+                                    { id: 4, nombre: 'Prov 4' } ];
+
+
+        $scope.$apply() 
+
+    }, 2000);
+
+        //Llamada a repository para obtener data
+        // agrupadorRepository.getAgrupadores($scope.idEmpresa)
+        //     .then(function successCallback(response) 
+        //     {
+        //         $scope.model = response.data;
+                
+        //         var tmpList = [];
+        //         for (var j = 0; j <= (($scope.model.length)-1); j++) 
+        //             {
+        //                 tmpList.push
+        //                 ({
+        //                     pca_idAgrupador: $scope.model[j].pca_idAgrupador,
+        //                     pca_idEmpresa: $scope.model[j].pca_idEmpresa,
+        //                     pca_nombre: $scope.model[j].pca_nombre,
+        //                     pca_descripcion: $scope.model[j].pca_descripcion,
+        //                     pca_orden: $scope.model[j].pca_orden,
+        //                     pca_estatus: $scope.model[j].pca_estatus,
+        //                     lista: {[],[]}
+        //                  });
+        //             }     
+        //             $scope.model = tmpList
+        //             $scope.llenaProvedores();
+        //     }
+
+        // , function errorCallback(response) {
                
-                alertFactory.error('Error al obtener los datos del agrupador.');
-            }
-        );
+        //         alertFactory.error('Error al obtener los datos del agrupador.');
+        //     }
+        // );
 
     };    
 

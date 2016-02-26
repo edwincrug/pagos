@@ -3,6 +3,11 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
    $scope.idEmpresa = 2;             
    $scope.idCuenta = 4;
 
+
+   var errorCallBack = function (data, status, headers, config) {
+        alertFactory.error('Ocurrio un problema');
+    };
+
     $scope.init = function () {
        //LQMA   leer parametros : id , idemployee
        getEmpleado();
@@ -15,7 +20,6 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
        $('.switch-checkbox').bootstrapSwitch();      
 
     };
-
 
     var prepagos = function(){
         $scope.llenaGrid();
@@ -37,6 +41,10 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         
         if ($rootScope.currentEmployee != null)
                 getId();
+        else{
+            configuraGrid();
+            setTimeout(function(){prepagos();},500);
+        }
     };
 
     var getId = function(){
@@ -44,14 +52,17 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
             $rootScope.currentId = getParameterByName('id');
         }
 
-        if ($rootScope.currentId == null){
+        /*if ($rootScope.currentId == null){
             var id = prompt("Ingrese un número de Id", 1);
             $rootScope.currentId = id;
-        }
+        }*/
         
         if ($rootScope.currentId != null)
             getIdOp();
-
+        else{
+            configuraGrid();
+            setTimeout(function(){prepagos();},500);
+        }
     }
 
     var getIdOp = function(){
@@ -59,15 +70,23 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
             $rootScope.currentIdOp = getParameterByName('idOp');
         }
 
-        if ($rootScope.currentEmployee == null){
+        /*if ($rootScope.currentIdOp == null){
             var idOp = prompt("Ingrese un número de IdOperacion", 1);
             $rootScope.currentIdOp = idOp;
-        }
+        }*/
 
         if ($rootScope.currentIdOp != null)
-            alertFactory.success('Mostramos datos Pre-autorizados');
-        else
-            prepagos();
+        {
+            //var gridsss = $scope.gridApi.grid;
+            //$scope.gridApi.grid.columns[1].enableCellEdit = false;
+            configuraGrid();
+            setTimeout(function(){prepagos();},500);
+            //$scope.llenaGrid();  //alertFactory.success('Mostramos datos Pre-autorizados');
+        }
+        else{
+            configuraGrid();
+            setTimeout(function(){prepagos();},500);
+        }
     };
 
     $scope.colapsado = false;
@@ -77,15 +96,25 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
     }
 
     //Funcion que carga al inicio para obtener la ficha de empleado
-    $scope.llenaGrid = function () {
-    	
-    	//Llamada a repository para obtener data
-    	pagoRepository.getDatos($scope.idEmpresa)
-    		.then(function successCallback(response) 
-            {
-			    
-			    $scope.gridOptions.data = response.data;
-                $scope.data = response.data;
+    $scope.llenaGrid = function () {    	
+
+        if ($rootScope.currentId != null){
+            pagoRepository.getDatosAprob($rootScope.currentId)
+            .success(llenaGridSuccessCallback)
+            .error(errorCallBack);
+            $scope.llenaEncabezado();
+        }
+        else
+    	    pagoRepository.getDatos($scope.idEmpresa)
+    		.success(llenaGridSuccessCallback)
+            .error(errorCallBack);
+
+    };  //Propiedades
+    
+
+    var llenaGridSuccessCallback = function (data, status, headers, config) {
+                $scope.gridOptions.data = data;
+                $scope.data = data;
                 $scope.carteraVencida = 0;
                 $scope.cantidadTotal = 0;
                 $scope.cantidadUpdate = 0;
@@ -108,22 +137,13 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 $scope.noPagable = $scope.carteraVencida -$scope.cantidadTotal;
                 $scope.gridOptions.data = $scope.data;
                 
-			    alertFactory.success('Se lleno el grid.');
+                alertFactory.success('Se lleno el grid.');
                 setTimeout(function()
                 { 
                  $scope.selectAll();
                 }, 500);
-                
+    };
 
-  			}, function errorCallback(response) {
-			    // called asynchronously if an error occurs
-			    // or server returns response with an error status.
-			    alertFactory.error('Error al obtener los datos del grid.');
-  			}
-  		);
-
-    };  //Propiedades
-    
 
     $scope.llenaEncabezado = function () {
         
@@ -143,8 +163,6 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         );
 
     };  
-
-
 
  var setGroupValues = function (columns, rows) {
          columns.forEach( function( column ) {
@@ -168,7 +186,10 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
          });
         return columns;
     };
-        $scope.gridOptions = {
+
+var configuraGrid = function(){
+
+$scope.gridOptions = {
         enableGridMenu: true,
         enableFiltering: true,
         enableGroupHeaderSelection: true,
@@ -190,7 +211,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
          },
          {
              field: 'Pagar', displayName: 'Pagar (total)', width: '10%', cellFilter: 'currency', aggregationType: uiGridConstants.aggregationTypes.sum,
-             treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
+             treeAggregationType: uiGridGroupingConstants.aggregation.SUM, enableCellEdit: ($rootScope.currentIdOp == 1)?false:true,
              editableCellTemplate: '<div><form name="inputForm"><input type="number" ng-class="\'colt\' + col.uid" ui-grid-editor ng-model="MODEL_COL_FIELD"></form></div>',
              customTreeAggregationFinalizerFn: function (aggregation) {
                  aggregation.rendered = aggregation.value;
@@ -341,10 +362,9 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
               });
 
           $scope.gridApi.selection.selectAllRows();  
-
         }
-
-    }
+    } //grid options
+}//funcion
 
  $scope.selectAll = function() {
     $scope.gridApi.selection.selectAllRows();
@@ -475,8 +495,7 @@ registrationModule.service('stats', function () {
                  if (angular.isUndefined(aggregation.rendered)) {
                      aggregation.rendered = aggregation.value;
                  }
-             },
-            
+             },            
             
              sumSquareErr: function (aggregation) {
                  aggregation.value = 0;

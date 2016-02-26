@@ -2,10 +2,10 @@
 
 .config(function ($routeProvider, $locationProvider) {
 
-    $routeProvider.when('/inicio', {
-        templateUrl: '/AngularJS/Templates/Pago.html',
-        controller: 'pagoController'
-    });
+    // $routeProvider.when('/', {
+    //     templateUrl: '/AngularJS/Templates/Pago.html',
+    //     controller: 'pagoController'
+    // });
 
 	$routeProvider.when('/', {
         templateUrl: '/AngularJS/Templates/Agrupador.html',
