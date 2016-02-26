@@ -1,4 +1,4 @@
 var global_settings = {
-	urlCORS: 'http://192.168.0.167/PagosApi',
+	urlCORS: 'http://localhost/PagosApi',
 	liveReload: 1000
 } 	

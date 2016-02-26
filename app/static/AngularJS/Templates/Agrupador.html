@@ -16,14 +16,14 @@
         </div>
         <br>
         <div class="floatleft">
-            <div ui-sortable="sortableOptions" class="apps-container screen floatleft" ng-model="list1" >
-                <div ui-sortable-selectable class="app" ng-repeat="app in list1 track by app.value">{{app.text}}</div>
+
+        <div ng-repeat="agrupadores in agrupador" class="screen floatleft">
+            <div ui-sortable="sortableOptions" class="apps-container screen floatleft" ng-model="{{$scope.agrupadores.lista}}">{{agrupadores.pca_nombre}}
+                <div ui-sortable-selectable class="app" ng-repeat="app in {{agrupadores.lista}} track by app.value" >{{app.text}}</div>
             </div>
-            <div ui-sortable="sortableOptions" class="apps-container screen floatleft" ng-model="list2" >
-                <div ui-sortable-selectable class="app" ng-repeat="app in list2 track by app.value">{{app.text}}</div>
-            </div>
-            <div ui-sortable="sortableOptions" class="apps-container screen floatleft" ng-model="list3" >
-                <div ui-sortable-selectable class="app" ng-repeat="app in list3 track by app.value">{{app.text}}</div>
+        </div>
+            <div ui-sortable="sortableOptions" class="apps-container screen floatleft" ng-model="list5" >Sin agrupar
+                <div ui-sortable-selectable class="app" ng-repeat="app in list5 track by app.value">{{app.text}}</div>
             </div>
             <div style="clear: both;"></div>
         </div>
