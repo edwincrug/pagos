@@ -15,7 +15,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
     $scope.init = function () {
        //LQMA   leer parametros : id , idemployee
-       getEmpleado();
+       GetEmpleado();
        //getId();       
 
        //Inicializamos el switch
@@ -26,7 +26,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
     };
     
-    var Grepagos = function(){
+    var Prepagos = function(){
         $scope.llenaGrid();
         $scope.llenaEncabezado();
     };
@@ -45,10 +45,10 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         }
         
         if ($rootScope.currentEmployee != null)
-                getId();
+                GetId();
         else{
-            configuraGrid();
-            setTimeout(function(){prepagos();},500);
+            ConfiguraGrid();
+            setTimeout(function(){Prepagos();},500);
         }
     };
 
@@ -59,10 +59,10 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         }
 
         if ($rootScope.currentId != null)
-            getIdOp();
+            GetIdOp();
         else{
-            configuraGrid();
-            setTimeout(function(){prepagos();},500);
+            ConfiguraGrid();
+            setTimeout(function(){Prepagos();},500);
         }
     }
 
@@ -74,12 +74,12 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
         if ($rootScope.currentIdOp != null)
         {            
-            configuraGrid();
-            setTimeout(function(){prepagos();},500);            
+            ConfiguraGrid();
+            setTimeout(function(){Prepagos();},500);            
         }
         else{
-            configuraGrid();
-            setTimeout(function(){prepagos();},500);
+            ConfiguraGrid();
+            setTimeout(function(){Prepagos();},500);
         }
     };
 
