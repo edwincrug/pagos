@@ -18,16 +18,16 @@
         <div class="floatleft">
 
         <div ng-repeat="agrupador in agrupadores" class="screen floatleft">
-            <div ui-sortable="sortableOptions" class="apps-container screen floatleft" ng-model="agrupador.lista">{{agrupador.titulo}}
-                <div ui-sortable-selectable class="app" ng-repeat="item in agrupador.lista track by item.id" >{{item.nombre}}</div>
+            <div ui-sortable="sortableOptions" class="apps-container screen floatleft" ng-model="agrupador.lista">{{agrupador.pca_descripcion}}
+                <div ui-sortable-selectable class="app" ng-repeat="item in agrupador.lista track by item.value" >{{item.text}}</div>
             </div>
         </div>
 
 
 
-        <div ui-sortable="sortableOptions" class="apps-container screen floatleft" ng-model="list5" >Sin agrupar
+       <!--  <div ui-sortable="sortableOptions" class="apps-container screen floatleft" ng-model="list5" >Sin agrupar
                 <div ui-sortable-selectable class="app" ng-repeat="app in list5 track by app.value">{{app.text}}</div>
-            </div>
+        </div> -->
             <div style="clear: both;"></div>
         </div>
         
