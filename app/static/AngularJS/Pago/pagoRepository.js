@@ -10,8 +10,21 @@ registrationModule.factory('pagoRepository', function ($http) {
 			   });           
         },
 
-
+        getEmpresas: function (id) {
+        return $http({
+                  method: 'GET',
+                  url: pagoUrl,
+                  params: { id: '9|' + id }
+               });           
+        },
         
+        getTotalxEmpresa: function (id) {
+        return $http({
+                  method: 'GET',
+                  url: pagoUrl,
+                  params: { id: '10|' + id }
+               });           
+        },
         getEncabezado: function (id) {
             return $http({
               method: 'GET',

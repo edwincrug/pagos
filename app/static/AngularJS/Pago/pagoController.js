@@ -2,6 +2,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
    $scope.idEmpresa = 2;             
    $scope.idCuenta = 4;
+   $scope.idUsuario = 4;
 
 
    var errorCallBack = function (data, status, headers, config) {
@@ -23,7 +24,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
        $.fn.bootstrapSwitch.defaults.onText = 'Todos';
        $.fn.bootstrapSwitch.defaults.offText = 'Pagables';
        $('.switch-checkbox').bootstrapSwitch();      
-
+       $scope.showSelCartera = false;
     };
     
     var Prepagos = function(){
@@ -100,18 +101,59 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         );
 
     };
+    //Trae las empresas para el modal de inicio
+    $scope.traeEmpresas = function () {        
+        //Llamada a repository para obtener data
+        pagoRepository.getEmpresas($scope.idUsuario)
+            .then(function successCallback(response) {
+                $scope.empresas = response.data;
+            }, function errorCallback(response) {
+                // called asynchronously if an error occurs
+                // or server returns response with an error status.
+                alertFactory.error('Error en empresas.');
+            }
+        );
 
+    };
+    //Trae el total de la empresa seleccionada
+    $scope.traeTotalxEmpresa = function (emp_idempresa) {        
+      
+        pagoRepository.getTotalxEmpresa(emp_idempresa)
+            .then(function successCallback(response) {
+                $scope.GranTotal = 0
+                $scope.TotalxEmpresas = response.data;
+                i=0;
+                $scope.TotalxEmpresas.forEach(function (cuentaPagadora, sumaSaldo)
+                    {
+                    $scope.GranTotal = $scope.GranTotal + $scope.TotalxEmpresas[i].sumaSaldo; 
+                    i++;                          
+                    });
+                $scope.showSelCartera = true;
+            }, function errorCallback(response) {
+                // called asynchronously if an error occurs
+                // or server returns response with an error status.
+                alertFactory.error('Error en empresas.');
+            }
+        );
+
+    };
     /***************************************************************************************************************
     Funciones de incio  
     END
     ****************************************************************************************************************/
-
 
     /***************************************************************************************************************
     Funciones de GRID  
     BEGIN
     ****************************************************************************************************************/    
 
+    //Muestra el div del grid y lo llena
+    $scope.MuestraGrid = function (value) 
+    {        
+        
+            $scope.showGrid = value;
+            $scope.apply();
+    };
 
     $scope.llenaGrid = function () {        
 
@@ -350,11 +392,7 @@ $scope.gridOptions = {
                                     rowEntity.Pagar = oldValue;
                                 }
                             }
-                        //}    
-                    // else{
-                    //                 alertFactory.warning('El pago debe de ser númerico  !!!');
-                    //                 rowEntity.Pagar = oldValue;
-                    //     }                
+                                   
                 }               
               });
 

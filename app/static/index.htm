@@ -42,7 +42,83 @@
   <base href='/'>
 </head>
 <body ng-app="registrationModule">
-  <!-- Contenedor de información -->
+<!-- Contenedor de información -->
+
+<!--Modal correcta-->
+
+<div id="memberModal" class="modal fade" tabindex="-1" data-focus-on="input:first" style="display: none;" ng-controller="pagoController" ng-init="traeEmpresas()" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                    </button> -->
+                     <h4 class="modal-title" id="memberModalLabel">Selecciona la empresa</h4>
+                      <p> 
+                    <select class="form-control" ng-change="traeTotalxEmpresa(empresa.emp_idempresa)" ng-model="empresa.emp_idempresa">
+                         <option ng-repeat="empresa in empresas" ng-value="empresa.emp_idempresa">{{empresa.emp_nombre}}</option>
+                    </select>
+                  </p>
+                </div>
+                <div class="modal-body">
+                     <p>Totales a Pagar por bancos</p>
+                      <div class="panel-body">
+                        <div class="rows" >
+                          <div class="resTexto">
+                            Cuenta Pagadora
+                          </div>
+                          <div class="resMonto ng-binding">
+                            
+                          </div>
+                        </div>
+                        <div class="rows" ng-repeat="TotalxEmpresa in TotalxEmpresas">
+                          <div class="resTexto">
+                            <b>{{TotalxEmpresa.banco}}:{{TotalxEmpresa.cuentaPagadora}}</b>
+                          </div>
+                          <div class="resMonto ng-binding">
+                            {{TotalxEmpresa.sumaSaldo | currency}}
+                          </div>
+                        </div>
+                        <div class="rows"> <div class="raya"></div></div>
+                        <div class="rows">
+                          <div class="resTexto">
+                            <b>Total a pagar</b>
+                          </div>
+                          <div class="resMonto ng-binding">
+                            {{GranTotal | currency}}
+                          </div>
+                        </div>
+                      </div>        
+                      <div class="panel panel-info" ng-if="showSelCartera">
+                        <div class="panel-body" style="text-align: center">
+                           <div class="btn-group" role="group" >
+                            <button type="button" class="btn btn-default"  ng-click="MuestraGrid('True')">Con toda la cartera</button>
+                            <button type="button" class="btn btn-default"  ng-click="MuestraGrid('False')">Seleccionar cartera</button>
+                          </div>
+
+                        </div>
+                      <div class="panel panel-info" ng-if="showGrid">
+                        <div class="panel-body" style="text-align: center">
+                          <p>Seleccionar cartera</p>
+                           <div id="grid1"  ui-grid="gridOptions" ui-grid-grouping ui-grid-edit ui-grid-selection ui-grid-cellNav class="grid"></div>
+                        </div>
+                        <div class="panel-footer" style="text-align: right">
+                          <button class="btn btn-default" data-toggle="modal" href="#stack2">Iniciar lote</button>
+                          <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button></div>
+                         </div>
+                      </div>  
+
+                  <!-- Totales a pagar por bancos -->
+                </div>
+                <div class="modal-footer">
+                 
+                </div>
+            </div>
+        </div>
+</div>
+ 
+<!--Fin Modal Coorecta-->
+
+  
   <div id="st-container">
     <!-- content push wrapper -->
     <div class="st-pusher" ng-keyup="$event.keyCode == 13 ? Search() : null">
@@ -95,6 +171,9 @@
 
 </nav>
 
+
+
+
 <div ng-view></div>
 </div>
 
@@ -146,6 +225,12 @@
 <!--Sidebars-->
 <script src="js/sidebar/classie.js"></script>
 <script src="js/sidebar/sidebarEffects.js"></script>
+<script type="text/javascript">
+$(document).ready(function () {
 
+    $('#memberModal').modal('show');
+
+});
+</script>
 </body>
 </html>
