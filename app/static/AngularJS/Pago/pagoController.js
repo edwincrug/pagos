@@ -101,12 +101,14 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         );
 
     };
-    //Trae las empresas para el modal de inicio
+  //Trae las empresas para el modal de inicio
     $scope.traeEmpresas = function () {        
         //Llamada a repository para obtener data
         pagoRepository.getEmpresas($scope.idUsuario)
             .then(function successCallback(response) {
                 $scope.empresas = response.data;
+                 $('#inicioModal').modal('show');
+               
             }, function errorCallback(response) {
                 // called asynchronously if an error occurs
                 // or server returns response with an error status.
@@ -120,8 +122,9 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
       
         pagoRepository.getTotalxEmpresa(emp_idempresa)
             .then(function successCallback(response) {
-                $scope.GranTotal = 0
+                $scope.GranTotal = 0;
                 $scope.TotalxEmpresas = response.data;
+                $scope.idEmpresa = emp_idempresa;
                 i=0;
                 $scope.TotalxEmpresas.forEach(function (cuentaPagadora, sumaSaldo)
                     {
@@ -137,6 +140,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         );
 
     };
+
     /***************************************************************************************************************
     Funciones de incio  
     END
@@ -147,13 +151,41 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
     BEGIN
     ****************************************************************************************************************/    
 
-    //Muestra el div del grid y lo llena
-    $scope.MuestraGrid = function (value) 
-    {        
-        
-            $scope.showGrid = value;
-            $scope.apply();
+     //Muestra el div del grid en el Modal y lo llena
+    $scope.MuestraGridModal = function (value) 
+    {       
+        $scope.showGrid = true;
+        $scope.init();
+        pagoRepository.getDatos($scope.idEmpresa)
+            .success(llenaGridSuccessCallback)
+            .error(errorCallBack);
+        $scope.gridOptions.columnDefs = [
+         
+         {
+           name: 'proveedor', grouping: { groupPriority: 0 }, sort: { priority: 0, direction: 'asc' }, name: 'proveedor'
+           , width: '50%'
+           ,cellTemplate: '<div><div ng-if="!col.grouping || col.grouping.groupPriority === undefined || col.grouping.groupPriority === null || ( row.groupHeader && col.grouping.groupPriority === row.treeLevel )" class="ui-grid-cell-contents" title="TOOLTIP">{{COL_FIELD CUSTOM_FILTERS}}</div></div>'
+         },
+         {
+             field: 'Pagar', displayName: 'Pagar (total)', width: '25%', cellFilter: 'currency', aggregationType: uiGridConstants.aggregationTypes.sum,
+             treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
+             editableCellTemplate: '<div><form name="inputForm"><input type="number" ng-class="\'colt\' + col.uid" ui-grid-editor ng-model="MODEL_COL_FIELD"></form></div>',
+             customTreeAggregationFinalizerFn: function (aggregation) {
+                 aggregation.rendered = aggregation.value;
+             }
+         },
+         { name: 'fechaPromesaPago', displayName: 'Fecha Promesa de Pago', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '15%'},
+
+        ];    
     };
+    // Oculta el grid del Modal y asigna la variable toda la cartera true
+    $scope.OcultaGridModal = function (value) 
+    {       
+        $scope.showGrid = value;
+      
+    };
+
+
 
     $scope.llenaGrid = function () {        
 
@@ -402,7 +434,7 @@ $scope.gridOptions = {
 }//funcion
 
  $scope.selectAll = function() {
-    $scope.gridApi.selection.selectAllRows();    
+   // $scope.gridApi.selection.selectAllRows();    
     };       
 
 $scope.FiltrarCartera = function (value) {
