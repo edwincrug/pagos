@@ -1,3 +1,8 @@
+
+$colorOperaciones: red
+
+/*  Pantalla de Pagos primera versión  */
+
 #container
 	margin-top: 20px
 	width: 90%
@@ -179,26 +184,92 @@
 .resaltado
 	font-weight: 600
 
+/* Estilos que no ubico */
+
 .selectNormal .ui-grid-cell-contents
-  background-color: #97B2F7
-  color: black
+	background-color: #97B2F7
+	color: black
 
 .ordenBloqueada .ui-grid-cell-contents
-  background-color: gray
-  color: white
+	background-color: gray
+	color: white
 
 .bloqueadaSelec .ui-grid-cell-contents
-  background-color: #5F6F97 !important
-  color: white
+	background-color: #5F6F97 !important
+	color: white
 
 .docIncompletos .ui-grid-cell-contents
-  background-color: orange
-  color: white
+	background-color: orange
+	color: white
 
 .bloqDocIncom .ui-grid-cell-contents
-    /*height: 100px;*/
-    background: #FC9F14
-    background: -webkit-linear-gradient(180deg, gray, #FC9F14)
-    background: -o-linear-gradient(180deg, gray, #FC9F14)
-    background: -moz-linear-gradient(180deg, gray, #FC9F14)
-    background: linear-gradient(180deg, gray, #FC9F14)
+	background: #FC9F14
+	background: -webkit-linear-gradient(180deg, gray, #FC9F14)
+	background: -o-linear-gradient(180deg, gray, #FC9F14)
+	background: -moz-linear-gradient(180deg, gray, #FC9F14)
+	background: linear-gradient(180deg, gray, #FC9F14)
+
+
+/*  Nuevo diseño pantalla de pagos */
+
+/* ventana modal */
+#memberModalLabel
+	text-align: center
+	font-size: 22px
+
+#selEmpresa
+	width: 100%
+	margin-top: 20px
+
+#selEmpresaLabel
+	display: inline-block
+	width: 20%
+	position: relative
+
+#spanEmpresaLabel
+	position: absolute
+	top: 0
+	margin-top: -26px
+	padding-left: 14px
+	font-size: 15px
+
+#selEmpresaCombo
+	display: inline-block
+	width: 79%
+
+.mdPagarLabel
+	margin-top: 10px
+	margin-left: 12px
+	font-size: 15px
+
+#mdContentSuma
+	width: 400px
+	margin-left: calc(50% - 200px)
+	margin-bottom: 15px
+
+.mdLineSuma
+	margin-bottom: 5px
+
+.sumTexto
+	display: inline-block
+	width: 50%
+	text-align: right
+	font-weight: 600
+	font-size: 15px
+	
+.sumMonto
+	display: inline-block
+	width: 49%
+	text-align: right
+	font-size: 22px
+	font-weight: 300
+
+.montoFinal
+	font-size: 25px
+	font-weight: 400
+
+#mdRadio
+	text-align: center
+
+#contenedorGrid
+	margin-top: 20px

@@ -1,23 +1,22 @@
+@charset "UTF-8";
+/*  Pantalla de Pagos primera versión  */
 #container {
   margin-top: 20px;
   width: 90%;
   margin-right: 5%;
-  margin-left: 5%;
-}
+  margin-left: 5%; }
 
 #accion {
   width: 100%;
   margin-top: 50px;
   text-align: right;
-  padding-right: 5%;
-}
+  padding-right: 5%; }
 
 .panelEncabezado {
   display: inline-block;
   width: 400px;
   float: left;
-  padding-left: 15px;
-}
+  padding-left: 15px; }
 
 .panelTotales {
   display: inline-block;
@@ -25,27 +24,23 @@
   float: right;
   padding-right: 15px;
   margin-top: 70px;
-  position: relative;
-}
+  position: relative; }
 
 #top {
   width: 90%;
   margin-right: 5%;
   margin-left: 5%;
-  position: relative;
-}
+  position: relative; }
 
 #title {
   width: 100%;
   text-align: center;
-  display: block;
-}
+  display: block; }
 
 #clsPagar {
   display: inline-block;
   width: 60%;
-  text-align: right;
-}
+  text-align: right; }
 
 #clsComplemento {
   position: absolute;
@@ -54,44 +49,36 @@
   width: 39%;
   text-align: left;
   margin-right: 10px;
-  padding-left: 20px;
-}
+  padding-left: 20px; }
 
 #clsMainLabel {
   font-size: 14px;
-  display: block;
-}
+  display: block; }
 
 .clsDetailText {
   font-size: 22px;
-  display: block;
-}
+  display: block; }
 
 .clsDetailLabel {
-  font-size: 12px;
-}
+  font-size: 12px; }
 
 #clsPagarText {
-  font-size: 33px;
-}
+  font-size: 33px; }
 
 .rows {
   width: 100%;
-  border: 1px solid transparent;
-}
+  border: 1px solid transparent; }
 
 .raya {
   width: 55%;
   border: 1px solid rgba(51, 122, 183, 0.61);
-  float: right;
-}
+  float: right; }
 
 .resTexto {
   width: 39%;
   display: inline-block;
   text-align: right;
-  font-weight: 400;
-}
+  font-weight: 400; }
 
 .resSigno {
   width: 20%;
@@ -99,8 +86,7 @@
   text-align: right;
   font-size: 11px;
   font-weight: 100;
-  color: rgba(51, 122, 183, 0.61);
-}
+  color: rgba(51, 122, 183, 0.61); }
 
 .resMonto {
   width: 39%;
@@ -108,29 +94,23 @@
   text-align: right;
   font-size: 18px;
   color: #484747;
-  font-weight: 300;
-}
+  font-weight: 300; }
 
 .flujo {
   float: right;
-  margin-right: -10px;
-}
+  margin-right: -10px; }
 
 .flujoHeader {
-  height: 35px;
-}
+  height: 35px; }
 
 .rojo {
-  color: red;
-}
+  color: red; }
 
 .blue {
-  color: #337ab7;
-}
+  color: #337ab7; }
 
 #collapsePanel {
-  height: 320px;
-}
+  height: 320px; }
 
 #colapsar {
   position: absolute;
@@ -143,8 +123,7 @@
   color: #474343;
   border-right: 1px solid gray;
   cursor: pointer;
-  text-align: center;
-}
+  text-align: center; }
 
 #resumenColapsado {
   position: relative;
@@ -154,87 +133,134 @@
   bottom: 0;
   border-bottom: 1px solid gray;
   height: 35px;
-  padding-right: 35px;
-}
+  padding-right: 35px; }
 
 #colFlujoEfectivo {
   display: inline-block;
   width: 300px;
-  float: right;
-}
+  float: right; }
 
 #colPagar {
   display: inline-block;
   width: 300px;
-  float: right;
-}
+  float: right; }
 
 .colLabel {
-  font-size: 14px;
-}
+  font-size: 14px; }
 
 .colText {
-  font-size: 24px;
-}
+  font-size: 24px; }
 
 .linkManual {
-  color: #474343;
-}
+  color: #474343; }
 
 .linkManual:hover {
   text-decoration: none;
-  color: #474343;
-}
+  color: #474343; }
 
 #chkPagable1 {
   position: absolute;
   bottom: 0;
   right: 0;
-  margin-right: 50px;
-}
+  margin-right: 50px; }
 
 #txtCartera {
   padding-right: 5px;
-  font-size: 16px;
-}
+  font-size: 16px; }
 
 #chkPagable2 {
   position: absolute;
   bottom: 0;
   right: 0;
   margin-right: 650px;
-  margin-bottom: 2px;
-}
+  margin-bottom: 2px; }
 
 .resaltado {
-  font-weight: 600;
-}
+  font-weight: 600; }
 
+/* Estilos que no ubico */
 .selectNormal .ui-grid-cell-contents {
   background-color: #97B2F7;
-  color: black;
-}
+  color: black; }
 
 .ordenBloqueada .ui-grid-cell-contents {
   background-color: gray;
-  color: white;
-}
+  color: white; }
 
 .bloqueadaSelec .ui-grid-cell-contents {
   background-color: #5F6F97 !important;
-  color: white;
-}
+  color: white; }
 
 .docIncompletos .ui-grid-cell-contents {
   background-color: orange;
-  color: white;
-}
+  color: white; }
 
 .bloqDocIncom .ui-grid-cell-contents {
-  /*height: 100px;*/
   background: #FC9F14;
   background: -webkit-linear-gradient(180deg, gray, #FC9F14);
   background: -o-linear-gradient(180deg, gray, #FC9F14);
   background: -moz-linear-gradient(180deg, gray, #FC9F14);
-  background: linear-gradient(180deg, gray, #FC9F14);
-}
+  background: linear-gradient(180deg, gray, #FC9F14); }
+
+/*  Nuevo diseño pantalla de pagos */
+/* ventana modal */
+#memberModalLabel {
+  text-align: center;
+  font-size: 22px; }
+
+#selEmpresa {
+  width: 100%;
+  margin-top: 20px; }
+
+#selEmpresaLabel {
+  display: inline-block;
+  width: 20%;
+  position: relative; }
+
+#spanEmpresaLabel {
+  position: absolute;
+  top: 0;
+  margin-top: -26px;
+  padding-left: 14px;
+  font-size: 15px; }
+
+#selEmpresaCombo {
+  display: inline-block;
+  width: 79%; }
+
+.mdPagarLabel {
+  margin-top: 10px;
+  margin-left: 12px;
+  font-size: 15px; }
+
+#mdContentSuma {
+  width: 400px;
+  margin-left: calc(50% - 200px);
+  margin-bottom: 15px; }
+
+.mdLineSuma {
+  margin-bottom: 5px; }
+
+.sumTexto {
+  display: inline-block;
+  width: 50%;
+  text-align: right;
+  font-weight: 600;
+  font-size: 15px; }
+
+.sumMonto {
+  display: inline-block;
+  width: 49%;
+  text-align: right;
+  font-size: 22px;
+  font-weight: 300; }
+
+.montoFinal {
+  font-size: 25px;
+  font-weight: 400; }
+
+#mdRadio {
+  text-align: center; }
+
+#contenedorGrid {
+  margin-top: 20px; }

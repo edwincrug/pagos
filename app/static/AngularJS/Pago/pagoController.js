@@ -53,7 +53,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         }
 
         if ($rootScope.currentEmployee == null){
-            var idEmpleado = prompt("Ingrese un número de empleado", 1);
+            var idEmpleado = 1; //prompt("Ingrese un número de empleado", 1);
             $rootScope.currentEmployee = idEmpleado;
         }
         
