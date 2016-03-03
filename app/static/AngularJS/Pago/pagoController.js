@@ -96,26 +96,24 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         }
     };
 
+    //FAl--Llena los datos de la empresa dependiendo el usuario.
     $scope.llenaEncabezado = function () {        
-        //Llamada a repository para obtener data
+       
         pagoRepository.getEncabezado($scope.idCuenta)
             .then(function successCallback(response) {
-                // this callback will be called asynchronously
-                // when the response is available
                 $scope.scencabezado = response.data;
-                alertFactory.success('Se lleno el encabezado.');
 
             }, function errorCallback(response) {
-                // called asynchronously if an error occurs
-                // or server returns response with an error status.
                 alertFactory.error('Error al obtener los datos del encabezado.');
             }
         );
 
     };
+
   //Trae las empresas para el modal de inicio
     $scope.traeEmpresas = function () {
         //Llamada a repository para obtener data
+
         pagoRepository.getEmpresas($scope.idUsuario)
             .then(function successCallback(response) {
                 $scope.empresas = response.data;
@@ -123,15 +121,13 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                  $scope.showTotales = false;
                
             }, function errorCallback(response) {
-                // called asynchronously if an error occurs
-                // or server returns response with an error status.
-                alertFactory.error('Error en empresas.');
+                 alertFactory.error('Error en empresas.');
             }
         );
 
     };
-    //Trae el total de la empresa seleccionada
-    $scope.traeTotalxEmpresa = function (emp_idempresa) {        
+    //FAl--Trae el total de bancos de la empresa seleccionada
+    $scope.traeTotalxEmpresa = function (emp_idempresa,emp_nombre) {        
       
         pagoRepository.getTotalxEmpresa(emp_idempresa)
             .then(function successCallback(response) {
@@ -144,14 +140,17 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                     $scope.GranTotal = $scope.GranTotal + $scope.TotalxEmpresas[i].sumaSaldo; 
                     i++;                          
                     });
+                $scope.traeTotalxEmpresa.emp_nombre = emp_nombre;
                 $scope.showTotales = true;
                 $scope.showSelCartera = true;
             }, function errorCallback(response) {
+                //oculta la información y manda el total a cero y llena el input del modal
                 $scope.TotalxEmpresas = [];
                 $scope.GranTotal = 0;
                 $scope.showGrid = false;
                 $scope.showSelCartera = false;
                 $scope.showTotales = false;
+                $scope.traeTotalxEmpresa.emp_nombre = 'La empresa seleccionada no tiene información';
             }
         );
 
@@ -167,7 +166,8 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
     BEGIN
     ****************************************************************************************************************/    
 
-     //Muestra el div del grid en el Modal y lo llena
+     //FAl--Muestra el div del grid en el Modal y 
+     //lo configura para que no se edite y solo presente los campos principales
     $scope.MuestraGridModal = function (value) 
     {       
         $scope.showGrid = true;
@@ -194,7 +194,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
         ];    
     };
-    // Oculta el grid del Modal y asigna la variable toda la cartera true
+    //FAl--Oculta el grid del Modal y asigna la variable toda la cartera true
     $scope.OcultaGridModal = function (value) 
     {       
         $scope.showGrid = value;

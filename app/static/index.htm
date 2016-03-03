@@ -44,7 +44,7 @@
 <body ng-app="registrationModule">
 <!-- Contenedor de información -->
 
-<!--Modal correcta-->
+<!--Modal de inicio FAL-->
 
 <div id="inicioModal" class="modal fade" tabindex="-1" data-focus-on="input:first" ng-controller="pagoController" ng-init="traeEmpresas()"  data-keyboard="false" data-backdrop="static">
   <div class="modal-dialog modal-lg">
@@ -52,12 +52,20 @@
                 <div class="modal-header">
                     <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
                     </button> -->
-                     <h4 class="modal-title" id="memberModalLabel">Selecciona la empresapagos.html</h4>
-                      <p> 
-                    <select class="form-control" ng-change="traeTotalxEmpresa(empresa.emp_idempresa)" ng-model="empresa.emp_idempresa">
-                         <option ng-repeat="empresa in empresas" ng-value="empresa.emp_idempresa">{{empresa.emp_nombre}}</option>
-                    </select>
-                  </p>
+                     <h4 class="modal-title" id="memberModalLabel">Selecciona la empresa</h4>
+                    <p> 
+                      <div class="input-group">
+                      <input type="text" class="form-control" ng-model='traeTotalxEmpresa.emp_nombre' aria-label="...">
+                        <div class="input-group-btn">
+                          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Seleccione <span class="caret"></span></button>
+                          <ul class="dropdown-menu dropdown-menu-right">
+                            <li ng-repeat="empresa in empresas">
+                              <a href="#" ng-click="traeTotalxEmpresa(empresa.emp_idempresa, empresa.emp_nombre)">{{empresa.emp_nombre}}</a>
+                            </li>
+                          </ul>
+                        </div><!-- /btn-group -->
+                      </div><!-- /input-group --> 
+                    </p>
                 </div>
                 <div class="modal-body" ng-if="showTotales">
                      <p>Totales a Pagar por bancos</p>
@@ -67,7 +75,6 @@
                             Cuenta Pagadora
                           </div>
                           <div class="resMonto ng-binding">
-                            
                           </div>
                         </div>
                         <div class="rows" ng-repeat="TotalxEmpresa in TotalxEmpresas">
@@ -102,10 +109,8 @@
                            <div id="grid1"  ui-grid="gridOptions" ui-grid-grouping ui-grid-edit ui-grid-selection ui-grid-cellNav class="gridStyle"></div>
                         </div>
                         <div class="panel-footer" style="text-align: right">
-                          
-                         </div>
+                        </div>
                       </div>  
-
                   <!-- Totales a pagar por bancos -->
                 </div>
                 <div class="modal-footer">
@@ -115,7 +120,8 @@
             </div>
         </div>
 </div>
-<!--Fin Modal Coorecta-->
+
+<!--Fin odal de inicio FAL-->
 
   
   <div id="st-container">
