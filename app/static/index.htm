@@ -59,7 +59,7 @@
                     </select>
                   </p>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" ng-if="showTotales">
                      <p>Totales a Pagar por bancos</p>
                       <div class="panel-body">
                         <div class="rows" >
@@ -102,15 +102,15 @@
                            <div id="grid1"  ui-grid="gridOptions" ui-grid-grouping ui-grid-edit ui-grid-selection ui-grid-cellNav class="gridStyle"></div>
                         </div>
                         <div class="panel-footer" style="text-align: right">
-                          <button class="btn btn-default" data-toggle="modal" href="#stack2">Iniciar lote</button>
-                          <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button></div>
+                          
                          </div>
                       </div>  
 
                   <!-- Totales a pagar por bancos -->
                 </div>
                 <div class="modal-footer">
-                 
+                 <button class="btn btn-default" data-toggle="modal" href="#stack2">Iniciar lote</button>
+                 <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button></div>
                 </div>
             </div>
         </div>
