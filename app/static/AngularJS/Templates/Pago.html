@@ -17,7 +17,7 @@
 								<td>{{total.sumaSaldo}}</td>
 							</tr>
 						</tbody>
-						<tfoot>					
+						<tfoot>
 							<td></td>
 							<td></td>
 						</tfoot>
@@ -228,7 +228,7 @@
 
 	</div>	
 	</section>
-	<!--
+	
 	<section id="top">
 		<div id="resumenColapsado" ng-hide="!colapsado">
 			<div id="chkPagable2">
@@ -244,7 +244,7 @@
 			</div>
 		</div>
 		<div class="collapse in" id="collapsePanel">
-			<div class="row panelEncabezado">
+			<!--div class="row panelEncabezado">
 				<div class="panel panel-primary">					
 					<div class="panel-heading flujoHeader">
 						<div class="flujo" tooltip="Último flujo de efectivo">
@@ -324,7 +324,7 @@
 						</div>
 					</div>			  
 				</div>
-			</div>
+			</div-->
 			<div class="row panelTotales">
 				<div id="clsPagar">
 					<span id="clsMainLabel">Total a Pagar</span><span id="clsPagarText" class="blue"> {{cantidadTotal | currency}} </span> 
@@ -357,10 +357,10 @@
 			<a class="glyphicon glyphicon-resize-small linkManual" aria-hidden="true" data-toggle="collapse" data-target="#collapsePanel" aria-expanded="false" aria-controls="collapsePanel" ng-click="Resize()" ng-hide="colapsado" tooltip="Contraer"></a>
 			<a class="glyphicon glyphicon-resize-full linkManual" aria-hidden="true" data-toggle="collapse" data-target="#collapsePanel" aria-expanded="false" aria-controls="collapsePanel" ng-click="Resize()" ng-hide="!colapsado" tooltip="Expandir"></a>
 		</div>
-	</section-->
+	</section>
 	
 	<section id="container">
-		<div id="grid1" ui-grid="gridOptions" ui-grid-grouping ui-grid-edit ui-grid-selection ui-grid-cellNav style="display: none;"></div>
+		<div id="grid1" ui-grid="gridOptions" ui-grid-grouping ui-grid-edit ui-grid-selection ui-grid-cellNav></div>
 	</section>
 
 	<section id="accion">
