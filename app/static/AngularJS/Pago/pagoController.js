@@ -114,6 +114,8 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
     $scope.traeEmpresas = function () {
         //Llamada a repository para obtener data
 
+        //LQMA 03032016
+        $rootScope.showGrid = false;
         pagoRepository.getEmpresas($scope.idUsuario)
             .then(function successCallback(response) {
                 $scope.empresas = response.data;
@@ -131,13 +133,13 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
       
         pagoRepository.getTotalxEmpresa(emp_idempresa)
             .then(function successCallback(response) {
-                $scope.GranTotal = 0;
-                $scope.TotalxEmpresas = response.data;
+                $rootScope.GranTotal = 0;
+                $rootScope.TotalxEmpresas = response.data;
                 $scope.idEmpresa = emp_idempresa;
                 i=0;
-                $scope.TotalxEmpresas.forEach(function (cuentaPagadora, sumaSaldo)
+                $rootScope.TotalxEmpresas.forEach(function (cuentaPagadora, sumaSaldo)
                     {
-                    $scope.GranTotal = $scope.GranTotal + $scope.TotalxEmpresas[i].sumaSaldo; 
+                    $rootScope.GranTotal = $rootScope.GranTotal + $rootScope.TotalxEmpresas[i].sumaSaldo; 
                     i++;                          
                     });
                 $scope.traeTotalxEmpresa.emp_nombre = emp_nombre;
@@ -145,9 +147,9 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 $scope.showSelCartera = true;
             }, function errorCallback(response) {
                 //oculta la información y manda el total a cero y llena el input del modal
-                $scope.TotalxEmpresas = [];
-                $scope.GranTotal = 0;
-                $scope.showGrid = false;
+                $rootScope.TotalxEmpresas = [];
+                $rootScope.GranTotal = 0;
+                $rootScope.showGrid = false;
                 $scope.showSelCartera = false;
                 $scope.showTotales = false;
                 $scope.traeTotalxEmpresa.emp_nombre = 'La empresa seleccionada no tiene información';
@@ -170,7 +172,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
      //lo configura para que no se edite y solo presente los campos principales
     $scope.MuestraGridModal = function (value) 
     {       
-        $scope.showGrid = true;
+        $rootScope.showGrid = true;
         $scope.init();
         pagoRepository.getDatos($scope.idEmpresa)
             .success(llenaGridSuccessCallback)
@@ -197,25 +199,35 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
     //FAl--Oculta el grid del Modal y asigna la variable toda la cartera true
     $scope.OcultaGridModal = function (value) 
     {       
-        $scope.showGrid = value;
-      
+        $rootScope.showGrid = value;      
     };
 
+    //LQMA
+    $scope.IniciaLote = function(){
+        $rootScope.modalSeleccionados = $scope.gridApi.selection.getSelectedRows();
+        //$scope.llenaGrid();
+        //$scope.gridOptions.data = $rootScope.modalSeleccionados;
+        //ConfiguraGrid();        
+    }
 
+    $scope.llenaGrid = function () {
 
-    $scope.llenaGrid = function () {        
-
-        if ($rootScope.currentId != null){
-            pagoRepository.getDatosAprob($rootScope.currentId)
-            .success(llenaGridSuccessCallback)
-            .error(errorCallBack);
-            $scope.llenaEncabezado();
+        if(!$rootScope.showGrid){ //LQMA  si esta oculto, consultamos toda la cartera
+            if ($rootScope.currentId != null){
+                pagoRepository.getDatosAprob($rootScope.currentId)
+                .success(llenaGridSuccessCallback)
+                .error(errorCallBack);
+                $scope.llenaEncabezado();
+            }
+            else
+                pagoRepository.getDatos($scope.idEmpresa)
+                .success(llenaGridSuccessCallback)
+                .error(errorCallBack);
+        }// esta oculto
+        else{
+            ConfiguraGrid();
+            $scope.gridOptions.data = $rootScope.modalSeleccionados;
         }
-        else
-            pagoRepository.getDatos($scope.idEmpresa)
-            .success(llenaGridSuccessCallback)
-            .error(errorCallBack);
-
     };  //Propiedades    
 
     var llenaGridSuccessCallback = function (data, status, headers, config) {
@@ -359,7 +371,6 @@ $scope.gridOptions = {
                     });
                 }
                  else
-
                         if (rowChanged.isSelected) {
                            $scope.Reprogramable =  Math.round($scope.Reprogramable * 100) / 100 - Math.round(rowChanged.entity.Pagar * 100) / 100;
                            $scope.cantidadTotal = Math.round($scope.cantidadTotal * 100) / 100 + Math.round(rowChanged.entity.Pagar * 100) / 100;
