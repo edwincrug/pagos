@@ -25,7 +25,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
        $.fn.bootstrapSwitch.defaults.onText = 'Todos';
        $.fn.bootstrapSwitch.defaults.offText = 'Pagables';
        $('.switch-checkbox').bootstrapSwitch();      
-       $scope.showSelCartera = false;
+       $scope.showSelCartera = true;
 
 
        //*******************************
@@ -120,6 +120,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
             .then(function successCallback(response) {
                 $scope.empresas = response.data;
                  $('#inicioModal').modal('show');
+                 $scope.showTotales = false;
                
             }, function errorCallback(response) {
                 // called asynchronously if an error occurs
@@ -143,11 +144,14 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                     $scope.GranTotal = $scope.GranTotal + $scope.TotalxEmpresas[i].sumaSaldo; 
                     i++;                          
                     });
+                $scope.showTotales = true;
                 $scope.showSelCartera = true;
             }, function errorCallback(response) {
-                // called asynchronously if an error occurs
-                // or server returns response with an error status.
-                alertFactory.error('Error en empresas.');
+                $scope.TotalxEmpresas = [];
+                $scope.GranTotal = 0;
+                $scope.showGrid = false;
+                $scope.showSelCartera = false;
+                $scope.showTotales = false;
             }
         );
 
@@ -238,10 +242,10 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 }
                 $scope.noPagable = $scope.carteraVencida -$scope.cantidadTotal;
                 $scope.gridOptions.data = $scope.data;
-                
-                alertFactory.success('Se lleno el grid.');
+ 
                 setTimeout(function()
                 { 
+
                  $scope.selectAll();
                 }, 500);
     };     
@@ -446,7 +450,7 @@ $scope.gridOptions = {
 }//funcion
 
  $scope.selectAll = function() {
-   // $scope.gridApi.selection.selectAllRows();    
+    $scope.gridApi.selection.selectAllRows();  
     };       
 
 $scope.FiltrarCartera = function (value) {
