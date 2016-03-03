@@ -109,15 +109,11 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         );
 
     };
-<<<<<<< HEAD
-  //FAl--Trae las empresas para el modal de inicio
-    $scope.traeEmpresas = function () {        
-        
-=======
+
   //Trae las empresas para el modal de inicio
     $scope.traeEmpresas = function () {
         //Llamada a repository para obtener data
->>>>>>> origin/master
+
         pagoRepository.getEmpresas($scope.idUsuario)
             .then(function successCallback(response) {
                 $scope.empresas = response.data;
