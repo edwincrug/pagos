@@ -1,51 +1,37 @@
 <link href="../../css/pago.css" rel="stylesheet" />
 
 <div cg-busy="myPromise" ng-init="init()" resize>
-	<div class="row">
-			<div class="col-xs-12 col-sm-12 col-lg-12"> 
-				<div id="ingresos" class="Table">
-					<table class="table table-condensed"> 
-						<thead> 
-							<tr>
-								<th>Banco</th> 
-								<th>Total a pagar</th> 
-							</tr> 
-						</thead> 
-						<tbody> 
-							<tr ng-repeat="total in TotalxEmpresas">
-								<td>{{total.banco}}</td>
-								<td>{{total.sumaSaldo}}</td>
-							</tr>
-						</tbody>
-						<tfoot>
-							<td></td>
-							<td></td>
-						</tfoot>
-					</table>
-				</div>
-			</div>		
-	</div>
+
 	<section id="global">
 		<h1 id="title">{{ scencabezado.empNombre }}</h1>
-		<div class="row panelTotales">
-				<div id="clsPagar">
-					<span id="clsMainLabel">Total a Pagar</span><span id="clsPagarText" class="blue"> {{cantidadTotal | currency}} </span> 
-				</div>
-				<div id="clsComplemento">
-					<div id="clsTotal">
-						<span class="clsDetailLabel">Cartera vencida</span> <span class="clsDetailText blue">{{carteraVencida | currency}}</span>
-					</div>
-					<div class="clsPendiente">
-						<span class="clsDetailLabel">No Pagable</span> <span class="clsDetailText blue"> {{ noPagable | currency }} </span>
-					</div>
-					<div class="clsPendiente">
-						<span class="clsDetailLabel">Reprogramado</span> <span class="clsDetailText blue"> {{ Reprogramable | currency }} </span>
-					</div>
-					<div class="clsPendiente">
-						<span class="clsDetailLabel">Porcentaje a pagar</span> <span class="clsDetailText blue"> {{ ((cantidadTotal * 100) / carteraVencida ) | number:2 }} %</span>
-					</div>
-				</div>
-			</div>
+		<div class="row panelTotalGlobal">
+			 <div class="panel-body">
+                        <div class="rows" >
+                          <div class="resTexto">
+                            Cuenta Pagadora
+                          </div>
+                          <div class="resMonto ng-binding">
+                          </div>
+                        </div>
+                        <div class="rows" ng-repeat="TotalxEmpresa in TotalxEmpresas">
+                          <div class="resTexto">
+                            <b>{{TotalxEmpresa.banco}}:{{TotalxEmpresa.cuentaPagadora}}</b>
+                          </div>
+                          <div class="resMonto ng-binding">
+                            {{TotalxEmpresa.sumaSaldo | currency}}
+                          </div>
+                        </div>
+                        <div class="rows"> <div class="raya"></div></div>
+                        <div class="rows">
+                          <div class="resTexto">
+                            <b>Total a pagar</b>
+                          </div>
+                          <div class="resMonto ng-binding">
+                            {{GranTotal | currency}}
+                          </div>
+                        </div>
+                      </div>        
+		</div>
 	</section>
 	<section id="flujoEfectivo">
 	<div class="collapse in" id="collapsePanel">			
