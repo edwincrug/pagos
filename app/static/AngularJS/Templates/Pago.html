@@ -1,9 +1,30 @@
 <link href="../../css/pago.css" rel="stylesheet" />
 
-
-
 <div cg-busy="myPromise" ng-init="init()" resize>
-
+	<div class="row">
+			<div class="col-xs-12 col-sm-12 col-lg-12"> 
+				<div id="ingresos" class="Table">
+					<table class="table table-condensed"> 
+						<thead> 
+							<tr>
+								<th>Banco</th> 
+								<th>Total a pagar</th> 
+							</tr> 
+						</thead> 
+						<tbody> 
+							<tr ng-repeat="total in TotalxEmpresas">
+								<td>{{total.banco}}</td>
+								<td>{{total.sumaSaldo}}</td>
+							</tr>
+						</tbody>
+						<tfoot>					
+							<td></td>
+							<td></td>
+						</tfoot>
+					</table>
+				</div>
+			</div>		
+	</div>
 	<section id="global">
 		<h1 id="title">{{ scencabezado.empNombre }}</h1>
 		<div class="row panelTotales">
@@ -61,8 +82,8 @@
 						<tfoot>
 							<td></td>
 							<td></td>
-							<td>total saldo</td>
-							<td>total disponible</td>
+							<td>{{getTotal('ingresoSaldo')}}</td>
+							<td>{{getTotal('ingresoDisponible')}}</td>
 						</tfoot>
 					</table>
 				</div>
@@ -198,7 +219,7 @@
 							<td></td>
 							<td></td>
 							<td></td>
-							<td></td>
+							<td>{{getTotal('egresosTotal')}}</td>
 							<td>total disponible</td>
 						</tfoot>
 					</table>
