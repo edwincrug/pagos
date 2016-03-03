@@ -37,12 +37,12 @@ registrationModule.factory('pagoRepository', function ($http) {
             return $http.post(pagoUrl + '2|' + id);
 
         },
-        setDatos: function(id, idEmpleado,idPadre){
+        setDatos: function(id, idEmpleado,idPadre,ingresos, transfer,caja,cobrar,total){
             //var data = JSON.stringify(id); 
             return $http({
                 url: pagoUrl,
                 method: "POST",
-                params: { id: '1|' + idEmpleado + '|' + idPadre },
+                params: { id: '1|' + idEmpleado + '|' + idPadre + '|' + JSON.stringify(ingresos) + '|' + JSON.stringify(transfer) + '|' + caja + '|' + cobrar + '|' + JSON.stringify(total)},
                 //dataType: "json",
                 data:JSON.stringify(id)
                 //traditional: true,

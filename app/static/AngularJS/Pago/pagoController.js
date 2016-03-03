@@ -4,6 +4,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
    $scope.idCuenta = 4;
    $scope.idUsuario = 4;
 
+   $scope.currentEmployee = 1;
 
    var errorCallBack = function (data, status, headers, config) {
         alertFactory.error('Ocurrio un problema');
@@ -25,6 +26,17 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
        $.fn.bootstrapSwitch.defaults.offText = 'Pagables';
        $('.switch-checkbox').bootstrapSwitch();      
        $scope.showSelCartera = false;
+
+
+       //*******************************
+       $scope.ingresos = [{id: 1, nombre:'Santander', cuenta: 94039,saldo: 40000, disponible: 40000, ingreso:1, egreso:0},
+                          {id: 2,nombre:'Bancomer', cuenta: 594833,saldo: 79000, disponible: 79000,ingreso:0, egreso:1},
+                          {id: 3,nombre:'Banamex', cuenta: 100298,saldo: 685000, disponible: 685000, ingreso:0, egreso:1}];
+
+       $scope.egresos = [{id: 1,nombre:'HSBC', cuenta: 228139,saldo: 90000, aTransferir: 0, total:90000,excedente:0, ingreso:0, egreso:1,totalPagar:200000,saldoIngreso:0},
+                         {id: 2,nombre:'Bancomer', cuenta: 594833,saldo: 120000, aTransferir: 0,total:120000,excedente:0, ingreso:1, egreso:1,totalPagar:450000,saldoIngreso:0}]; 
+
+       $scope.transferencias = [{bancoOrigen:'', bancoDestino: '', importe:0, disponibleOrigen:0,index:0}];
     };
     
     var Prepagos = function(){
@@ -468,7 +480,18 @@ var isNumeric = function(obj){
 //LQMA funcion para guardar datos del grid (se implementara para guardar Ingresos bancos, otros , Transferencias)
 $scope.Guardar = function() {
 
-    pagoRepository.getPagosPadre($rootScope.currentEmployee)
+    var negativos = 0;
+    angular.forEach($scope.ingresos, function(ingreso, key){
+            if(parseInt(ingreso.disponible) < 0)
+                negativos += 1;
+        });
+
+    if(negativos > 0)
+        alertFactory.warning('Existen disponibles en valores negativos. Verifique las transferencias.');
+    else 
+    {
+        //alertFactory.success('Se guardaron los datos.');
+        pagoRepository.getPagosPadre($rootScope.currentEmployee)
             .then(function successCallback(response) 
             {        
                 var array = [];
@@ -497,7 +520,11 @@ $scope.Guardar = function() {
 
                             });    
 
-                 pagoRepository.setDatos(array,$rootScope.currentEmployee,response.data)
+                 var jsIngresos = angular.toJson($scope.ingresos); //delete $scope.ingresos['$$hashKey'];
+                 var jsTransf = angular.toJson($scope.transferencias);
+                 var jsEgresos = angular.toJson($scope.egresos);
+
+                 pagoRepository.setDatos(array,$rootScope.currentEmployee,response.data,jsIngresos,jsTransf,$scope.caja,$scope.cobrar,jsEgresos)
                         .then(function successCallback(response) {
                             
                             alertFactory.success('Se guardaron los datos.');
@@ -509,7 +536,171 @@ $scope.Guardar = function() {
             }, function errorCallback(response) {                
                 alertFactory.error('Error al insertar en tabla padre.');
             });
+        }//fin else
   };//fin de funcion guardar
+
+/***************************************************************************************************************
+    Funciones de guardado de datos
+    END
+****************************************************************************************************************/
+
+    $scope.addTransferencia = function()
+    {
+        var index = $scope.transferencias.length;
+        var newTransferencia = {bancoOrigen:'', bancoDestino: '', importe:0, index:index};
+        $scope.transferencias.push(newTransferencia);
+    };
+
+    $scope.delTransferencia = function(transferencia)
+    {    
+        $scope.transferencias.splice(transferencia.index,1);
+
+        var index = 0;
+        angular.forEach($scope.transferencias, function(transferencia, key){
+                    transferencia.index = index;
+                    index +=1;
+        });
+
+        $scope.calculaTotalOperaciones();
+        recalculaIngresos();   
+    };
+
+    $scope.selBancoIngreso = function(ingreso,transferencia)
+    {   
+        if(ingreso.disponible <= 0)
+            alertFactory.warning('El saldo disponible de esta cuenta es 0 o menor. Elija otra.');
+        else
+            if(transferencia.bancoOrigen != ingreso.nombre + '-' + ingreso.cuenta)
+            {
+                angular.forEach($scope.ingresos, function(ingreso, key){     
+                    if(ingreso.nombre +'-'+ ingreso.cuenta == transferencia.bancoOrigen)                
+                            ingreso.disponible = parseInt(ingreso.disponible) + parseInt(transferencia.importe);
+                });
+
+                transferencia.bancoOrigen = ingreso.nombre + '-' + ingreso.cuenta;
+                transferencia.disponibleOrigen = ingreso.disponible;
+                transferencia.importe = 0;
+            }
+
+        $scope.calculaTotalOperaciones();
+        recalculaIngresos(); 
+    };
+
+    $scope.selBancoEgreso = function(egreso,transferencia)
+    {
+        transferencia.bancoDestino = egreso.nombre + '-' + egreso.cuenta;
+
+        $scope.calculaTotalOperaciones();
+        recalculaIngresos(); 
+    };
+
+    $scope.calculaSaldoIngresos = function(ingreso)
+    {    
+        var total = 0;
+
+        angular.forEach($scope.transferencias, function(transferencia, key){
+                if(transferencia.bancoOrigen == ingreso.nombre + '-' + ingreso.cuenta)
+                {
+                    total = parseInt(total) + parseInt(transferencia.importe);
+                    //transferencia.disponibleOrigen = ingreso.disponible;
+                }
+            });
+
+        ingreso.disponible = parseInt(ingreso.saldo) - parseInt(total);
+
+        angular.forEach($scope.egresos, function(egreso, key){
+                    if((ingreso.nombre +'-'+ ingreso.cuenta == egreso.nombre + '-' + egreso.cuenta) && egreso.ingreso == 1)
+                        egreso.saldoIngreso = ingreso.disponible;
+            });
+
+        angular.forEach($scope.transferencias, function(transferencia, key){
+                if(transferencia.bancoOrigen == ingreso.nombre + '-' + ingreso.cuenta)
+                    transferencia.disponibleOrigen = ingreso.disponible;
+            });
+
+        if(parseInt(ingreso.disponible) < 0)
+            alertFactory.warning('El saldo disponible de esta cuenta es menor a 0. Verifique las transferencias.');
+        //setTimeout(function(){recalculaIngresos()},100);    
+
+        $scope.calculaTotalOperaciones();
+    };
+    
+    $scope.calculaTransferencia = function(transferencia)
+    {
+        //$scope.ingresos = [{id: 1, nombre:'Santander', cuenta: 94039,saldo: 40000, disponible: 25000, ingreso:1, egreso:0}]
+        //$scope.transferencias = [{bancoOrigen:'', bancoDestino: '', importe:0}]    
+        var total = 0;
+        
+        angular.forEach($scope.transferencias, function(transferencia1, key){
+                if(transferencia1.bancoOrigen == transferencia.bancoOrigen)
+                    total +=1;
+            });
+
+        if(total == 1)
+        {
+            if((transferencia.importe > transferencia.disponibleOrigen) ||  (transferencia.disponibleOrigen <=0))
+            {
+                alertFactory.warning('El valor es mayor al saldo disponible!');
+                transferencia.importe = 0;
+            }
+        }
+        else
+        {
+            angular.forEach($scope.ingresos, function(ingreso, key){
+                if(ingreso.nombre +'-'+ ingreso.cuenta == transferencia.bancoOrigen)
+                {
+                    if(ingreso.disponible - transferencia.importe < 0)    
+                    {
+                        alertFactory.warning('El valor es mayor al saldo disponible!');
+                        transferencia.importe = 0;
+                    }
+                    else{
+                        ingreso.disponible =  ingreso.disponible - transferencia.importe;
+                        //transferencia.disponibleOrigen = ingreso.disponible;
+                    }
+                }        
+            });
+        }    
+
+        $scope.calculaTotalOperaciones();
+
+        recalculaIngresos();    
+    };
+
+    var recalculaIngresos = function()
+    {
+        angular.forEach($scope.ingresos, function(ingreso, key){
+            ingreso.disponible = ingreso.saldo;
+            angular.forEach($scope.transferencias, function(transferencia, key){
+                if(ingreso.nombre +'-'+ ingreso.cuenta == transferencia.bancoOrigen)
+                    ingreso.disponible = ingreso.disponible - transferencia.importe;
+            });           
+
+        });        
+    }
+
+    $scope.calculaTotalOperaciones = function()
+    {        
+        //$scope.egresos = [{id: 1,nombre:'HSBC', cuenta: 228139,saldo: 90000, aTransferir: 25000, total:0,excedente:0, ingreso:1, egreso:0},
+        angular.forEach($scope.egresos, function(egreso, key){
+                var totalDestino = 0;
+                angular.forEach($scope.transferencias, function(transferencia, key){
+                    if(transferencia.bancoDestino == egreso.nombre + '-' + egreso.cuenta)
+                         totalDestino = totalDestino + parseInt(transferencia.importe);
+                });
+                egreso.aTransferir = totalDestino;
+                egreso.total = egreso.aTransferir + (egreso.ingreso == 1)?parseInt(egreso.saldoIngreso):parseInt(egreso.saldo);
+                egreso.excedente = egreso.totalPagar - egreso.total;
+        });
+    };
+
+    $scope.presskey = function(event){
+        if (event.which === 13)
+        {
+            //alert('I am an alert');
+            $(this).focusout();
+        }
+    };
 
 /***************************************************************************************************************
     Funciones de guardado de datos
