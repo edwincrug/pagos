@@ -109,9 +109,15 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         );
 
     };
+<<<<<<< HEAD
   //FAl--Trae las empresas para el modal de inicio
     $scope.traeEmpresas = function () {        
         
+=======
+  //Trae las empresas para el modal de inicio
+    $scope.traeEmpresas = function () {
+        //Llamada a repository para obtener data
+>>>>>>> origin/master
         pagoRepository.getEmpresas($scope.idUsuario)
             .then(function successCallback(response) {
                 $scope.empresas = response.data;
@@ -703,6 +709,42 @@ $scope.Guardar = function() {
             $(this).focusout();
         }
     };
+
+
+    $scope.getTotal = function(opcion){
+    var total = 0;
+    
+    switch(opcion){
+
+        case 'egresosTotal':
+                angular.forEach($scope.egresos, function(egreso, key){        
+                    total += parseInt(egreso.total);
+                });
+                break;
+
+        case 'ingresoSaldo':
+                angular.forEach($scope.ingresos, function(ingreso, key){
+                   total += parseInt((ingreso.saldo == '')?0:ingreso.saldo); 
+                });
+                break;
+
+        case 'ingresoDisponible':
+                angular.forEach($scope.ingresos, function(ingreso, key){
+                   total += parseInt((ingreso.disponible == '')?0:ingreso.disponible); 
+                });
+                break;
+
+        case 'b':
+
+
+                break;
+
+    } 
+
+
+
+    return total;
+}
 
 /***************************************************************************************************************
     Funciones de guardado de datos
