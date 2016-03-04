@@ -208,8 +208,8 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
             .then(function successCallback(response) {
                 $scope.egresos = response.data;                
                 
-                recalculaIngresos();
                 $scope.calculaTotalOperaciones();
+                recalculaIngresos();               
 
             }, function errorCallback(response) {
                 alertFactory.error('Error al obtener los Egresos');
@@ -269,8 +269,11 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
     //LQMA
     $scope.IniciaLote = function(){
-        $rootScope.modalSeleccionados = $scope.gridApi.selection.getSelectedRows();        
-        $rootScope.gridOptions.data = $rootScope.modalSeleccionados;
+
+        if($rootScope.showGrid) {
+            $rootScope.modalSeleccionados = $scope.gridApi.selection.getSelectedRows();
+            $rootScope.gridOptions.data = $rootScope.modalSeleccionados;
+        }   
         $('#inicioModal').modal('hide');
     }
 
