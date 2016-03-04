@@ -45,7 +45,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
        $('.switch-checkbox').bootstrapSwitch();      
        $scope.showSelCartera = true;
        /***********************************************************/ 
-
+       //configuraGridModal();
 
        //*******************************
        //                   id=no esta, nombre y cuenta = cuenta, saldo = saldo, disponible = disponible,
@@ -207,7 +207,8 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         pagoRepository.getDatos($scope.idEmpresa)
             .success(llenaGridSuccessCallback)
             .error(errorCallBack);
-        $scope.gridOptions.columnDefs = [
+
+        $rootScope.gridOptions.columnDefs = [
          
          {
            name: 'nombreAgrupador', grouping: { groupPriority: 0 }, sort: { priority: 0, direction: 'asc' }, width: '15%',displayName: 'Grupo', enableCellEdit: false
@@ -229,25 +230,22 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
          { name: 'cuentaPagadora', width: '15%', displayName: 'Banco'}
         ];  
 
+        /************************************************************************************************************************/  
     };
     //FAl--Oculta el grid del Modal y asigna la variable toda la cartera true
     $scope.OcultaGridModal = function (value) 
-    {       
-
-        $rootScope.showGrid = value;      
-
+    {
+        $rootScope.showGrid = value;
     };
 
     //LQMA
     $scope.IniciaLote = function(){
-        $rootScope.modalSeleccionados = $scope.gridApi.selection.getSelectedRows();
-        //$scope.llenaGrid();
-        $scope.gridOptions.data = $rootScope.modalSeleccionados;
-        //ConfiguraGrid();        
+        $rootScope.modalSeleccionados = $scope.gridApi.selection.getSelectedRows();        
+        $rootScope.gridOptions.data = $rootScope.modalSeleccionados;
+        $('#inicioModal').modal('hide');
     }
 
     $scope.llenaGrid = function () {
-
 
         if(!$rootScope.showGrid){ //LQMA  si esta oculto, consultamos toda la cartera
             if ($rootScope.currentId != null){
@@ -263,13 +261,13 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         }// esta oculto
         else{
             ConfiguraGrid();
-            $scope.gridOptions.data = $rootScope.modalSeleccionados;
+            $rootScope.gridOptions.data = $rootScope.modalSeleccionados;
 
         }
     };  //Propiedades    
 
     var llenaGridSuccessCallback = function (data, status, headers, config) {
-                $scope.gridOptions.data = data;
+                $rootScope.gridOptions.data = data;
                 $scope.data = data;
                 $scope.carteraVencida = 0;
                 $scope.cantidadTotal = 0;
@@ -291,16 +289,13 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
                 }
                 $scope.noPagable = $scope.carteraVencida -$scope.cantidadTotal;
-                $scope.gridOptions.data = $scope.data;
+                $rootScope.gridOptions.data = $scope.data;                
  
                 setTimeout(function()
                 { 
 
                  $scope.selectAll();
                 }, 500);
-
-
-
     };     
 
  var setGroupValues = function (columns, rows) {
@@ -329,7 +324,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 //LQMA congifura e inicializa el grid
 var ConfiguraGrid = function(){
 
-$scope.gridOptions = {
+$rootScope.gridOptions = {
         enableGridMenu: true,
         enableFiltering: true,
         enableGroupHeaderSelection: true,
@@ -499,17 +494,15 @@ $scope.gridOptions = {
                             }
                                    
                 }               
-              });
-                
+              });               
                     
           $scope.gridApi.selection.selectAllRows(true);  
         }
-    } //grid options
-}//funcion
+    } //grid options    
+};//funcion
 
  $scope.selectAll = function() {
-    $scope.gridApi.selection.selectAllRows();  
-
+    $scope.gridApi.selection.selectAllRows();
 };       
 
 $scope.FiltrarCartera = function (value) {
