@@ -4,7 +4,11 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
    $scope.idCuenta = 4;
    $scope.idUsuario = 4;
 
-   $scope.currentEmployee = 1;
+   //LQMA 04032016
+   $rootScope.currentEmployee = 1;
+   $rootScope.currentId = null;
+   $rootScope.currentIdOp = null;
+
 
    var errorCallBack = function (data, status, headers, config) {
         alertFactory.error('Ocurrio un problema');
@@ -15,9 +19,23 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
     BEGIN
     ****************************************************************************************************************/
 
+
     $scope.init = function () {
        //LQMA   leer parametros : id , idemployee
-       GetEmpleado();
+
+       if($scope.currentEmployee < 0)
+       {
+            $('#inicioModal').modal('hide');
+            GetEmpleado();
+       }
+       else
+       {
+             GetEmpleado();
+             $scope.traeEmpresas();
+       }
+
+       /***********************************************************/
+       //GetEmpleado();
        //getId();       
 
        //Inicializamos el switch
@@ -26,15 +44,26 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
        $.fn.bootstrapSwitch.defaults.offText = 'Pagables';
        $('.switch-checkbox').bootstrapSwitch();      
        $scope.showSelCartera = true;
-
+       /***********************************************************/ 
 
        //*******************************
-       $scope.ingresos = [{id: 1, nombre:'Santander', cuenta: 94039,saldo: 40000, disponible: 40000, ingreso:1, egreso:0},
+       //                   id=no esta, nombre y cuenta = cuenta, saldo = saldo, disponible = disponible,
+       /*$scope.ingresos = [{id: 1, nombre:'Santander', cuenta: 94039,saldo: 40000, disponible: 40000, ingreso:1, egreso:0},         
                           {id: 2,nombre:'Bancomer', cuenta: 594833,saldo: 79000, disponible: 79000,ingreso:0, egreso:1},
-                          {id: 3,nombre:'Banamex', cuenta: 100298,saldo: 685000, disponible: 685000, ingreso:0, egreso:1}];
+                          {id: 3,nombre:'Banamex', cuenta: 100298,saldo: 685000, disponible: 685000, ingreso:0, egreso:1}];*/
 
-       $scope.egresos = [{id: 1,nombre:'HSBC', cuenta: 228139,saldo: 90000, aTransferir: 0, total:90000,excedente:0, ingreso:0, egreso:1,totalPagar:200000,saldoIngreso:0},
-                         {id: 2,nombre:'Bancomer', cuenta: 594833,saldo: 120000, aTransferir: 0,total:120000,excedente:0, ingreso:1, egreso:1,totalPagar:450000,saldoIngreso:0}]; 
+        // SEL_CUENTAS_INGRESOS_SP
+        $scope.ingresos = [{nombre:'Santander', cuenta: 94039,saldo: 40000, disponible: 40000},         
+                          {nombre:'Bancomer', cuenta: 594833,saldo: 79000, disponible: 79000},
+                          {nombre:'Banamex', cuenta: 100298,saldo: 685000, disponible: 685000}];
+
+        // SEL_CUENTAS_EGRESOS_SP
+       /*$scope.egresos = [{id: 1,nombre:'HSBC', cuenta: 228139,saldo: 90000, aTransferir: 0, total:90000,excedente:0, ingreso:0, egreso:1,totalPagar:200000,saldoIngreso:0},
+                         {id: 2,nombre:'Bancomer', cuenta: 594833,saldo: 120000, aTransferir: 0,total:120000,excedente:0, ingreso:1, egreso:1,totalPagar:450000,saldoIngreso:0}]; */
+
+       // nombre y cuenta = cuenta, saldo = saldo (siempre vendra en 0), aTransferir = aTransferir (viene en 0), total = total (viene en 0, se calcula),   excedente = viene en 0, se calcula, totalPagar = recuperar del $scope.TotalxEmpresa.sumaSaldo,saldoIngreso = 0
+       $scope.egresos = [{nombre:'HSBC', cuenta: 228139,saldo: 90000, aTransferir: 0, total:90000,excedente:0, ingreso:0, egreso:1,totalPagar:200000,saldoIngreso:0},
+                         {nombre:'Bancomer', cuenta: 594833,saldo: 120000, aTransferir: 0,total:120000,excedente:0, ingreso:1, egreso:1,totalPagar:450000,saldoIngreso:0}];
 
        $scope.transferencias = [{bancoOrigen:'', bancoDestino: '', importe:0, disponibleOrigen:0,index:0}];
     };
@@ -206,7 +235,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
     $scope.IniciaLote = function(){
         $rootScope.modalSeleccionados = $scope.gridApi.selection.getSelectedRows();
         //$scope.llenaGrid();
-        //$scope.gridOptions.data = $rootScope.modalSeleccionados;
+        $scope.gridOptions.data = $rootScope.modalSeleccionados;
         //ConfiguraGrid();        
     }
 
@@ -462,7 +491,8 @@ $scope.gridOptions = {
 
  $scope.selectAll = function() {
     $scope.gridApi.selection.selectAllRows();  
-    };       
+
+};       
 
 $scope.FiltrarCartera = function (value) {
     console.log(value);
