@@ -50,23 +50,20 @@
 					</div>
 					<table class="table table-condensed"> 
 						<thead> 
-							<tr> 				
-								<th>Banco</th> 
+							<tr>								
 								<th>Cuenta</th> 
 								<th>Saldo</th> 
 								<th>Disponible</th>
 							</tr> 
 						</thead> 
 						<tbody> 
-							<tr ng-repeat="ingreso in ingresos" ng-class="{'danger':ingreso.disponible == '0', 'warning':ingreso.disponible < (ingreso.saldo / 2),'info': ingreso.disponible > (ingreso.disponible / 2)}">
-								<td>{{ingreso.nombre}}</td> 
+							<tr ng-repeat="ingreso in ingresos" ng-class="{'danger':ingreso.disponible == '0', 'warning':ingreso.disponible < (ingreso.saldo / 2),'info': ingreso.disponible > (ingreso.disponible / 2)}">								
 								<td>{{ingreso.cuenta}}</td>				
 								<td><input type="text" ng-model="ingreso.saldo" ng-blur="calculaSaldoIngresos(ingreso)"></td> 
 								<td>{{ingreso.disponible}}</td> 
 							</tr>
 						</tbody>
-						<tfoot>
-							<td></td>
+						<tfoot>							
 							<td></td>
 							<td>{{getTotal('ingresoSaldo')}}</td>
 							<td>{{getTotal('ingresoDisponible')}}</td>
@@ -97,7 +94,7 @@
 								        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Seleccione <span class="caret"></span></button>
 								        <ul class="dropdown-menu dropdown-menu-right">
 								          <li ng-repeat="ingreso in ingresos">
-								          	<a href="#" ng-click="selBancoIngreso(ingreso, transferencia)">{{ingreso.nombre}} - {{ingreso.cuenta}}</a>
+								          	<a href="#" ng-click="selBancoIngreso(ingreso, transferencia)">{{ingreso.cuenta}}</a>
 								          </li>
 								        </ul>
 								      </div><!-- /btn-group -->
@@ -111,7 +108,7 @@
 								        <ul class="dropdown-menu dropdown-menu-right">
 								          <li ng-repeat="egreso in egresos">
 								          	<a href="#" class="egresosCombo" ng-click='selBancoEgreso(egreso,transferencia)'>
-								          		{{egreso.nombre}} - {{egreso.cuenta}}
+								          		{{egreso.cuenta}}
 								          	</a>
 								          </li>
 								        </ul>
@@ -184,7 +181,7 @@
 						<tbody> 
 							<tr ng-repeat="egreso in egresos">
 								<td>
-									{{egreso.nombre}} - {{egreso.cuenta}}
+									{{egreso.cuenta}}
 								</td>								
 								<td>
 									<input type="text" ng-model="egreso.saldo" ng-blur="calculaTotalOperaciones()" ng-hide="egreso.ingreso != 0">
