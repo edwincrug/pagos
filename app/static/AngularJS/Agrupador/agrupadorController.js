@@ -12,6 +12,7 @@ $scope.init = function () {
     $scope.idEmpleado = 1;
     $scope.idEmpresa = 4;
 
+//FAL trae los distintos agrupadores
 $scope.llenaAgrupadores = function () {
  agrupadorRepository.getAgrupadores($scope.idEmpresa)
             .then(function successCallback(response) 
@@ -28,14 +29,11 @@ $scope.llenaAgrupadores = function () {
         }
 
         , function errorCallback(response) {
-                // called asynchronously if an error occurs
-                // or server returns response with an error status.
-                alertFactory.error('Error al obtener los datos del agrupador.');
+             alertFactory.error('Error al obtener los datos del agrupador.');
             }
         );
 }; 
-
-
+//FAL en cada lista mete los proveedores correspondientes
 function llenaLista(id_agrupador) {
 
         var tmpList = [];
@@ -61,7 +59,7 @@ function llenaLista(id_agrupador) {
         return tmpList;
     }
 
-
+//Trae todos los proveedores asigandos a idempresa
 $scope.llenaProvedores = function () {
         
         //Llamada a repository para obtener data
@@ -79,18 +77,21 @@ $scope.llenaProvedores = function () {
 
     };  //Propiedades
    
+
     $scope.sortingLog = [];
+    //Función del Agrupador selector
     $scope.sortableOptions = uiSortableMultiSelectionMethods.extendOptions({
         connectWith: ".apps-container"
     });
 
+    //Funcion que entrega los agrupamientos ordenados
     $scope.logModels = function () {
         $scope.sortingLog = [];
         for (var i = 0; i < $scope.rawScreens.length; i++) {
-            var logEntry = $scope.rawScreens[i].map(function (x) {
+            var logEntry = $scope.rawScreens[i].lista.map(function (x) {
                 return x.value;
             }).join(', ');
-            logEntry = 'Agrupamiento #' + (i + 1) + ': ' + logEntry;
+            logEntry = $scope.rawScreens[i].pca_descripcion + ': ' + logEntry;
             $scope.sortingLog.push(logEntry);
         }
     };

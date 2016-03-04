@@ -337,7 +337,7 @@ $scope.gridOptions = {
                  aggregation.rendered = aggregation.value;
              }
          },
-        { name: 'monto', displayName: 'Monto', width: '15%', cellFilter: 'currency' , enableCellEdit: false},
+         { name: 'monto', displayName: 'Monto', width: '15%', cellFilter: 'currency' , enableCellEdit: false},
          { name: 'saldo', displayName: 'Saldo', width: '15%', cellFilter: 'currency' , enableCellEdit: false},
          { name: 'documento', displayName: '# Documento', width: '15%', enableCellEdit: false, headerTooltip: 'Documento # de factura del provedor', cellClass: 'cellToolTip' },
          { name: 'tipo', width: '15%', displayName: 'Tipo', enableCellEdit: false },
