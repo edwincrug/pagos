@@ -35,7 +35,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
        }*/
 
        /***********************************************************/
-       //GetEmpleado();
+       GetEmpleado();
        //getId();       
 
        //Inicializamos el switch
@@ -45,6 +45,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
        $('.switch-checkbox').bootstrapSwitch();      
        $scope.showSelCartera = true;
        /***********************************************************/ 
+
 
        //*******************************
        //                   id=no esta, nombre y cuenta = cuenta, saldo = saldo, disponible = disponible,
@@ -209,26 +210,32 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         $scope.gridOptions.columnDefs = [
          
          {
-           name: 'proveedor', grouping: { groupPriority: 0 }, sort: { priority: 0, direction: 'asc' }, name: 'proveedor'
-           , width: '50%'
+           name: 'nombreAgrupador', grouping: { groupPriority: 0 }, sort: { priority: 0, direction: 'asc' }, width: '15%',displayName: 'Grupo', enableCellEdit: false
+         },
+         {
+           name: 'proveedor', grouping: { groupPriority: 1 }, sort: { priority: 1, direction: 'asc' }, name: 'proveedor', enableCellEdit: false
+           , width: '35%'
            ,cellTemplate: '<div><div ng-if="!col.grouping || col.grouping.groupPriority === undefined || col.grouping.groupPriority === null || ( row.groupHeader && col.grouping.groupPriority === row.treeLevel )" class="ui-grid-cell-contents" title="TOOLTIP">{{COL_FIELD CUSTOM_FILTERS}}</div></div>'
          },
          {
              field: 'Pagar', displayName: 'Pagar (total)', width: '25%', cellFilter: 'currency', aggregationType: uiGridConstants.aggregationTypes.sum,
-             treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
+             treeAggregationType: uiGridGroupingConstants.aggregation.SUM, enableCellEdit: false,
              editableCellTemplate: '<div><form name="inputForm"><input type="number" ng-class="\'colt\' + col.uid" ui-grid-editor ng-model="MODEL_COL_FIELD"></form></div>',
              customTreeAggregationFinalizerFn: function (aggregation) {
                  aggregation.rendered = aggregation.value;
              }
          },
-         { name: 'fechaPromesaPago', displayName: 'Fecha Promesa de Pago', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '15%'},
+         { name: 'fechaPromesaPago', displayName: 'Fecha Promesa de Pago', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '15%', enableCellEdit: false},
+         { name: 'cuentaPagadora', width: '15%', displayName: 'Banco'}
+        ];  
 
-        ];    
     };
     //FAl--Oculta el grid del Modal y asigna la variable toda la cartera true
     $scope.OcultaGridModal = function (value) 
     {       
+
         $rootScope.showGrid = value;      
+
     };
 
     //LQMA
@@ -240,6 +247,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
     }
 
     $scope.llenaGrid = function () {
+
 
         if(!$rootScope.showGrid){ //LQMA  si esta oculto, consultamos toda la cartera
             if ($rootScope.currentId != null){
@@ -256,6 +264,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         else{
             ConfiguraGrid();
             $scope.gridOptions.data = $rootScope.modalSeleccionados;
+
         }
     };  //Propiedades    
 
@@ -289,6 +298,9 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
                  $scope.selectAll();
                 }, 500);
+
+
+
     };     
 
  var setGroupValues = function (columns, rows) {
@@ -331,9 +343,11 @@ $scope.gridOptions = {
         },
 
         columnDefs: [
-         
          {
-           name: 'proveedor', grouping: { groupPriority: 0 }, sort: { priority: 0, direction: 'asc' }, width: '20%',name: 'proveedor'
+           name: 'nombreAgrupador', grouping: { groupPriority: 0 }, sort: { priority: 0, direction: 'asc' }, width: '15%',displayName: 'Grupo', enableCellEdit: false
+         },
+         {
+           name: 'proveedor', grouping: { groupPriority: 1 }, sort: { priority: 1, direction: 'asc' }, width: '15%',name: 'proveedor'
            , width: '20%'
            ,cellTemplate: '<div><div ng-if="!col.grouping || col.grouping.groupPriority === undefined || col.grouping.groupPriority === null || ( row.groupHeader && col.grouping.groupPriority === row.treeLevel )" class="ui-grid-cell-contents" title="TOOLTIP">{{COL_FIELD CUSTOM_FILTERS}}</div></div>'
          },
@@ -352,8 +366,8 @@ $scope.gridOptions = {
                  aggregation.rendered = aggregation.value;
              }
          },
-        { name: 'monto', displayName: 'Monto', width: '13%', cellFilter: 'currency' , enableCellEdit: false},
-         { name: 'saldo', displayName: 'Saldo', width: '13%', cellFilter: 'currency' , enableCellEdit: false},
+        { name: 'monto', displayName: 'Monto', width: '15%', cellFilter: 'currency' , enableCellEdit: false},
+         { name: 'saldo', displayName: 'Saldo', width: '15%', cellFilter: 'currency' , enableCellEdit: false},
          { name: 'documento', displayName: '# Documento', width: '15%', enableCellEdit: false, headerTooltip: 'Documento # de factura del provedor', cellClass: 'cellToolTip' },
          { name: 'tipo', width: '15%', displayName: 'Tipo', enableCellEdit: false },
          { name: 'tipodocto', width: '15%', displayName: 'Tipo Documento', enableCellEdit: false },
@@ -373,6 +387,7 @@ $scope.gridOptions = {
          // { name: 'proveedorBloqueado', width: '5%' },
          { name: 'documentoPagable', width: '15%', displayName: 'Estatus del Documento'},
          { name: 'ordenBloqueada', displayName: 'Bloqueada', width: '20%' , cellTemplate: '<button ng-click="row.entity.ordenBloqueada = !row.entity.ordenBloqueada" ng-model="row.entity.ordenBloqueada" style="{{row.entity.ordenBloqueada ? "background-color: lightgreen" : ""}}"></button>' },
+         { name: 'cuentaPagadora', width: '15%', displayName: 'Banco'}
          // { name: 'diasCobro', width: '5%' },
          // { name: 'aprobado', width: '5%' },
          // { name: 'contReprog', width: '5%' }
@@ -386,6 +401,8 @@ $scope.gridOptions = {
             $scope.gridApi = gridApi;
             // $scope.gridApi.grid.registerColumnsProcessor( setGroupValues, 410 );
             $scope.cantidadTotal = $scope.cantidadTotal;
+            // marcando los padres.
+
             $scope.gridApi.selection.on.rowSelectionChanged($scope, function (rowChanged) {
                 if (typeof (rowChanged.treeLevel) !== 'undefined' && rowChanged.treeLevel > -1) 
                 {
@@ -483,8 +500,9 @@ $scope.gridOptions = {
                                    
                 }               
               });
-
-          $scope.gridApi.selection.selectAllRows();  
+                
+                    
+          $scope.gridApi.selection.selectAllRows(true);  
         }
     } //grid options
 }//funcion
