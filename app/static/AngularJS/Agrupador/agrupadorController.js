@@ -20,12 +20,9 @@ $scope.llenaAgrupadores = function () {
             var i = 0, j=0;
             $scope.agrupadores.forEach(function (pca_idAgrupador, pca_nombre)
             {
-            $scope.agrupadores[i].lista = llenaLista($scope.agrupadores[i].pca_idAgrupador);
+             $scope.agrupadores[i].lista = llenaLista($scope.agrupadores[i].pca_idAgrupador);
             i++;                            
             });
-
-           
-
              $scope.rawScreens = $scope.agrupadores;
                  
         }
@@ -44,13 +41,21 @@ function llenaLista(id_agrupador) {
         var tmpList = [];
         var i = 0;
         $scope.proveedores.forEach(function (idProveedor, nomProveedor)
-            {
-                tmpList.push(
+            {  
+                if(id_agrupador == $scope.proveedores[i].idAgrupador)
                 {
-                text: $scope.proveedores[i].nomProveedor,
-                value: id_agrupador + '-' + $scope.proveedores[i].idProveedor
-                });
-            i++;                            
+                    tmpList.push(
+                    {
+                    text: $scope.proveedores[i].nombreProveedor + id_agrupador + '-' + $scope.proveedores[i].idProveedor,
+                    value: id_agrupador + '-' + $scope.proveedores[i].idProveedor
+                    });
+                 i++;    
+                }
+                else
+                {
+                   i++;   
+                }   
+                                      
             }); 
 
         return tmpList;
