@@ -8,6 +8,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
    $rootScope.currentEmployee = 1;
    $rootScope.currentId = null;
    $rootScope.currentIdOp = null;
+   $scope.idLote = 0;
 
 
    var errorCallBack = function (data, status, headers, config) {
@@ -46,7 +47,6 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
        $scope.showSelCartera = true;
        /***********************************************************/ 
        //configuraGridModal();
-
        //*******************************
        //                   id=no esta, nombre y cuenta = cuenta, saldo = saldo, disponible = disponible,
        /*$scope.ingresos = [{id: 1, nombre:'Santander', cuenta: 94039,saldo: 40000, disponible: 40000, ingreso:1, egreso:0},         
@@ -54,18 +54,20 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                           {id: 3,nombre:'Banamex', cuenta: 100298,saldo: 685000, disponible: 685000, ingreso:0, egreso:1}];*/
 
         // SEL_CUENTAS_INGRESOS_SP
-        $scope.ingresos = [{nombre:'Santander', cuenta: 94039,saldo: 40000, disponible: 40000},         
+        /*$scope.ingresos = [{nombre:'Santander', cuenta: 94039,saldo: 40000, disponible: 40000},
                           {nombre:'Bancomer', cuenta: 594833,saldo: 79000, disponible: 79000},
                           {nombre:'Banamex', cuenta: 100298,saldo: 685000, disponible: 685000}];
+
+        $scope.egresos = [{nombre:'HSBC', cuenta: 228139,saldo: 90000, aTransferir: 0, total:90000,excedente:0, ingreso:0, egreso:1,totalPagar:200000,saldoIngreso:0},
+                         {nombre:'Bancomer', cuenta: 594833,saldo: 120000, aTransferir: 0,total:120000,excedente:0, ingreso:1, egreso:1,totalPagar:450000,saldoIngreso:0}];*/
+
+        $scope.LlenaIngresos();        
 
         // SEL_CUENTAS_EGRESOS_SP
        /*$scope.egresos = [{id: 1,nombre:'HSBC', cuenta: 228139,saldo: 90000, aTransferir: 0, total:90000,excedente:0, ingreso:0, egreso:1,totalPagar:200000,saldoIngreso:0},
                          {id: 2,nombre:'Bancomer', cuenta: 594833,saldo: 120000, aTransferir: 0,total:120000,excedente:0, ingreso:1, egreso:1,totalPagar:450000,saldoIngreso:0}]; */
 
-       // nombre y cuenta = cuenta, saldo = saldo (siempre vendra en 0), aTransferir = aTransferir (viene en 0), total = total (viene en 0, se calcula),   excedente = viene en 0, se calcula, totalPagar = recuperar del $scope.TotalxEmpresa.sumaSaldo,saldoIngreso = 0
-       $scope.egresos = [{nombre:'HSBC', cuenta: 228139,saldo: 90000, aTransferir: 0, total:90000,excedente:0, ingreso:0, egreso:1,totalPagar:200000,saldoIngreso:0},
-                         {nombre:'Bancomer', cuenta: 594833,saldo: 120000, aTransferir: 0,total:120000,excedente:0, ingreso:1, egreso:1,totalPagar:450000,saldoIngreso:0}];
-
+       // nombre y cuenta = cuenta, saldo = saldo (siempre vendra en 0), aTransferir = aTransferir (viene en 0), total = total (viene en 0, se calcula),   excedente = viene en 0, se calcula, totalPagar = recuperar del $scope.TotalxEmpresa.sumaSaldo,saldoIngreso = 0   
        $scope.transferencias = [{bancoOrigen:'', bancoDestino: '', importe:0, disponibleOrigen:0,index:0}];
     };
     
@@ -186,6 +188,33 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
             }
         );
 
+    };
+
+
+    //LQMA 04032016 obtiene ingresos y egresos
+    $scope.LlenaIngresos = function () {       
+        pagoRepository.getIngresos(4,$scope.idLote)  //$scope.idEmpresa
+            .then(function successCallback(response) {
+                $scope.ingresos = response.data;
+                $scope.LlenaEgresos();
+            }, function errorCallback(response) {
+                alertFactory.error('Error al obtener los Ingresos');
+            }
+        );
+    };
+
+    $scope.LlenaEgresos = function () {
+        pagoRepository.getEgresos(4,$scope.idLote) //$scope.idEmpresa
+            .then(function successCallback(response) {
+                $scope.egresos = response.data;
+                
+                $scope.recalculaIngresos();
+                $scope.calculaTotalOperaciones();
+
+            }, function errorCallback(response) {
+                alertFactory.error('Error al obtener los Egresos');
+            }
+        );
     };
 
     /***************************************************************************************************************
@@ -626,14 +655,14 @@ $scope.Guardar = function() {
         if(ingreso.disponible <= 0)
             alertFactory.warning('El saldo disponible de esta cuenta es 0 o menor. Elija otra.');
         else
-            if(transferencia.bancoOrigen != ingreso.nombre + '-' + ingreso.cuenta)
+            if(transferencia.bancoOrigen != ingreso.cuenta)
             {
                 angular.forEach($scope.ingresos, function(ingreso, key){     
-                    if(ingreso.nombre +'-'+ ingreso.cuenta == transferencia.bancoOrigen)                
+                    if(ingreso.cuenta == transferencia.bancoOrigen)                
                             ingreso.disponible = parseInt(ingreso.disponible) + parseInt(transferencia.importe);
                 });
 
-                transferencia.bancoOrigen = ingreso.nombre + '-' + ingreso.cuenta;
+                transferencia.bancoOrigen = ingreso.cuenta;
                 transferencia.disponibleOrigen = ingreso.disponible;
                 transferencia.importe = 0;
             }
@@ -644,7 +673,7 @@ $scope.Guardar = function() {
 
     $scope.selBancoEgreso = function(egreso,transferencia)
     {
-        transferencia.bancoDestino = egreso.nombre + '-' + egreso.cuenta;
+        transferencia.bancoDestino = egreso.cuenta;
 
         $scope.calculaTotalOperaciones();
         recalculaIngresos(); 
@@ -655,7 +684,7 @@ $scope.Guardar = function() {
         var total = 0;
 
         angular.forEach($scope.transferencias, function(transferencia, key){
-                if(transferencia.bancoOrigen == ingreso.nombre + '-' + ingreso.cuenta)
+                if(transferencia.bancoOrigen == ingreso.cuenta)
                 {
                     total = parseInt(total) + parseInt(transferencia.importe);
                     //transferencia.disponibleOrigen = ingreso.disponible;
@@ -665,12 +694,12 @@ $scope.Guardar = function() {
         ingreso.disponible = parseInt(ingreso.saldo) - parseInt(total);
 
         angular.forEach($scope.egresos, function(egreso, key){
-                    if((ingreso.nombre +'-'+ ingreso.cuenta == egreso.nombre + '-' + egreso.cuenta) && egreso.ingreso == 1)
+                    if((ingreso.cuenta == egreso.cuenta) && egreso.ingreso == 1)
                         egreso.saldoIngreso = ingreso.disponible;
             });
 
         angular.forEach($scope.transferencias, function(transferencia, key){
-                if(transferencia.bancoOrigen == ingreso.nombre + '-' + ingreso.cuenta)
+                if(transferencia.bancoOrigen == ingreso.cuenta)
                     transferencia.disponibleOrigen = ingreso.disponible;
             });
 
@@ -703,7 +732,7 @@ $scope.Guardar = function() {
         else
         {
             angular.forEach($scope.ingresos, function(ingreso, key){
-                if(ingreso.nombre +'-'+ ingreso.cuenta == transferencia.bancoOrigen)
+                if(ingreso.cuenta == transferencia.bancoOrigen)
                 {
                     if(ingreso.disponible - transferencia.importe < 0)    
                     {
@@ -728,7 +757,7 @@ $scope.Guardar = function() {
         angular.forEach($scope.ingresos, function(ingreso, key){
             ingreso.disponible = ingreso.saldo;
             angular.forEach($scope.transferencias, function(transferencia, key){
-                if(ingreso.nombre +'-'+ ingreso.cuenta == transferencia.bancoOrigen)
+                if(ingreso.cuenta == transferencia.bancoOrigen)
                     ingreso.disponible = ingreso.disponible - transferencia.importe;
             });           
 
@@ -741,7 +770,7 @@ $scope.Guardar = function() {
         angular.forEach($scope.egresos, function(egreso, key){
                 var totalDestino = 0;
                 angular.forEach($scope.transferencias, function(transferencia, key){
-                    if(transferencia.bancoDestino == egreso.nombre + '-' + egreso.cuenta)
+                    if(transferencia.bancoDestino == egreso.cuenta)
                          totalDestino = totalDestino + parseInt(transferencia.importe);
                 });
                 egreso.aTransferir = totalDestino;
