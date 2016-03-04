@@ -206,9 +206,9 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
     $scope.LlenaEgresos = function () {
         pagoRepository.getEgresos(4,$scope.idLote) //$scope.idEmpresa
             .then(function successCallback(response) {
-                $scope.egresos = response.data;
+                $scope.egresos = response.data;                
                 
-                $scope.recalculaIngresos();
+                recalculaIngresos();
                 $scope.calculaTotalOperaciones();
 
             }, function errorCallback(response) {
