@@ -196,8 +196,8 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                  aggregation.rendered = aggregation.value;
              }
          },
-         { name: 'fechaPromesaPago', displayName: 'Fecha Promesa de Pago', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '15%', enableCellEdit: false}
-
+         { name: 'fechaPromesaPago', displayName: 'Fecha Promesa de Pago', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '15%', enableCellEdit: false},
+         { name: 'cuentaPagadora', width: '15%', displayName: 'Banco'}
         ];  
 
     };
@@ -337,8 +337,8 @@ $scope.gridOptions = {
                  aggregation.rendered = aggregation.value;
              }
          },
-        { name: 'monto', displayName: 'Monto', width: '13%', cellFilter: 'currency' , enableCellEdit: false},
-         { name: 'saldo', displayName: 'Saldo', width: '13%', cellFilter: 'currency' , enableCellEdit: false},
+        { name: 'monto', displayName: 'Monto', width: '15%', cellFilter: 'currency' , enableCellEdit: false},
+         { name: 'saldo', displayName: 'Saldo', width: '15%', cellFilter: 'currency' , enableCellEdit: false},
          { name: 'documento', displayName: '# Documento', width: '15%', enableCellEdit: false, headerTooltip: 'Documento # de factura del provedor', cellClass: 'cellToolTip' },
          { name: 'tipo', width: '15%', displayName: 'Tipo', enableCellEdit: false },
          { name: 'tipodocto', width: '15%', displayName: 'Tipo Documento', enableCellEdit: false },
@@ -358,6 +358,7 @@ $scope.gridOptions = {
          // { name: 'proveedorBloqueado', width: '5%' },
          { name: 'documentoPagable', width: '15%', displayName: 'Estatus del Documento'},
          { name: 'ordenBloqueada', displayName: 'Bloqueada', width: '20%' , cellTemplate: '<button ng-click="row.entity.ordenBloqueada = !row.entity.ordenBloqueada" ng-model="row.entity.ordenBloqueada" style="{{row.entity.ordenBloqueada ? "background-color: lightgreen" : ""}}"></button>' },
+         { name: 'cuentaPagadora', width: '15%', displayName: 'Banco'}
          // { name: 'diasCobro', width: '5%' },
          // { name: 'aprobado', width: '5%' },
          // { name: 'contReprog', width: '5%' }
