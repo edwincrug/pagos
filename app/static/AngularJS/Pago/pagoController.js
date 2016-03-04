@@ -28,6 +28,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
        $scope.showSelCartera = true;
 
 
+
        //*******************************
        $scope.ingresos = [{id: 1, nombre:'Santander', cuenta: 94039,saldo: 40000, disponible: 40000, ingreso:1, egreso:0},
                           {id: 2,nombre:'Bancomer', cuenta: 594833,saldo: 79000, disponible: 79000,ingreso:0, egreso:1},
@@ -178,27 +179,30 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         $scope.gridOptions.columnDefs = [
          
          {
-           name: 'proveedor', grouping: { groupPriority: 0 }, sort: { priority: 0, direction: 'asc' }, name: 'proveedor'
-           , width: '50%'
+           name: 'nombreAgrupador', grouping: { groupPriority: 0 }, sort: { priority: 0, direction: 'asc' }, width: '15%',displayName: 'Grupo', enableCellEdit: false
+         },
+         {
+           name: 'proveedor', grouping: { groupPriority: 1 }, sort: { priority: 1, direction: 'asc' }, name: 'proveedor', enableCellEdit: false
+           , width: '35%'
            ,cellTemplate: '<div><div ng-if="!col.grouping || col.grouping.groupPriority === undefined || col.grouping.groupPriority === null || ( row.groupHeader && col.grouping.groupPriority === row.treeLevel )" class="ui-grid-cell-contents" title="TOOLTIP">{{COL_FIELD CUSTOM_FILTERS}}</div></div>'
          },
          {
              field: 'Pagar', displayName: 'Pagar (total)', width: '25%', cellFilter: 'currency', aggregationType: uiGridConstants.aggregationTypes.sum,
-             treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
+             treeAggregationType: uiGridGroupingConstants.aggregation.SUM, enableCellEdit: false,
              editableCellTemplate: '<div><form name="inputForm"><input type="number" ng-class="\'colt\' + col.uid" ui-grid-editor ng-model="MODEL_COL_FIELD"></form></div>',
              customTreeAggregationFinalizerFn: function (aggregation) {
                  aggregation.rendered = aggregation.value;
              }
          },
-         { name: 'fechaPromesaPago', displayName: 'Fecha Promesa de Pago', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '15%'},
+         { name: 'fechaPromesaPago', displayName: 'Fecha Promesa de Pago', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '15%', enableCellEdit: false}
 
-        ];    
+        ];  
+
     };
     //FAl--Oculta el grid del Modal y asigna la variable toda la cartera true
     $scope.OcultaGridModal = function (value) 
     {       
         $scope.showGrid = value;
-      
     };
 
 
@@ -210,6 +214,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
             .success(llenaGridSuccessCallback)
             .error(errorCallBack);
             $scope.llenaEncabezado();
+
         }
         else
             pagoRepository.getDatos($scope.idEmpresa)
@@ -248,6 +253,9 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
                  $scope.selectAll();
                 }, 500);
+
+
+
     };     
 
  var setGroupValues = function (columns, rows) {
@@ -345,6 +353,8 @@ $scope.gridOptions = {
             $scope.gridApi = gridApi;
             // $scope.gridApi.grid.registerColumnsProcessor( setGroupValues, 410 );
             $scope.cantidadTotal = $scope.cantidadTotal;
+            // marcando los padres.
+
             $scope.gridApi.selection.on.rowSelectionChanged($scope, function (rowChanged) {
                 if (typeof (rowChanged.treeLevel) !== 'undefined' && rowChanged.treeLevel > -1) 
                 {
@@ -443,8 +453,9 @@ $scope.gridOptions = {
                                    
                 }               
               });
-
-          $scope.gridApi.selection.selectAllRows();  
+                
+                    
+          $scope.gridApi.selection.selectAllRows(true);  
         }
     } //grid options
 }//funcion
