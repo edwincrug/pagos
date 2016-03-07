@@ -186,6 +186,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                     if($rootScope.noLotes.data.length > 0) //mostrar boton crear lote
                     {   
                         alertFactory.info('Total de lotes: ' +  $rootScope.noLotes.data.length);
+                        $rootScope.idLotePadre = $rootScope.noLotes.data[$rootScope.noLotes.data.length - 1].idLotePago;
                     }
                     else
                     {
@@ -646,7 +647,7 @@ $scope.Guardar = function() {
                  var jsTransf = angular.toJson($scope.transferencias);
                  var jsEgresos = angular.toJson($scope.egresos);
 
-                 pagoRepository.setDatos(array,$rootScope.currentEmployee,response.data,jsIngresos,jsTransf,$scope.caja,$scope.cobrar,jsEgresos)
+                 pagoRepository.setDatos(array,$rootScope.currentEmployee,$rootScope.idLotePadre,jsIngresos,jsTransf,$scope.caja,$scope.cobrar,jsEgresos)
                         .then(function successCallback(response) {
                             
                             alertFactory.success('Se guardaron los datos.');
