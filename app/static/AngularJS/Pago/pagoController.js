@@ -5,7 +5,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
    $scope.idUsuario = 4;
 
    //LQMA 04032016
-   $rootScope.currentEmployee = 1;
+   $rootScope.currentEmployee = 6;
    $rootScope.currentId = null;
    $rootScope.currentIdOp = null;
    $scope.idLote = 0;
@@ -61,18 +61,16 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         $scope.egresos = [{nombre:'HSBC', cuenta: 228139,saldo: 90000, aTransferir: 0, total:90000,excedente:0, ingreso:0, egreso:1,totalPagar:200000,saldoIngreso:0},
                          {nombre:'Bancomer', cuenta: 594833,saldo: 120000, aTransferir: 0,total:120000,excedente:0, ingreso:1, egreso:1,totalPagar:450000,saldoIngreso:0}];*/
 
-        $scope.LlenaIngresos();        
+        $scope.LlenaIngresos();
 
         // SEL_CUENTAS_EGRESOS_SP
        /*$scope.egresos = [{id: 1,nombre:'HSBC', cuenta: 228139,saldo: 90000, aTransferir: 0, total:90000,excedente:0, ingreso:0, egreso:1,totalPagar:200000,saldoIngreso:0},
                          {id: 2,nombre:'Bancomer', cuenta: 594833,saldo: 120000, aTransferir: 0,total:120000,excedente:0, ingreso:1, egreso:1,totalPagar:450000,saldoIngreso:0}]; */
 
        // nombre y cuenta = cuenta, saldo = saldo (siempre vendra en 0), aTransferir = aTransferir (viene en 0), total = total (viene en 0, se calcula),   excedente = viene en 0, se calcula, totalPagar = recuperar del $scope.TotalxEmpresa.sumaSaldo,saldoIngreso = 0   
-       $scope.transferencias = [{bancoOrigen:'', bancoDestino: '', importe:0, disponibleOrigen:0,index:0}];
+       $scope.transferencias = [{bancoOrigen:'', bancoDestino: '', importe:0, disponibleOrigen:0,index:0}];       
 
-       
-
-    };
+    };//Fin funcion Init
     
     var Prepagos = function(){
         $scope.llenaGrid();
@@ -180,6 +178,25 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 $scope.traeTotalxEmpresa.emp_nombre = emp_nombre;
                 $scope.showTotales = true;
                 $scope.showSelCartera = true;
+                //LQMA  07032016
+                pagoRepository.getLotes($scope.idEmpresa,$rootScope.currentEmployee)
+                .then(function successCallback(data) {
+
+                    $rootScope.noLotes = data;
+                    if($rootScope.noLotes.data.length > 0) //mostrar boton crear lote
+                    {   
+                        alertFactory.info('Total de lotes: ' +  $rootScope.noLotes.data.length);
+                    }
+                    else
+                    {
+                        alertFactory.info('No existen Lotes');
+                    }
+                }, 
+                function errorCallback(response) {
+                    alertFactory.error('Error al obtener los Lotes');
+                }
+                );
+
             }, function errorCallback(response) {
                 //oculta la información y manda el total a cero y llena el input del modal
                 $rootScope.TotalxEmpresas = [];
@@ -190,9 +207,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 $scope.traeTotalxEmpresa.emp_nombre = 'La empresa seleccionada no tiene información';
             }
         );
-
     };
-
 
     //LQMA 04032016 obtiene ingresos y egresos
     $scope.LlenaIngresos = function () {       
@@ -273,12 +288,20 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
     //LQMA
     $scope.IniciaLote = function(){
 
-        if($rootScope.showGrid) {
-            $rootScope.modalSeleccionados = $scope.gridApi.selection.getSelectedRows();
-            $rootScope.gridOptions.data = $rootScope.modalSeleccionados;
-        }   
-        $('#inicioModal').modal('hide');
-    }
+        pagoRepository.getPagosPadre($rootScope.currentEmployee)
+            .then(function successCallback(response) 
+            {  
+                $rootScope.idLotePadre = response.data;
+                if($rootScope.showGrid) {
+                    $rootScope.modalSeleccionados = $scope.gridApi.selection.getSelectedRows();
+                    $rootScope.gridOptions.data = $rootScope.modalSeleccionados;
+                }   
+                $('#inicioModal').modal('hide');
+
+            }, function errorCallback(response) {                
+                alertFactory.error('Error al insertar Lote.');
+            });
+    }; //FIN inicia Lote
 
     $scope.llenaGrid = function () {
 
@@ -590,9 +613,9 @@ $scope.Guardar = function() {
     else 
     {
         //alertFactory.success('Se guardaron los datos.');
-        pagoRepository.getPagosPadre($rootScope.currentEmployee)
+        /*pagoRepository.getPagosPadre($rootScope.currentEmployee)
             .then(function successCallback(response) 
-            {        
+            {        */
                 var array = [];
                 var rows =  $scope.gridApi.grid.rows;
                 var count = 0;
@@ -601,7 +624,7 @@ $scope.Guardar = function() {
 
                             var elemento = {};
 
-                             elemento.pag_id = response.data;
+                             elemento.pal_id_lote_pago = $rootScope.idLotePadre; //response.data;
                              elemento.pad_polTipo = row.entity.polTipo;
                              elemento.pad_polAnnio = row.entity.annio;
                              elemento.pad_polMes = row.entity.polMes;
@@ -632,9 +655,9 @@ $scope.Guardar = function() {
                             alertFactory.error('Error al guardar Datos');
                         }
                     );     
-            }, function errorCallback(response) {                
+            /*}, function errorCallback(response) {                
                 alertFactory.error('Error al insertar en tabla padre.');
-            });
+            });*/
         }//fin else
   };
 

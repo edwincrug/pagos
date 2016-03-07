@@ -92,11 +92,7 @@
           </div><!-- /.navbar-collapse -->
 
         </div><!-- /.container-fluid -->
-
       </nav>
-
-
-
 
       <div ng-view></div>
     </div>
@@ -177,8 +173,8 @@
      <!-- Totales a pagar por bancos -->
    </div>
    <div class="modal-footer">
-     <button class="btn btn-info" data-toggle="modal" href="#stack2" ng-click="IniciaLote()">Crear Lote</button>
-     <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button></div>
+     <button class="btn btn-info" data-toggle="modal" href="#stack2" ng-click="IniciaLote()" ng-hide="noLotes.data.length > 0">Crear Lote</button>
+     <button type="button" class="btn btn-primary" data-dismiss="modal" ng-hide="noLotes.data.length == 0">Ir a Programación Pago</button></div>
    </div>
  </div>
 </div>
