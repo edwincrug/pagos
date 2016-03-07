@@ -751,8 +751,7 @@ $scope.Guardar = function() {
         }    
 
         $scope.calculaTotalOperaciones();
-
-        recalculaIngresos();    
+        recalculaIngresos();
     };
 
     var recalculaIngresos = function()
@@ -784,9 +783,9 @@ $scope.Guardar = function() {
 
     $scope.presskey = function(event){
         if (event.which === 13)
-        {
-            //alert('I am an alert');
-            $(this).focusout();
+        {            
+            $scope.calculaTotalOperaciones();
+            recalculaIngresos();
         }
     };
 
@@ -816,12 +815,8 @@ $scope.Guardar = function() {
 
         case 'b':
 
-
                 break;
-
     } 
-
-
 
     return total;
 }
