@@ -3,345 +3,282 @@
 <div cg-busy="myPromise" ng-init="init()" resize>
 
 	<section id="global">
-		<h1 id="title">{{ scencabezado.empNombre }}</h1>
-		<div class="row panelTotalGlobal">
-			 <div class="panel-body">
-                        <div class="rows" >
-                          <div class="resTexto">
-                            Cuenta Pagadora
-                          </div>
-                          <div class="resMonto ng-binding">
-                          </div>
-                        </div>
-                        <div class="rows" ng-repeat="TotalxEmpresa in TotalxEmpresas">
-                          <div class="resTexto">
-                            <b>{{TotalxEmpresa.banco}}:{{TotalxEmpresa.cuentaPagadora}}</b>
-                          </div>
-                          <div class="resMonto ng-binding">
-                            {{TotalxEmpresa.sumaSaldo | currency}}
-                          </div>
-                        </div>
-                        <div class="rows"> <div class="raya"></div></div>
-                        <div class="rows">
-                          <div class="resTexto">
-                            <b>Total a pagar</b>
-                          </div>
-                          <div class="resMonto ng-binding">
-                            {{GranTotal | currency}}
-                          </div>
-                        </div>
-                      </div>        
+		<div id="tituloEmpresa">
+			<h1 id="title">{{ scencabezado.empNombre }}</h1>
 		</div>
+		<div id="mdContentSuma2">
+			<div class="mdLineSuma" ng-repeat="TotalxEmpresa in TotalxEmpresas">
+				<div class="sumTexto">
+					{{TotalxEmpresa.cuentaPagadora}}
+				</div>
+				<div class="sumMonto blue">
+					{{TotalxEmpresa.sumaSaldo | currency}}
+				</div>
+			</div>
+			<div class="rows"> <div class="raya"></div></div>
+			<div class="rows">
+				<div class="sumTexto">
+					A pagar
+				</div>
+				<div class="sumMonto montoFinal blue">
+					{{GranTotal | currency}}
+				</div>
+			</div>
+		</div> 
+		<div id="chkPagable2">
+				<span id="txtCartera">	Totales </span><input type="checkbox" class="switch-checkbox" checked>
+		</div>      
 	</section>
 	<section id="flujoEfectivo">
-	<div class="collapse in" id="collapsePanel">			
-		<div class="row">
-			<div class="col-xs-12 col-sm-10 col-lg-10"> 
-			</div>
-			<div class="col-xs-12 col-sm-1 col-lg-1"> 
-				<input type="button" id="btnAdd" ng-click="addTransferencia()" value="+" />
-			</div>			
+		<div class="tituloBloque1">
+			Flujo de Efectivo
 		</div>
-		<div class="row">
-			<div class="col-xs-12 col-sm-6 col-lg-6"> 
-				<div id="ingresos" class="Table"> 
-				    <div class="Title">
-						<p>Ingresos</p>
-					</div>
-					<table class="table table-condensed"> 
-						<thead> 
-							<tr> 				
-								<th>Banco</th> 
-								<th>Cuenta</th> 
-								<th>Saldo</th> 
-								<th>Disponible</th>
-							</tr> 
-						</thead> 
-						<tbody> 
-							<tr ng-repeat="ingreso in ingresos" ng-class="{'danger':ingreso.disponible == '0', 'warning':ingreso.disponible < (ingreso.saldo / 2),'info': ingreso.disponible > (ingreso.disponible / 2)}">
-								<td>{{ingreso.nombre}}</td> 
-								<td>{{ingreso.cuenta}}</td>				
-								<td><input type="text" ng-model="ingreso.saldo" ng-blur="calculaSaldoIngresos(ingreso)"></td> 
-								<td>{{ingreso.disponible}}</td> 
-							</tr>
-						</tbody>
-						<tfoot>
-							<td></td>
-							<td></td>
-							<td>{{getTotal('ingresoSaldo')}}</td>
-							<td>{{getTotal('ingresoDisponible')}}</td>
-						</tfoot>
-					</table>
-				</div>
-			</div>
-			<div class="col-xs-6 col-lg-6">
-				<div id="transferencias" class="Table"> 
-					<div class="Title">
-						<p>Transferencias Bancarias</p>
-					</div>
-					<table class="table table-condensed"> 
-						<thead> 
-							<tr> 				
-								<th>Banco Origen</th>
-								<th>Banco Destino</th>
-								<th>Importe</th>
-								<th></th>
-							</tr> 
-						</thead> 
-						<tbody id="tbodyTrans1"> 
-							<tr class="clonedInput" ng-repeat="transferencia in transferencias">				
-								<td>									
-									<div class="input-group">
-								      <input type="text" class="form-control" ng-model='transferencia.bancoOrigen' aria-label="...">
-								      <div class="input-group-btn">
-								        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Seleccione <span class="caret"></span></button>
-								        <ul class="dropdown-menu dropdown-menu-right">
-								          <li ng-repeat="ingreso in ingresos">
-								          	<a href="#" ng-click="selBancoIngreso(ingreso, transferencia)">{{ingreso.nombre}} - {{ingreso.cuenta}}</a>
-								          </li>
-								        </ul>
-								      </div><!-- /btn-group -->
-								    </div><!-- /input-group -->	
-								</td> 											
-								<td>
-								    <div class="input-group">
-								      <input type="text" class="form-control" ng-model='transferencia.bancoDestino' aria-label="...">
-								      <div class="input-group-btn">
-								        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Seleccione <span class="caret"></span></button>
-								        <ul class="dropdown-menu dropdown-menu-right">
-								          <li ng-repeat="egreso in egresos">
-								          	<a href="#" class="egresosCombo" ng-click='selBancoEgreso(egreso,transferencia)'>
-								          		{{egreso.nombre}} - {{egreso.cuenta}}
-								          	</a>
-								          </li>
-								        </ul>
-								      </div><!-- /btn-group -->
-								    </div><!-- /input-group -->	
-								</td> 								
-								<td><input type="text" ng-blur="calculaTransferencia(transferencia)" ng-keypress="presskey($event)" ng-model="transferencia.importe"></td> 
-								<td> 
-									<input type="button" id="btnDel" value="-" ng-click="delTransferencia(transferencia)" />
-								</td>
-							</tr>
-						</tbody>
-						<tfoot>							
-							<td></td>
-							<td></td>
-							<td>total disponible</td>
-						</tfoot>
-					</table>
-				</div>					
-			</div>
-		</div>
-		<div class="col-xs-6 col-lg-6">
-				<div id="otros" class="Table"> 
-				    <div class="Title">
-						<p>Ingresos Otros</p>
-					</div>
-					<table class="table table-condensed"> 
-						<thead> 
-							<tr> 				
-								<th>Concepto</th> 								
-								<th>Total</th>
-							</tr> 
-						</thead> 
-						<tbody> 
-							<tr>				
-								<td>
-									Caja:
-								</td>								
-								<td><input type="text" id="txtCaja"></td> 
-							</tr>
-							<tr>				
-								<td>
-									Cobranza esperada:
-								</td>								
-								<td><input type="text" id="txtCobranza"></td> 
-							</tr>
-						</tbody>
-						<tfoot>							
-							<td></td>							
-							<td>total disponible</td>
-						</tfoot>
-					</table>
-				</div>					
-		</div>
-		<div class="col-xs-6 col-lg-6">
-				<div id="totalOpeaciones" class="Table"> 
-				    <div class="Title">
-						<p>Total Operaciones</p>
-					</div>
-					<table class="table table-condensed"> 
-						<thead> 
-							<tr> 				
-								<th>Banco-Cta</th> 								
-								<th>Saldo</th>
-								<th>A transferir</th> 								
-								<th>Total</th>
-								<th>Excedente</th>
-							</tr> 
-						</thead> 
-						<tbody> 
-							<tr ng-repeat="egreso in egresos">
-								<td>
-									{{egreso.nombre}} - {{egreso.cuenta}}
-								</td>								
-								<td>
-									<input type="text" ng-model="egreso.saldo" ng-blur="calculaTotalOperaciones()" ng-hide="egreso.ingreso != 0">
-									<label ng-hide="egreso.ingreso == 0">{{egreso.saldoIngreso}}</label>
-								</td> 
-								<td>
-									{{egreso.aTransferir}}
-								</td> 
-								<td>
-									{{egreso.total}}
-								</td> 
-								<td>
-									{{egreso.excedente}}
-								</td> 
-							</tr>							
-						</tbody>
-						<tfoot>							
-							<td></td>
-							<td></td>
-							<td></td>
-							<td>{{getTotal('egresosTotal')}}</td>
-							<td>total disponible</td>
-						</tfoot>
-					</table>
-				</div>					
-		</div>		
-
-	</div>	
-	</section>
-	
-	<section id="top">
 		<div id="resumenColapsado" ng-hide="!colapsado">
-			<div id="chkPagable2">
-				<span id="txtCartera">	Situación Cartera </span><input type="checkbox" class="switch-checkbox" checked>
+			<div id="colCobranza">
+				<div class="colLabel">Cobranza Esperada</div><span class="colText lightBlue" > {{scencabezado.disponible | currency}} </span> 
 			</div>
-			<div id="colFlujoEfectivo">
-				<span class="colLabel">Total a Pagar </span><span class="colText blue" class="blue"> 
-				<label id= "CantTotal"></label>
-				{{cantidadTotal | currency}} </span> 
+			<div id="colCaja">
+				<div class="colLabel">Caja</div><span class="colText lightBlue" > {{scencabezado.disponible | currency}} </span> 
 			</div>
-			<div id="colPagar">
-				<span class="colLabel">Flujo de Efectivo</span><span class="colText blue" class="blue"> {{scencabezado.disponible | currency}} </span> 
+			<div id="mdContentSuma2">
+			<div class="mdLineSuma" ng-repeat="TotalxEmpresa in TotalxEmpresas">
+				<div class="sumTexto">
+					{{TotalxEmpresa.cuentaPagadora}}
+				</div>
+				<div class="sumMonto lightBlue">
+					{{TotalxEmpresa.sumaSaldo | currency}}
+				</div>
 			</div>
+			<div class="rows"> <div class="raya rayaLightBlue"></div></div>
+			<div class="rows">
+				<div class="sumTexto">
+					Flujo
+				</div>
+				<div class="sumMonto montoFinal lightBlue">
+					{{GranTotal | currency}}
+				</div>
+			</div>
+		</div> 
 		</div>
-		<div class="collapse in" id="collapsePanel">
-			<!--div class="row panelEncabezado">
-				<div class="panel panel-primary">					
-					<div class="panel-heading flujoHeader">
-						<div class="flujo" tooltip="Último flujo de efectivo">
-							Flujo de Efectivo
-							<span class="glyphicon glyphicon-time" aria-hidden="true"></span>
-							12/02/16 13:50
+		<div class="collapse in" id="collapsePanel">	
+			<div id="contenedorTablas">
+				<div class="rowTablas">
+					<div id="tblBancos">
+						<div class="titleBloque">
+							Ingresos Bancos
 						</div>
+						<br>
+						<table class="table table-condensed" id="tablaING"> 
+							<thead> 
+								<tr>
+									<th>Cuenta</th> 
+									<th>Saldo</th> 
+									<th>Disponible</th>
+								</tr> 
+							</thead> 
+							<tbody> 
+								<tr ng-repeat="ingreso in ingresos" >
+									<td>{{ingreso.cuenta}}</td>				
+									<td><input type="text" ng-model="ingreso.saldo" ng-blur="calculaSaldoIngresos(ingreso)" class="form-control txtIngresos"></td> 
+									<td ng-class="{'danger':ingreso.disponible == '0', 'warning':ingreso.disponible < (ingreso.saldo / 2),'info': ingreso.disponible > (ingreso.disponible / 2)}">{{ingreso.disponible}}</td> 
+								</tr>
+							</tbody>
+							<tfoot>
+								<td></td>
+								<td>{{getTotal('ingresoSaldo')}}</td>
+								<td>{{getTotal('ingresoDisponible')}}</td>
+							</tfoot>
+						</table>
 					</div>
-					<div class="panel-body">
-						<div class="rows">
-							<div class="resTexto">
-								Saldo en banco
-							</div>
-							<div class="resSigno">
-								<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-							</div>
-							<div class="resMonto">
-								{{scencabezado.saldoBanco | currency}}
-							</div>
+					<div id="tblOtros">
+						<div class="titleBloque">
+							<p>Ingresos Otros</p>
 						</div>
-						<div class="rows">
-							<div class="resTexto">
-								Saldo en caja
-							</div>
-							<div class="resSigno">
-								<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-							</div>
-							<div class="resMonto">
-								{{scencabezado.saldoCaja | currency}}
-							</div>
+						<br>
+						<table class="table table-condensed"> 
+							<thead> 
+								<tr> 				
+									<th>Concepto</th> 								
+									<th>Total</th>
+								</tr> 
+							</thead> 
+							<tbody> 
+								<tr>				
+									<td>
+										Caja:
+									</td>								
+									<td><input type="text" id="txtCaja" class="form-control txtIngresos"></td> 
+								</tr>
+								<tr>				
+									<td>
+										Cobranza esperada:
+									</td>								
+									<td><input type="text" id="txtCobranza" class="form-control txtIngresos"></td> 
+								</tr>
+							</tbody>
+							<tfoot>							
+								<td></td>							
+								<td>total disponible</td>
+							</tfoot>
+						</table>
+					</div>
+					<div id="tblTransfer">
+						<div class="titleBloque">
+							<p>Transferencias Bancarias</p>
 						</div>
-						<div class="rows">
-							<div class="resTexto">
-								Cobranza esperada
-							</div>
-							<div class="resSigno">
-								<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-							</div>
-							<div class="resMonto">
-								{{scencabezado.cobranzaEsperada | currency}}
-							</div>
-						</div>
-						<div class="rows"> <div class="raya"></div></div>
-						<div class="rows">
-							<div class="resTexto">
-								Flujo de Efectivo
-							</div>
-							<div class="resSigno">
-
-							</div>
-							<div class="resMonto">
-								{{scencabezado.disponible | currency}}
-							</div>
-						</div>
-						<div class="rows">
-							<div class="resTexto">
-								Total a Pagar
-							</div>
-							<div class="resSigno">
-								<span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
-							</div>
-							<div class="resMonto">
-								{{cantidadTotal | currency}}
-							</div>
-						</div>
-						<div class="rows"> <div class="raya"></div></div>
-						<div class="rows">
-							<div class="resTexto resaltado">
-								Disponible
-							</div>
-							<div class="resSigno">
-
-							</div>
-							<div class="resMonto resaltado" ng-class="{ 'rojo': (scencabezado.disponible < cantidadTotal ) }">
-								{{ (scencabezado.disponible - cantidadTotal ) | currency }}
-							</div>
-						</div>
-					</div>			  
+						<button type="button" class="btn btn-success" id="btnAdd" ng-click="addTransferencia()" > 
+							<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+						</button>
+						<table class="table table-condensed" id="tablaTR"> 
+							<thead> 
+								<tr> 				
+									<th>Banco Origen</th>
+									<th>Banco Destino</th>
+									<th>Importe</th>
+									<th></th>
+								</tr> 
+							</thead> 
+							<tbody id="tbodyTrans1"> 
+								<tr class="clonedInput" ng-repeat="transferencia in transferencias">				
+									<td>									
+										<div class="input-group">
+											<input type="text" class="form-control" ng-model='transferencia.bancoOrigen' aria-label="...">
+											<div class="input-group-btn">
+												<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <span class="caret"></span></button>
+												<ul class="dropdown-menu dropdown-menu-right">
+													<li ng-repeat="ingreso in ingresos">
+														<a href="#" ng-click="selBancoIngreso(ingreso, transferencia)">{{ingreso.nombre}} - {{ingreso.cuenta}}</a>
+													</li>
+												</ul>
+											</div><!-- /btn-group -->
+										</div><!-- /input-group -->	
+									</td> 											
+									<td>
+										<div class="input-group">
+											<input type="text" class="form-control" ng-model='transferencia.bancoDestino' aria-label="...">
+											<div class="input-group-btn">
+												<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <span class="caret"></span></button>
+												<ul class="dropdown-menu dropdown-menu-right">
+													<li ng-repeat="egreso in egresos">
+														<a href="#" class="egresosCombo" ng-click='selBancoEgreso(egreso,transferencia)'>
+															{{egreso.nombre}} - {{egreso.cuenta}}
+														</a>
+													</li>
+												</ul>
+											</div><!-- /btn-group -->
+										</div><!-- /input-group -->	
+									</td> 								
+									<td><input type="text" ng-blur="calculaTransferencia(transferencia)" ng-keypress="presskey($event)" ng-model="transferencia.importe" class="form-control txtIngresos"></td> 
+									<td> 
+										<button type="button" class="btn btn-danger" id="btnDel" ng-click="delTransferencia(transferencia)">
+											<span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+										</button>
+									</td>
+								</tr>
+							</tbody>
+							<tfoot>							
+								<td></td>
+								<td></td>
+								<td>total disponible</td>
+							</tfoot>
+						</table>
+					</div>
 				</div>
-			</div-->
-			<div class="row panelTotales">
-				<div id="clsPagar">
-					<span id="clsMainLabel">Total a Pagar</span><span id="clsPagarText" class="blue"> {{cantidadTotal | currency}} </span> 
+				<div class="rowTablas">
+					
+					<div id="tblTotales">
+						<div class="titleBloque">
+							<p>Total Operaciones</p>
+						</div>
+						<table class="table table-condensed"> 
+							<thead> 
+								<tr> 				
+									<th>Banco-Cta</th> 								
+									<th>Saldo</th>
+									<th>A transferir</th> 								
+									<th>Total</th>
+									<th>Excedente</th>
+								</tr> 
+							</thead> 
+							<tbody> 
+								<tr ng-repeat="egreso in egresos">
+									<td>
+										{{egreso.nombre}} - {{egreso.cuenta}}
+									</td>								
+									<td>
+										<input type="text" ng-model="egreso.saldo" ng-blur="calculaTotalOperaciones()" ng-hide="egreso.ingreso != 0" class="form-control txtIngresos">
+										<label ng-hide="egreso.ingreso == 0">{{egreso.saldoIngreso}}</label>
+									</td> 
+									<td>
+										{{egreso.aTransferir}}
+									</td> 
+									<td>
+										{{egreso.total}}
+									</td> 
+									<td>
+										{{egreso.excedente}}
+									</td> 
+								</tr>							
+							</tbody>
+							<tfoot>							
+								<td></td>
+								<td></td>
+								<td></td>
+								<td>{{getTotal('egresosTotal')}}</td>
+								<td>total disponible</td>
+							</tfoot>
+						</table>
+					</div>
 				</div>
-				<div id="clsComplemento">
-					<div id="clsTotal">
-						<span class="clsDetailLabel">Cartera vencida</span> <span class="clsDetailText blue">{{carteraVencida | currency}}</span>
-					</div>
-					<div class="clsPendiente">
-						<span class="clsDetailLabel">No Pagable</span> <span class="clsDetailText blue"> {{ noPagable | currency }} </span>
-					</div>
-					<div class="clsPendiente">
-						<span class="clsDetailLabel">Reprogramado</span> <span class="clsDetailText blue"> {{ Reprogramable | currency }} </span>
-					</div>
-					<div class="clsPendiente">
-						<span class="clsDetailLabel">Porcentaje a pagar</span> <span class="clsDetailText blue"> {{ ((cantidadTotal * 100) / carteraVencida ) | number:2 }} %</span>
-					</div>
-				</div>
-
 			</div>
-			<div id="chkPagable1">
-				<div class="btn-group" role="group">
-					<button type="button" class="btn btn-default" ng-click="FiltrarCartera('')">Todos</button>
-					<button type="button" class="btn btn-default"  ng-click="FiltrarCartera('True')">Pagada</button>
-					<button type="button" class="btn btn-default"  ng-click="FiltrarCartera('False')">No Pagada</button>
-				</div>
-			</div>
-		</div>
+
+		</div>	
 		<div id="colapsar" >
 			<a class="glyphicon glyphicon-resize-small linkManual" aria-hidden="true" data-toggle="collapse" data-target="#collapsePanel" aria-expanded="false" aria-controls="collapsePanel" ng-click="Resize()" ng-hide="colapsado" tooltip="Contraer"></a>
 			<a class="glyphicon glyphicon-resize-full linkManual" aria-hidden="true" data-toggle="collapse" data-target="#collapsePanel" aria-expanded="false" aria-controls="collapsePanel" ng-click="Resize()" ng-hide="!colapsado" tooltip="Expandir"></a>
+		</div>
+	</section>
+	
+	<section id="filtros">
+		<div class="tituloBloque2">
+			Cartera a pagar
+		</div>
+		<div id="filtrosContenedor">
+			
+			<div class="row panelTotales">
+				<div id="clsPagar">
+					<span id="clsMainLabel">Incluido</span><span id="clsPagarText" class="blueInfo"> {{cantidadTotal | currency}} </span>
+				</div>
+				<div id="clsComplemento">
+					<div id="clsTotal">
+						<span class="clsDetailLabel">Cartera vencida</span> <span class="clsDetailText blueInfo">{{carteraVencida | currency}}</span>
+					</div>
+					<div class="clsPendiente">
+						<span class="clsDetailLabel">No Incluido</span> <span class="clsDetailText blueInfo"> {{ noPagable | currency }} </span>
+					</div>
+<!-- 					<div class="clsPendiente">
+						<span class="clsDetailLabel">Reprogramado</span> <span class="clsDetailText blue"> {{ Reprogramable | currency }} </span>
+					</div> -->
+					<div class="clsPendiente">
+						<span class="clsDetailLabel">Porcentaje a pagar</span> <span class="clsDetailText blueInfo"> {{ ((cantidadTotal * 100) / carteraVencida ) | number:2 }} %</span>
+					</div>
+				</div>
+
+			</div>
+			<div id="chkPagable0">
+				<div class="btn-group" role="group">
+					<button type="button" class="btn btn-primary" ng-click="FiltrarCartera('')">Todos</button>
+					<button type="button" class="btn btn-primary"  ng-click="FiltrarCartera('True')">Pagable</button>
+					<button type="button" class="btn btn-primary"  ng-click="FiltrarCartera('False')">Incluida</button>
+					<button type="button" class="btn btn-primary"  ng-click="FiltrarCartera('False')">No Incluida</button>
+				</div>
+			</div>
+			<div id="chkPagable1">
+				<div class="btn-group" role="group">
+					<button type="button" class="btn btn-info" ng-click="FiltrarCartera('')">BANAMEX 7187 </button>
+					<button type="button" class="btn btn-info"  ng-click="FiltrarCartera('True')"> BANCOMER 1289 </button>
+				</div>
+			</div>
 		</div>
 	</section>
 	
