@@ -4,7 +4,12 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
    $scope.idCuenta = 4;
    $scope.idUsuario = 4;
 
-   $scope.currentEmployee = 1;
+   //LQMA 04032016
+   $rootScope.currentEmployee = 1;
+   $rootScope.currentId = null;
+   $rootScope.currentIdOp = null;
+   $scope.idLote = 0;
+
 
    var errorCallBack = function (data, status, headers, config) {
         alertFactory.error('Ocurrio un problema');
@@ -15,8 +20,22 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
     BEGIN
     ****************************************************************************************************************/
 
+
     $scope.init = function () {
        //LQMA   leer parametros : id , idemployee
+       
+       /*if($scope.currentEmployee == 0)
+       {
+            $('#inicioModal').modal('hide');
+            //GetEmpleado();
+       }
+       else
+       {
+             //GetEmpleado();
+             $scope.traeEmpresas();
+       }*/
+
+       /***********************************************************/
        GetEmpleado();
        //getId();       
 
@@ -26,18 +45,33 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
        $.fn.bootstrapSwitch.defaults.offText = 'Global';
        $('.switch-checkbox').bootstrapSwitch();      
        $scope.showSelCartera = true;
-
-
-
+       /***********************************************************/ 
+       //configuraGridModal();
        //*******************************
-       $scope.ingresos = [{id: 1, nombre:'Santander', cuenta: 94039,saldo: 40000, disponible: 40000, ingreso:1, egreso:0},
+       //                   id=no esta, nombre y cuenta = cuenta, saldo = saldo, disponible = disponible,
+       /*$scope.ingresos = [{id: 1, nombre:'Santander', cuenta: 94039,saldo: 40000, disponible: 40000, ingreso:1, egreso:0},         
                           {id: 2,nombre:'Bancomer', cuenta: 594833,saldo: 79000, disponible: 79000,ingreso:0, egreso:1},
-                          {id: 3,nombre:'Banamex', cuenta: 100298,saldo: 685000, disponible: 685000, ingreso:0, egreso:1}];
+                          {id: 3,nombre:'Banamex', cuenta: 100298,saldo: 685000, disponible: 685000, ingreso:0, egreso:1}];*/
 
-       $scope.egresos = [{id: 1,nombre:'HSBC', cuenta: 228139,saldo: 90000, aTransferir: 0, total:90000,excedente:0, ingreso:0, egreso:1,totalPagar:200000,saldoIngreso:0},
-                         {id: 2,nombre:'Bancomer', cuenta: 594833,saldo: 120000, aTransferir: 0,total:120000,excedente:0, ingreso:1, egreso:1,totalPagar:450000,saldoIngreso:0}]; 
+        // SEL_CUENTAS_INGRESOS_SP
+        /*$scope.ingresos = [{nombre:'Santander', cuenta: 94039,saldo: 40000, disponible: 40000},
+                          {nombre:'Bancomer', cuenta: 594833,saldo: 79000, disponible: 79000},
+                          {nombre:'Banamex', cuenta: 100298,saldo: 685000, disponible: 685000}];
 
+        $scope.egresos = [{nombre:'HSBC', cuenta: 228139,saldo: 90000, aTransferir: 0, total:90000,excedente:0, ingreso:0, egreso:1,totalPagar:200000,saldoIngreso:0},
+                         {nombre:'Bancomer', cuenta: 594833,saldo: 120000, aTransferir: 0,total:120000,excedente:0, ingreso:1, egreso:1,totalPagar:450000,saldoIngreso:0}];*/
+
+        $scope.LlenaIngresos();        
+
+        // SEL_CUENTAS_EGRESOS_SP
+       /*$scope.egresos = [{id: 1,nombre:'HSBC', cuenta: 228139,saldo: 90000, aTransferir: 0, total:90000,excedente:0, ingreso:0, egreso:1,totalPagar:200000,saldoIngreso:0},
+                         {id: 2,nombre:'Bancomer', cuenta: 594833,saldo: 120000, aTransferir: 0,total:120000,excedente:0, ingreso:1, egreso:1,totalPagar:450000,saldoIngreso:0}]; */
+
+       // nombre y cuenta = cuenta, saldo = saldo (siempre vendra en 0), aTransferir = aTransferir (viene en 0), total = total (viene en 0, se calcula),   excedente = viene en 0, se calcula, totalPagar = recuperar del $scope.TotalxEmpresa.sumaSaldo,saldoIngreso = 0   
        $scope.transferencias = [{bancoOrigen:'', bancoDestino: '', importe:0, disponibleOrigen:0,index:0}];
+
+       
+
     };
     
     var Prepagos = function(){
@@ -159,6 +193,33 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
     };
 
+
+    //LQMA 04032016 obtiene ingresos y egresos
+    $scope.LlenaIngresos = function () {       
+        pagoRepository.getIngresos(4,$scope.idLote)  //$scope.idEmpresa
+            .then(function successCallback(response) {
+                $scope.ingresos = response.data;
+                $scope.LlenaEgresos();
+            }, function errorCallback(response) {
+                alertFactory.error('Error al obtener los Ingresos');
+            }
+        );
+    };
+
+    $scope.LlenaEgresos = function () {
+        pagoRepository.getEgresos(4,$scope.idLote) //$scope.idEmpresa
+            .then(function successCallback(response) {
+                $scope.egresos = response.data;                
+                
+                $scope.calculaTotalOperaciones();
+                recalculaIngresos();               
+
+            }, function errorCallback(response) {
+                alertFactory.error('Error al obtener los Egresos');
+            }
+        );
+    };
+
     /***************************************************************************************************************
     Funciones de incio  
     END
@@ -178,7 +239,8 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         pagoRepository.getDatos($scope.idEmpresa)
             .success(llenaGridSuccessCallback)
             .error(errorCallBack);
-        $scope.gridOptions.columnDefs = [
+
+        $rootScope.gridOptions.columnDefs = [
          
          {
            name: 'nombreAgrupador', grouping: { groupPriority: 0 }, sort: { priority: 0, direction: 'asc' }, width: '15%',displayName: 'Grupo', enableCellEdit: false
@@ -200,25 +262,25 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
          { name: 'cuentaPagadora', width: '15%', displayName: 'Banco'}
         ];  
 
+        /************************************************************************************************************************/  
     };
     //FAl--Oculta el grid del Modal y asigna la variable toda la cartera true
     $scope.OcultaGridModal = function (value) 
-    {       
-
-        $rootScope.showGrid = value;      
-
+    {
+        $rootScope.showGrid = value;
     };
 
     //LQMA
     $scope.IniciaLote = function(){
-        $rootScope.modalSeleccionados = $scope.gridApi.selection.getSelectedRows();
-        //$scope.llenaGrid();
-        //$scope.gridOptions.data = $rootScope.modalSeleccionados;
-        //ConfiguraGrid();        
+
+        if($rootScope.showGrid) {
+            $rootScope.modalSeleccionados = $scope.gridApi.selection.getSelectedRows();
+            $rootScope.gridOptions.data = $rootScope.modalSeleccionados;
+        }   
+        $('#inicioModal').modal('hide');
     }
 
     $scope.llenaGrid = function () {
-
 
         if(!$rootScope.showGrid){ //LQMA  si esta oculto, consultamos toda la cartera
             if ($rootScope.currentId != null){
@@ -234,13 +296,13 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         }// esta oculto
         else{
             ConfiguraGrid();
-            $scope.gridOptions.data = $rootScope.modalSeleccionados;
+            $rootScope.gridOptions.data = $rootScope.modalSeleccionados;
 
         }
     };  //Propiedades    
 
     var llenaGridSuccessCallback = function (data, status, headers, config) {
-                $scope.gridOptions.data = data;
+                $rootScope.gridOptions.data = data;
                 $scope.data = data;
                 $scope.carteraVencida = 0;
                 $scope.cantidadTotal = 0;
@@ -262,16 +324,13 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
                 }
                 $scope.noPagable = $scope.carteraVencida -$scope.cantidadTotal;
-                $scope.gridOptions.data = $scope.data;
+                $rootScope.gridOptions.data = $scope.data;                
  
                 setTimeout(function()
                 { 
 
                  $scope.selectAll();
                 }, 500);
-
-
-
     };     
 
  var setGroupValues = function (columns, rows) {
@@ -300,7 +359,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 //LQMA congifura e inicializa el grid
 var ConfiguraGrid = function(){
 
-$scope.gridOptions = {
+$rootScope.gridOptions = {
         enableGridMenu: true,
         enableFiltering: true,
         enableGroupHeaderSelection: true,
@@ -470,17 +529,16 @@ $scope.gridOptions = {
                             }
                                    
                 }               
-              });
-                
+              });               
                     
           $scope.gridApi.selection.selectAllRows(true);  
         }
-    } //grid options
-}//funcion
+    } //grid options    
+};//funcion
 
  $scope.selectAll = function() {
-    $scope.gridApi.selection.selectAllRows();  
-    };       
+    $scope.gridApi.selection.selectAllRows();
+};       
 
 $scope.FiltrarCartera = function (value) {
     console.log(value);
@@ -518,6 +576,14 @@ $scope.Guardar = function() {
             if(parseInt(ingreso.disponible) < 0)
                 negativos += 1;
         });
+
+
+    setTimeout(function(){guardaValida(negativos);},500);
+    
+  };//fin de funcion guardar
+
+
+  var guardaValida=function(negativos){
 
     if(negativos > 0)
         alertFactory.warning('Existen disponibles en valores negativos. Verifique las transferencias.');
@@ -570,7 +636,7 @@ $scope.Guardar = function() {
                 alertFactory.error('Error al insertar en tabla padre.');
             });
         }//fin else
-  };//fin de funcion guardar
+  };
 
 /***************************************************************************************************************
     Funciones de guardado de datos
@@ -603,14 +669,14 @@ $scope.Guardar = function() {
         if(ingreso.disponible <= 0)
             alertFactory.warning('El saldo disponible de esta cuenta es 0 o menor. Elija otra.');
         else
-            if(transferencia.bancoOrigen != ingreso.nombre + '-' + ingreso.cuenta)
+            if(transferencia.bancoOrigen != ingreso.cuenta)
             {
                 angular.forEach($scope.ingresos, function(ingreso, key){     
-                    if(ingreso.nombre +'-'+ ingreso.cuenta == transferencia.bancoOrigen)                
+                    if(ingreso.cuenta == transferencia.bancoOrigen)                
                             ingreso.disponible = parseInt(ingreso.disponible) + parseInt(transferencia.importe);
                 });
 
-                transferencia.bancoOrigen = ingreso.nombre + '-' + ingreso.cuenta;
+                transferencia.bancoOrigen = ingreso.cuenta;
                 transferencia.disponibleOrigen = ingreso.disponible;
                 transferencia.importe = 0;
             }
@@ -621,7 +687,7 @@ $scope.Guardar = function() {
 
     $scope.selBancoEgreso = function(egreso,transferencia)
     {
-        transferencia.bancoDestino = egreso.nombre + '-' + egreso.cuenta;
+        transferencia.bancoDestino = egreso.cuenta;
 
         $scope.calculaTotalOperaciones();
         recalculaIngresos(); 
@@ -632,7 +698,7 @@ $scope.Guardar = function() {
         var total = 0;
 
         angular.forEach($scope.transferencias, function(transferencia, key){
-                if(transferencia.bancoOrigen == ingreso.nombre + '-' + ingreso.cuenta)
+                if(transferencia.bancoOrigen == ingreso.cuenta)
                 {
                     total = parseInt(total) + parseInt(transferencia.importe);
                     //transferencia.disponibleOrigen = ingreso.disponible;
@@ -642,12 +708,12 @@ $scope.Guardar = function() {
         ingreso.disponible = parseInt(ingreso.saldo) - parseInt(total);
 
         angular.forEach($scope.egresos, function(egreso, key){
-                    if((ingreso.nombre +'-'+ ingreso.cuenta == egreso.nombre + '-' + egreso.cuenta) && egreso.ingreso == 1)
+                    if((ingreso.cuenta == egreso.cuenta) && egreso.ingreso == 1)
                         egreso.saldoIngreso = ingreso.disponible;
             });
 
         angular.forEach($scope.transferencias, function(transferencia, key){
-                if(transferencia.bancoOrigen == ingreso.nombre + '-' + ingreso.cuenta)
+                if(transferencia.bancoOrigen == ingreso.cuenta)
                     transferencia.disponibleOrigen = ingreso.disponible;
             });
 
@@ -680,7 +746,7 @@ $scope.Guardar = function() {
         else
         {
             angular.forEach($scope.ingresos, function(ingreso, key){
-                if(ingreso.nombre +'-'+ ingreso.cuenta == transferencia.bancoOrigen)
+                if(ingreso.cuenta == transferencia.bancoOrigen)
                 {
                     if(ingreso.disponible - transferencia.importe < 0)    
                     {
@@ -696,8 +762,7 @@ $scope.Guardar = function() {
         }    
 
         $scope.calculaTotalOperaciones();
-
-        recalculaIngresos();    
+        recalculaIngresos();
     };
 
     var recalculaIngresos = function()
@@ -705,7 +770,7 @@ $scope.Guardar = function() {
         angular.forEach($scope.ingresos, function(ingreso, key){
             ingreso.disponible = ingreso.saldo;
             angular.forEach($scope.transferencias, function(transferencia, key){
-                if(ingreso.nombre +'-'+ ingreso.cuenta == transferencia.bancoOrigen)
+                if(ingreso.cuenta == transferencia.bancoOrigen)
                     ingreso.disponible = ingreso.disponible - transferencia.importe;
             });           
 
@@ -718,7 +783,7 @@ $scope.Guardar = function() {
         angular.forEach($scope.egresos, function(egreso, key){
                 var totalDestino = 0;
                 angular.forEach($scope.transferencias, function(transferencia, key){
-                    if(transferencia.bancoDestino == egreso.nombre + '-' + egreso.cuenta)
+                    if(transferencia.bancoDestino == egreso.cuenta)
                          totalDestino = totalDestino + parseInt(transferencia.importe);
                 });
                 egreso.aTransferir = totalDestino;
@@ -729,9 +794,9 @@ $scope.Guardar = function() {
 
     $scope.presskey = function(event){
         if (event.which === 13)
-        {
-            //alert('I am an alert');
-            $(this).focusout();
+        {            
+            $scope.calculaTotalOperaciones();
+            recalculaIngresos();
         }
     };
 
@@ -761,12 +826,8 @@ $scope.Guardar = function() {
 
         case 'b':
 
-
                 break;
-
     } 
-
-
 
     return total;
 }
