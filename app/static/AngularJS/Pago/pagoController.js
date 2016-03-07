@@ -69,6 +69,9 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
        // nombre y cuenta = cuenta, saldo = saldo (siempre vendra en 0), aTransferir = aTransferir (viene en 0), total = total (viene en 0, se calcula),   excedente = viene en 0, se calcula, totalPagar = recuperar del $scope.TotalxEmpresa.sumaSaldo,saldoIngreso = 0   
        $scope.transferencias = [{bancoOrigen:'', bancoDestino: '', importe:0, disponibleOrigen:0,index:0}];
+
+       
+
     };
     
     var Prepagos = function(){
@@ -574,6 +577,14 @@ $scope.Guardar = function() {
                 negativos += 1;
         });
 
+
+    setTimeout(function(){guardaValida(negativos);},500);
+    
+  };//fin de funcion guardar
+
+
+  var guardaValida=function(negativos){
+
     if(negativos > 0)
         alertFactory.warning('Existen disponibles en valores negativos. Verifique las transferencias.');
     else 
@@ -625,7 +636,7 @@ $scope.Guardar = function() {
                 alertFactory.error('Error al insertar en tabla padre.');
             });
         }//fin else
-  };//fin de funcion guardar
+  };
 
 /***************************************************************************************************************
     Funciones de guardado de datos
