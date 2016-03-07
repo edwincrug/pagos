@@ -23,15 +23,15 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
     $scope.init = function () {
        //LQMA   leer parametros : id , idemployee
-       /*
-       if($scope.currentEmployee < 0)
+       
+       /*if($scope.currentEmployee == 0)
        {
             $('#inicioModal').modal('hide');
-            GetEmpleado();
+            //GetEmpleado();
        }
        else
        {
-             GetEmpleado();
+             //GetEmpleado();
              $scope.traeEmpresas();
        }*/
 
