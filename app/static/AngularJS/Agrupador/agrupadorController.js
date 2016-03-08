@@ -88,6 +88,9 @@ $scope.llenaProvedores = function () {
     $scope.logModels = function () {
         $scope.sortingLog = [];
         for (var i = 0; i < $scope.rawScreens.length; i++) {
+
+            
+
             var logEntry = $scope.rawScreens[i].lista.map(function (x) {
                 return x.value;
             }).join(', ');

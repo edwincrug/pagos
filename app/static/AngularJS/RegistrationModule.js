@@ -7,12 +7,12 @@
          controller: 'pagoController'
      });
 
-	$routeProvider.when('/agrupar', {
+	$routeProvider.when('/', {
         templateUrl: '/AngularJS/Templates/Agrupador.html',
         controller: 'agrupadorController'
     });
 
-    $routeProvider.when('/', {
+    $routeProvider.when('/agrupar', {
         templateUrl: '/AngularJS/Templates/CuentasProveedor.html',
         controller: 'CuentasProveedorController'
     });
