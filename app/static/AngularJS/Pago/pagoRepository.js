@@ -59,11 +59,11 @@ registrationModule.factory('pagoRepository', function ($http) {
             });
            
         },
-        getPagosPadre: function (idEmpleado) {
+        getPagosPadre: function (idEmpresa, idEmpleado, nombreLote) {
             return $http({
               method: 'GET',
               url: pagoUrl,
-              params: { id: '6|' + idEmpleado }
+              params: { id: '6|' + idEmpresa + '|' + idEmpleado + '|' + nombreLote }
             });
             
         },
@@ -87,6 +87,20 @@ registrationModule.factory('pagoRepository', function ($http) {
               method: 'GET',
               url: pagoUrl,
               params: { id: '13|' + idEmpresa + '|' + idEmpleado }
+            });            
+        },
+        getTransferencias: function (idLote) {
+            return $http({
+              method: 'GET',
+              url: pagoUrl,
+              params: { id: '14|' + idLote  }
+            });            
+        },
+        getOtrosIngresos: function (idLote) {
+            return $http({
+              method: 'GET',
+              url: pagoUrl,
+              params: { id: '15|' + idLote }
             });            
         }
     };

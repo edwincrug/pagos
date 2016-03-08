@@ -1,15 +1,14 @@
 registrationModule.controller("pagoController", function ($scope, $http, $interval, uiGridGroupingConstants, uiGridConstants,$filter, $rootScope, localStorageService, alertFactory, pagoRepository, stats) {
 
-   $scope.idEmpresa = 2;             
+   $scope.idEmpresa = 4;             
    $scope.idCuenta = 4;
    $scope.idUsuario = 4;
 
    //LQMA 04032016
-   $rootScope.currentEmployee = 6;
+   $rootScope.currentEmployee = 9;
    $rootScope.currentId = null;
    $rootScope.currentIdOp = null;
    $scope.idLote = 0;
-
 
    var errorCallBack = function (data, status, headers, config) {
         alertFactory.error('Ocurrio un problema');
@@ -179,24 +178,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 $scope.showTotales = true;
                 $scope.showSelCartera = true;
                 //LQMA  07032016
-                pagoRepository.getLotes($scope.idEmpresa,$rootScope.currentEmployee)
-                .then(function successCallback(data) {
-
-                    $rootScope.noLotes = data;
-                    if($rootScope.noLotes.data.length > 0) //mostrar boton crear lote
-                    {   
-                        alertFactory.info('Total de lotes: ' +  $rootScope.noLotes.data.length);
-                        $rootScope.idLotePadre = $rootScope.noLotes.data[$rootScope.noLotes.data.length - 1].idLotePago;
-                    }
-                    else
-                    {
-                        alertFactory.info('No existen Lotes');
-                    }
-                }, 
-                function errorCallback(response) {
-                    alertFactory.error('Error al obtener los Lotes');
-                }
-                );
+                $scope.ObtieneLotes();
 
             }, function errorCallback(response) {
                 //oculta la información y manda el total a cero y llena el input del modal
@@ -210,9 +192,32 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         );
     };
 
+    $scope.ObtieneLotes = function()
+    {
+        $rootScope.NuevoLote = true;
+        pagoRepository.getLotes($scope.idEmpresa,$rootScope.currentEmployee)
+                .then(function successCallback(data) {
+
+                    $rootScope.noLotes = data;
+                    if($rootScope.noLotes.data.length > 0) //mostrar boton crear lote
+                    {   
+                        alertFactory.info('Total de lotes: ' +  $rootScope.noLotes.data.length);
+                        $rootScope.idLotePadre = $rootScope.noLotes.data[$rootScope.noLotes.data.length - 1].idLotePago;
+                        $rootScope.NuevoLote = false;
+                    }
+                    else
+                    {
+                        alertFactory.info('No existen Lotes');
+                    }
+                }, 
+                function errorCallback(response) {
+                    alertFactory.error('Error al obtener los Lotes');
+                });
+    };
+
     //LQMA 04032016 obtiene ingresos y egresos
     $scope.LlenaIngresos = function () {       
-        pagoRepository.getIngresos(4,$scope.idLote)  //$scope.idEmpresa
+        pagoRepository.getIngresos($scope.idEmpresa,$scope.idLote)  //$scope.idEmpresa
             .then(function successCallback(response) {
                 $scope.ingresos = response.data;
                 $scope.LlenaEgresos();
@@ -223,7 +228,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
     };
 
     $scope.LlenaEgresos = function () {
-        pagoRepository.getEgresos(4,$scope.idLote) //$scope.idEmpresa
+        pagoRepository.getEgresos($scope.idEmpresa,$scope.idLote) //$scope.idEmpresa
             .then(function successCallback(response) {
                 $scope.egresos = response.data;                
                 
@@ -286,10 +291,14 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         $rootScope.showGrid = value;
     };
 
-    //LQMA
-    $scope.IniciaLote = function(){
+    //LQMA 07032016
+    $scope.IniciaLote = function(){        
+        //$("#modalNuevoLote").modal('show');
 
-        pagoRepository.getPagosPadre($rootScope.currentEmployee)
+        /*if(($rootScope.nombreLoteNuevo == null) || ($rootScope.nombreLoteNuevo == ''))
+              alertFactory.warning('Debe capturar el nombre del Lote');
+        else  */
+        pagoRepository.getPagosPadre($scope.idEmpresa,$rootScope.currentEmployee,$rootScope.nombreLoteNuevo)
             .then(function successCallback(response) 
             {  
                 $rootScope.idLotePadre = response.data;
@@ -298,6 +307,8 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                     $rootScope.gridOptions.data = $rootScope.modalSeleccionados;
                 }   
                 $('#inicioModal').modal('hide');
+
+                $scope.ObtieneLotes();
 
             }, function errorCallback(response) {                
                 alertFactory.error('Error al insertar Lote.');
@@ -591,6 +602,44 @@ var isNumeric = function(obj){
     Funciones de guardado de datos
     BEGIN
 ****************************************************************************************************************/
+//LQMA 08032016
+
+$rootScope.ConsultaLote = function(Lote,index) {
+    alertFactory.info('Consulta de Lote ' + index);
+
+    $scope.idLote = Lote.idLotePago;
+
+    $scope.LlenaIngresos(); 
+    $scope.LlenaEgresos();
+
+    pagoRepository.getOtrosIngresos($scope.idLote)
+            .then(function successCallback(response) 
+            {  
+                $scope.caja = response.data[0].pio_caja;
+                $scope.cobrar = response.data[0].pio_cobranzaEsperada;
+
+            }, function errorCallback(response) {                
+                alertFactory.error('Error al obtener Otros Ingresos.');
+            });
+
+    pagoRepository.getTransferencias($scope.idLote)
+            .then(function successCallback(response) 
+            {  
+                $scope.transferencias = [];
+
+                angular.forEach(response.data, function(transferencia, key){                    
+                    var newTransferencia = transferencia;
+                    $scope.transferencias.push(newTransferencia);
+                });                
+
+            }, function errorCallback(response) {                
+                alertFactory.error('Error al obtener Transferencias.');
+            });
+
+    pagoRepository.getDatosAprob($scope.idLote)
+                .success(llenaGridSuccessCallback)
+                .error(errorCallBack);
+}
 
 //LQMA funcion para guardar datos del grid (se implementara para guardar Ingresos bancos, otros , Transferencias)
 $scope.Guardar = function() {
@@ -826,9 +875,9 @@ $scope.Guardar = function() {
 
 
     $scope.getTotal = function(opcion){
-    var total = 0;
+        var total = 0;
     
-    switch(opcion){
+        switch(opcion){
 
         case 'egresosTotal':
                 angular.forEach($scope.egresos, function(egreso, key){        
@@ -851,10 +900,15 @@ $scope.Guardar = function() {
         case 'b':
 
                 break;
-    } 
+        } 
 
-    return total;
-}
+        return total;
+    } //get total end
+
+    $scope.CrearNuevoLote = function(){
+        $rootScope.NuevoLote = true;
+        $('#inicioModal').modal('show');
+    }
 
 /***************************************************************************************************************
     Funciones de guardado de datos

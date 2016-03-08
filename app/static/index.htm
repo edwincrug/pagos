@@ -164,23 +164,30 @@
         <div class="mdPagarLabel">
           Seleccione los registros
         </div>
-        <div id="contenedorGrid">
-          
-         <div id="grid1" ui-grid="gridOptions" ui-grid-grouping ui-grid-edit ui-grid-selection ui-grid-cellNav class="gridStyle"></div>
-         
-       </div>
-     </div>  
+        <div id="contenedorGrid">          
+         <div id="grid1" ui-grid="gridOptions" ui-grid-grouping ui-grid-edit ui-grid-selection ui-grid-cellNav class="gridStyle"></div>         
+        </div>
+      </div>
+      <div>
+        <div class="rows" ng-show="NuevoLote">
+          <div class="sumTexto">
+            Nombre Lote:          
+            <input type="text" ng-model="nombreLoteNuevo">
+          </div>
+      </div>
      <!-- Totales a pagar por bancos -->
    </div>
    <div class="modal-footer">
-     <button class="btn btn-info" data-toggle="modal" href="#stack2" ng-click="IniciaLote()" ng-hide="noLotes.data.length > 0">Crear Lote</button>
-     <button type="button" class="btn btn-primary" data-dismiss="modal" ng-hide="noLotes.data.length == 0">Ir a Programación Pago</button></div>
+     <button class="btn btn-info" data-toggle="modal" href="#stack2" ng-click="IniciaLote()" ng-show="NuevoLote">Crear Lote</button>
+     <button type="button" class="btn btn-primary" data-dismiss="modal" ng-hide="NuevoLote">Ir a Programación Pago</button>
+     <button type="button" class="btn btn-primary" data-dismiss="modal" ng-show="NuevoLote">Cancelar</button>
+   </div>
+
    </div>
  </div>
 </div>
 </div>
 <!--Fin odal de inicio FAL-->
-
 <!--Interface de usuario-->
 <script src="js/toastr.min.js"></script>
 
