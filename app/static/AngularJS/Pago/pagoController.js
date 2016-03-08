@@ -41,8 +41,8 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
        //Inicializamos el switch
        $.fn.bootstrapSwitch.defaults.offColor = 'info';
-       $.fn.bootstrapSwitch.defaults.onText = 'Todos';
-       $.fn.bootstrapSwitch.defaults.offText = 'Pagables';
+       $.fn.bootstrapSwitch.defaults.onText = 'Lote';
+       $.fn.bootstrapSwitch.defaults.offText = 'Global';
        $('.switch-checkbox').bootstrapSwitch();      
        $scope.showSelCartera = true;
        /***********************************************************/ 
