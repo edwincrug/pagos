@@ -80,7 +80,7 @@ registrationModule.factory('pagoRepository', function ($http) {
               method: 'GET',
               url: pagoUrl,
               params: { id: '12|' + idEmpresa + '|' + idLote }
-            });            
+            });
         },
         getLotes: function (idEmpresa,idEmpleado) {
             return $http({
@@ -101,7 +101,7 @@ registrationModule.factory('pagoRepository', function ($http) {
               method: 'GET',
               url: pagoUrl,
               params: { id: '15|' + idLote }
-            });            
+            });
         }
     };
 });
