@@ -21,6 +21,19 @@ registrationModule.factory('agrupadorRepository', function ($http) {
         update: function (id) {
             return $http.post(pagoUrl + '2|' + id);
 
-        }
+        },
+
+        setDatos: function(id,Agrupadores)
+        {
+            
+            return $http({
+                url: pagoUrl,
+                method: "POST",
+                params: { id: '2|' + id},
+                //dataType: "json",
+                data:JSON.stringify(Agrupadores)
+               
+            });            
+        },//FAL
     };
 });

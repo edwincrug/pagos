@@ -84,7 +84,7 @@ $scope.llenaProvedores = function () {
         connectWith: ".apps-container"
     });
 
-    //Funcion que entrega los agrupamientos ordenados
+    //FAL Funcion que entrega los agrupamientos ordenados
     $scope.logModels = function () {
         $scope.sortingLog = [];
         for (var i = 0; i < $scope.rawScreens.length; i++) {
@@ -95,6 +95,17 @@ $scope.llenaProvedores = function () {
             $scope.sortingLog.push(logEntry);
         }
     };
+    //FAL Guarda la configuración de los agrupadores y el orden.
+   $scope.Guardar = function() {
+           agrupadorRepository.setDatos($scope.idEmpresa,$scope.agrupadores)
+                .then(function successCallback(response) {
+                   alertFactory.success('Se guardaron los datos.');
+
+                }, function errorCallback(response) {                
+                    alertFactory.error('Error al guardar Datos');
+                });
+                    
+  };//fin de funcion guardar
 });
 
 
