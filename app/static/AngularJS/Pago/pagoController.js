@@ -940,6 +940,16 @@ $scope.Guardar = function() {
                         total += parseInt(transferencia.importe);
                     });     
                 break;
+        case 'saldo':
+                    angular.forEach($scope.egresos, function(egreso, key){
+                        total += (egreso.ingreso == 1)?parseInt(egreso.saldoIngreso):parseInt(egreso.saldo);
+                    });     
+                break;                                
+        case 'aTransferir':
+                    angular.forEach($scope.egresos, function(egreso, key){
+                        total += parseInt(egreso.aTransferir);
+                    });     
+                break;
         } 
 
         return total;

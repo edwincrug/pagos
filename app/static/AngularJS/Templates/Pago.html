@@ -44,10 +44,10 @@
 		</div>
 		<div id="resumenColapsado" ng-hide="!colapsado">
 			<div id="colCobranza">
-				<div class="colLabel">Cobranza Esperada</div><span class="colText lightBlue" > {{scencabezado.disponible | currency}} </span> 
+				<div class="colLabel">Cobranza Esperada</div><span class="colText lightBlue" > {{cobrar | currency}} </span> 
 			</div>
 			<div id="colCaja">
-				<div class="colLabel">Caja</div><span class="colText lightBlue" > {{scencabezado.disponible | currency}} </span> 
+				<div class="colLabel">Caja</div><span class="colText lightBlue" > {{caja | currency}} </span> 
 			</div>
 			<div id="mdContentSuma2">
 			<div class="mdLineSuma" ng-repeat="TotalxEmpresa in TotalxEmpresas">
