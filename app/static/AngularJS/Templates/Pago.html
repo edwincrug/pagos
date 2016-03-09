@@ -89,13 +89,13 @@
 								<tr ng-repeat="ingreso in ingresos" >
 									<td>{{ingreso.cuenta}}</td>				
 									<td><input type="text" ng-model="ingreso.saldo" ng-blur="calculaSaldoIngresos(ingreso)" class="form-control txtIngresos" ng-keypress="presskey($event)"></td> 
-									<td ng-class="{'danger':ingreso.disponible == '0', 'warning':ingreso.disponible < (ingreso.saldo / 2),'info': ingreso.disponible > (ingreso.disponible / 2)}">{{ingreso.disponible}}</td> 
+									<td ng-class="{'danger':ingreso.disponible == '0', 'warning':ingreso.disponible < (ingreso.saldo / 2),'info': ingreso.disponible > (ingreso.disponible / 2)}">{{ingreso.disponible | currency}}</td> 
 								</tr>
 							</tbody>
 							<tfoot>
 								<td></td>
-								<td>{{getTotal('ingresoSaldo')}}</td>
-								<td>{{getTotal('ingresoDisponible')}}</td>
+								<td>{{getTotal('ingresoSaldo') | currency}}</td>
+								<td>{{getTotal('ingresoDisponible') | currency}}</td>
 							</tfoot>
 						</table>
 					</div>
@@ -127,7 +127,7 @@
 							</tbody>
 							<tfoot>							
 								<td></td>							
-								<td>total disponible</td>
+								<td>{{getTotal('otrosIngresos') | currency}}</td>
 							</tfoot>
 						</table>
 					</div>
@@ -188,7 +188,7 @@
 							<tfoot>							
 								<td></td>
 								<td></td>
-								<td>total disponible</td>
+								<td>{{getTotal('transferencias') | currency}}</td>
 							</tfoot>
 						</table>
 					</div>
@@ -216,16 +216,16 @@
 									</td>								
 									<td>
 										<input type="text" ng-model="egreso.saldo" ng-blur="calculaTotalOperaciones()" ng-hide="egreso.ingreso != 0" class="form-control txtIngresos">
-										<label ng-hide="egreso.ingreso == 0">{{egreso.saldoIngreso}}</label>
+										<label ng-hide="egreso.ingreso == 0">{{egreso.saldoIngreso | currency}}</label>
 									</td> 
 									<td>
-										{{egreso.aTransferir}}
+										{{egreso.aTransferir | currency}}
 									</td> 
 									<td>
-										{{egreso.total}}
+										{{egreso.total | currency}}
 									</td> 
 									<td>
-										{{egreso.excedente}}
+										{{egreso.excedente | currency}}
 									</td> 
 								</tr>							
 							</tbody>
@@ -233,8 +233,8 @@
 								<td></td>
 								<td></td>
 								<td></td>
-								<td>{{getTotal('egresosTotal')}}</td>
-								<td>{{getTotal('excedente')}}</td>
+								<td>{{getTotal('egresosTotal') | currency}}</td>
+								<td>{{getTotal('excedente') | currency}}</td>
 							</tfoot>
 						</table>
 					</div>
