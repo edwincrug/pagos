@@ -292,7 +292,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
     };
 
     //LQMA 07032016
-    $scope.IniciaLote = function(){        
+    $scope.IniciaLote = function(){
         //$("#modalNuevoLote").modal('show');
 
         /*if(($rootScope.nombreLoteNuevo == null) || ($rootScope.nombreLoteNuevo == ''))
@@ -883,6 +883,7 @@ $scope.Guardar = function() {
                 angular.forEach($scope.egresos, function(egreso, key){        
                     total += parseInt(egreso.total);
                 });
+                $rootScope.FlujoEfectivo = total;
                 break;
 
         case 'ingresoSaldo':
@@ -897,8 +898,20 @@ $scope.Guardar = function() {
                 });
                 break;
 
-        case 'b':
+        case 'excedente':
+                angular.forEach($scope.egresos, function(egreso, key){
+                    total += parseInt(egreso.excedente);
+                });
+                break;
 
+        case 'otrosIngresos':                
+                    total += parseInt($scope.caja) + parseInt($scope.cobrar);                
+                break;
+
+        case 'transferencias':
+                    angular.forEach($scope.transferencias, function(transferencia, key){
+                        total += parseInt(transferencia.importe);
+                    });     
                 break;
         } 
 

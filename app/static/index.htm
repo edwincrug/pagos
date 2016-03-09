@@ -160,9 +160,8 @@
             {{GranTotal | currency}}
           </div>
         </div>
-      </div>        
-      <div class="panel" ng-if="showSelCartera">
-        <div>
+      </div>              
+        <div ng-if="showSelCartera" ng-show="NuevoLote">
           <div class="mdPagarLabel">
             ¿Que contenido tendrá el nuevo lote?
           </div>
@@ -195,7 +194,6 @@
      <button type="button" class="btn btn-primary" data-dismiss="modal" ng-hide="NuevoLote">Ir a Programación Pago</button>
      <button type="button" class="btn btn-primary" data-dismiss="modal" ng-show="NuevoLote">Cancelar</button>
    </div>
-
  </div>
 </div>
 </div>
