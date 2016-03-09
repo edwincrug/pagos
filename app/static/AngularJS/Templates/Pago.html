@@ -67,7 +67,7 @@
 					{{GranTotal | currency}}
 				</div>
 			</div>
-		</div> 
+			</div> 
 		</div>
 		<div class="collapse in" id="collapsePanel">	
 			<div id="contenedorTablas">
@@ -253,7 +253,25 @@
 			Cartera a pagar
 		</div>
 		<div id="filtrosContenedor">
-			
+			<div id="mdContentSuma3">
+			<div class="mdLineSuma" ng-repeat="TotalxEmpresa in TotalxEmpresas">
+				<div class="sumTexto">
+					{{TotalxEmpresa.cuentaPagadora}}
+				</div>
+				<div class="sumMonto lightBlue">
+					{{TotalxEmpresa.sumaSaldo | currency}}
+				</div>
+			</div>
+			<div class="rows"> <div class="raya rayaLightBlue"></div></div>
+			<div class="rows">
+				<div class="sumTexto">
+					A pagar
+				</div>
+				<div class="sumMonto montoFinal lightBlue">
+					{{GranTotal | currency}}
+				</div>
+			</div>
+			</div> 
 			<div class="row panelTotales">
 				<div id="clsPagar">
 					<span id="clsMainLabel">Incluido</span><span id="clsPagarText" class="blueInfo"> {{cantidadTotal | currency}} </span>
