@@ -91,21 +91,16 @@
                 </li>
               </ul>
             </div><!-- /.navbar-collapse -->
-
-          </div><!-- /.container-fluid -->
-        </nav>
-
-        <div class="container">
-          <ul class="cbp-vimenu">
-            <li><a href="#" class="icon-logo"></a></li>
-            <li><a href="#" class="icon-accion" tooltip="nuevo lote" ng-click="CrearNuevoLote()"></a></li>
-
-            <li ng-repeat="Lote in noLotes.data"><a  ng-click="ConsultaLote(Lote,{{$index + 1}})" class="icon-pencil"> Lote {{$index +1}} </a></li>
-
-          </ul>
-          <div class="main">
-            <div ng-view></div>
-          </div>
+            <div class="container">
+        <ul class="cbp-vimenu">
+          <li><a class="icon-logo"></a></li>
+          <li><a tooltip="nuevo lote" ng-click="CrearNuevoLote()">+</a></li>
+          
+          <li ng-repeat="Lote in noLotes.data"><a ng-click="ConsultaLote(Lote,{{$index + 1}})"> Lote {{$index +1}} </a></li>
+          
+        </ul>
+        <div class="main">
+          <div ng-view></div>
         </div>
 
       </div>
