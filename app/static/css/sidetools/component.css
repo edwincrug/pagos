@@ -23,7 +23,7 @@
 
 .cbp-vimenu li a {
 	display: block;
-	text-indent: -500em;
+	/* text-indent: -500em; */
 	height: 5em;
 	width: 5em;
 	line-height: 5em;
