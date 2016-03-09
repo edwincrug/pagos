@@ -898,8 +898,10 @@ $scope.Guardar = function() {
                 });
                 break;
 
-        case 'b':
-
+        case 'excedente':
+                angular.forEach($scope.egresos, function(egreso, key){
+                    total += parseInt(egreso.excedente);
+                });
                 break;
         } 
 
