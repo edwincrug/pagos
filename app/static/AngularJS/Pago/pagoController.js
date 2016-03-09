@@ -292,7 +292,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
     };
 
     //LQMA 07032016
-    $scope.IniciaLote = function(){        
+    $scope.IniciaLote = function(){
         //$("#modalNuevoLote").modal('show');
 
         /*if(($rootScope.nombreLoteNuevo == null) || ($rootScope.nombreLoteNuevo == ''))
@@ -883,6 +883,7 @@ $scope.Guardar = function() {
                 angular.forEach($scope.egresos, function(egreso, key){        
                     total += parseInt(egreso.total);
                 });
+                $rootScope.FlujoEfectivo = total;
                 break;
 
         case 'ingresoSaldo':
