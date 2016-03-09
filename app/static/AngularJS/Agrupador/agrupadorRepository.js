@@ -22,7 +22,7 @@ registrationModule.factory('agrupadorRepository', function ($http) {
             return $http.post(pagoUrl + '2|' + id);
 
         },
-        //MANDA EL JSON AL API CON LA LISTA DE AGRUPADORES CONTENIENDO A SU VEZ LOS PROVEDORES EN EL ORDEN DADO
+
         setDatos: function(id,Agrupadores)
         {
             

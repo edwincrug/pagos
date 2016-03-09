@@ -6,33 +6,21 @@ registrationModule.factory('CuentasProveedorRepository', function ($http) {
         return $http({
             method: 'GET',
             url: pagoUrl,
-            params: { id: '21|' + id + '|' + lote}
+            params: { id: '11|' + id + '|' + lote}
          });           
         },
+
          getProvedoresCuenta: function (id) {
         return $http({
             method: 'GET',
             url: pagoUrl,
-            params: { id: '20|' + id }
+            params: { id: '12|' + id }
          });           
         },
+
         update: function (id) {
             return $http.post(pagoUrl + '2|' + id);
 
-        },
-
-        //MANDA EL JSON AL API CON LA LISTA DE CUENTAS CONTENIENDO A SU VEZ LOS PROVEDORES EN EL ORDEN DADO
-        setDatos: function(id,cuentasProveedores)
-        {
-            
-            return $http({
-                url: pagoUrl,
-                method: "POST",
-                params: { id: '3|' + id},
-                //dataType: "json",
-                data:JSON.stringify(cuentasProveedores)
-               
-            });            
-        }//FAL
+        }
     };
 });

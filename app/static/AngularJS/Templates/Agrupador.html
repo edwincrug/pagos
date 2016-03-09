@@ -1,18 +1,32 @@
 <link href="../../css/agrupador.css" rel="stylesheet" />
 <div cg-busy="myPromise" ng-init="init()" resize>
+
+
+
  <div ng-controller="agrupadorController" class="container">
+
         <h2>Agrupamiento y orden de provedores</h2>
+        <div>
+            <button type="button" ng-click="logModels()">Agrupamientos y orden</button>
+            <ul class="list logList">
+                <li ng-repeat="entry in sortingLog" class="logItem">
+                    {{entry}}
+                </li>
+            </ul>
+        </div>
+        <br>
         <div class="floatleft">
-          <!--Trae primero los agrupadores con su descripción-->  
-            <div ng-repeat="agrupador in agrupadores" class="screen floatleft">
-                <div ui-sortable="sortableOptions" class="apps-container screen floatleft" ng-model="agrupador.lista">{{agrupador.pca_descripcion}}
-                    <!--Dentro de cada agrupador sus provedores-->
-                    <div ui-sortable-selectable class="app" ng-repeat="item in agrupador.lista track by item.value" >{{item.text}}</div>
-                </div>
-            </div>
-            <div style="clear: both;">
-                 <button class="btn btn-info" data-toggle="modal" href="#stack2" ng-click="Guardar()">Guardar</button>
+
+        <div ng-repeat="agrupador in agrupadores" class="screen floatleft">
+            <div ui-sortable="sortableOptions" class="apps-container screen floatleft" ng-model="agrupador.lista">{{agrupador.pca_descripcion}}
+                <div ui-sortable-selectable class="app" ng-repeat="item in agrupador.lista track by item.value" >{{item.text}}</div>
             </div>
         </div>
+            <div style="clear: both;">
+                 <button class="btn btn-info" data-toggle="modal" href="#stack2" ng-click="Guardar()">Guardar</button>
+                
+            </div>
+        </div>
+        
         <div class="clear"></div>
 </div></div>

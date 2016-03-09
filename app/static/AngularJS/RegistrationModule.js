@@ -2,20 +2,20 @@
 
 .config(function ($routeProvider, $locationProvider) {
 
-     $routeProvider.when('/inicio', {
+     $routeProvider.when('/', {
          templateUrl: '/AngularJS/Templates/Pago.html',
          controller: 'pagoController'
      });
 
-	$routeProvider.when('/AGRUPADOR', {
+	/*$routeProvider.when('/', {
         templateUrl: '/AngularJS/Templates/Agrupador.html',
         controller: 'agrupadorController'
     });
 
-    $routeProvider.when('/', {
+    $routeProvider.when('/agrupar', {
         templateUrl: '/AngularJS/Templates/CuentasProveedor.html',
         controller: 'CuentasProveedorController'
-    });
+    });*/
     $locationProvider.html5Mode(true);
 });
 
