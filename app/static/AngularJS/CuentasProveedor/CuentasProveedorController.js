@@ -54,7 +54,7 @@ function llenaLista(id) {
                     tmpList.push(
                     {
                     text: $scope.proveedoresCuenta[i].nombreProveedor + id + '-' + $scope.proveedoresCuenta[i].idProveedor,
-                    value: id + '-' + $scope.proveedoresCuenta[i].idProveedor
+                    value: $scope.proveedoresCuenta[i].idProveedor + '-' + $scope.proveedoresCuenta[i].idCuentaPagadora
                     });
                  i++;    
                 }
@@ -101,6 +101,18 @@ $scope.llenaProvedoresCuenta = function () {
             $scope.sortingLog.push(logEntry);
         }
     };
+
+        //FAL Guarda la configuración de los agrupadores y el orden.
+   $scope.Guardar = function() {
+           CuentasProveedorRepository.setDatos($scope.idEmpresa,$scope.cuentas)
+                .then(function successCallback(response) {
+                   alertFactory.success('Se guardaron los datos.');
+
+                }, function errorCallback(response) {                
+                    alertFactory.error('Error al guardar Datos');
+                });
+                    
+  };//fin de funcion guardar
 });
 
 
