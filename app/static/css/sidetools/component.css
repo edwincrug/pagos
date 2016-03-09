@@ -74,8 +74,22 @@
 	font-family: 'Lato', Calibri, Arial, sans-serif;
 }
 
-.cbp-vimenu li a.icon-logo1:before {
+.cbp-vimenu li a.icon-accion:before {
 	content: "+";
+	font-weight: 600;
+	font-size: 250%;
+	font-family: 'Lato', Calibri, Arial, sans-serif;
+}
+
+.cbp-vimenu li a.icon-logo1:before {
+	content: "1";
+	font-weight: 600;
+	font-size: 250%;
+	font-family: 'Lato', Calibri, Arial, sans-serif;
+}
+
+.cbp-vimenu li a.icon-logo2:before {
+	content: "2";
 	font-weight: 600;
 	font-size: 250%;
 	font-family: 'Lato', Calibri, Arial, sans-serif;

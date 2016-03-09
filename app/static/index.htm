@@ -37,6 +37,7 @@
   <link rel="stylesheet" type="text/css" href="css/sidebar/component.css" />
   <link rel="stylesheet" type="text/css" href="css/sidebar/body.css" />
   <link rel="stylesheet" type="text/css" href="css/ui-grid.css" />
+  <link rel="stylesheet" type="text/css" href="css/sidetools/component.css" />
   <script src="js/sidebar/modernizr.custom.js"></script>
 
   <base href='/'>
@@ -94,7 +95,19 @@
         </div><!-- /.container-fluid -->
       </nav>
 
-      <div ng-view></div>
+            <div class="container">
+        <ul class="cbp-vimenu">
+          <li><a href="#" class="icon-logo" >Logo</a></li>
+          <li><a href="#" class="icon-accion" tooltip="nuevo lote">Archive</a></li>
+          
+          <li ng-repeat="Lote in noLotes.data"><a  ng-click="ConsultaLote(Lote,{{$index + 1}})" class="icon-pencil"> Lote {{$index +1}} </a></li>
+          
+        </ul>
+        <div class="main">
+          <div ng-view></div>
+        </div>
+    </div>
+
     </div>
 
   </div><!-- /st-pusher -->
