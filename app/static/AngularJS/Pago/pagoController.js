@@ -905,7 +905,7 @@ $scope.Guardar = function() {
         return total;
     } //get total end
 
-    $scope.CrearNuevoLote = function(){
+    $rootScope.CrearNuevoLote = function(){
         $rootScope.NuevoLote = true;
         $('#inicioModal').modal('show');
     }
