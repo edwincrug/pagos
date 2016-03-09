@@ -485,10 +485,37 @@ $rootScope.gridOptions = {
                         if (rowChanged.isSelected) {
                            $scope.Reprogramable =  Math.round($scope.Reprogramable * 100) / 100 - Math.round(rowChanged.entity.Pagar * 100) / 100;
                            $scope.cantidadTotal = Math.round($scope.cantidadTotal * 100) / 100 + Math.round(rowChanged.entity.Pagar * 100) / 100;
+                          //FAL actualizar cuenta pagadoras
+                            i=0;
+                            
+                            $rootScope.TotalxEmpresas.forEach(function (cuentaPagadora, sumaSaldo)
+                            {
+                               if(rowChanged.entity.cuentaPagadora == $rootScope.TotalxEmpresas[i].cuentaPagadora)
+                               {
+                                    $rootScope.TotalxEmpresas[i].sumaSaldo = Math.round($rootScope.TotalxEmpresas[i].sumaSaldo * 100) / 100 + Math.round(rowChanged.entity.Pagar * 100) / 100;
+                                    $rootScope.GranTotal = $rootScope.GranTotal + rowChanged.entity.Pagar;
+                               }
+                               
+                               i++;                           
+                            });
+
                         }
                         else{
                             $scope.Reprogramable = Math.round($scope.Reprogramable * 100) / 100 + Math.round(rowChanged.entity.Pagar * 100) / 100;
                             $scope.cantidadTotal = Math.round($scope.cantidadTotal * 100) / 100 - Math.round(rowChanged.entity.Pagar * 100) / 100;
+                            //FAL actualizar cuenta pagadoras
+                            i=0;
+                            
+                            $rootScope.TotalxEmpresas.forEach(function (cuentaPagadora, sumaSaldo)
+                            {
+                               if(rowChanged.entity.cuentaPagadora == $rootScope.TotalxEmpresas[i].cuentaPagadora)
+                               {
+                                    $rootScope.TotalxEmpresas[i].sumaSaldo = Math.round($rootScope.TotalxEmpresas[i].sumaSaldo * 100) / 100 - Math.round(rowChanged.entity.Pagar * 100) / 100;
+                                    $rootScope.GranTotal = $rootScope.GranTotal - rowChanged.entity.Pagar;
+                               }
+                               i++;                           
+                            });
+
                         }
             });
 
