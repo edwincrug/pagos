@@ -35,6 +35,9 @@
 	-moz-transition: background 0.1s ease-in-out;
 	transition: background 0.1s ease-in-out;
 	font-size: 11px;
+	text-decoration: none;
+	cursor: pointer;
+	font-weight: 600;
 }
 
 .cbp-vimenu li a:hover,
