@@ -6,14 +6,14 @@ registrationModule.factory('CuentasProveedorRepository', function ($http) {
         return $http({
             method: 'GET',
             url: pagoUrl,
-            params: { id: '21|' + id + '|' + lote}
+            params: { id: '17|' + id + '|' + lote}
          });           
         },
          getProvedoresCuenta: function (id) {
         return $http({
             method: 'GET',
             url: pagoUrl,
-            params: { id: '20|' + id }
+            params: { id: '16|' + id }
          });           
         },
         update: function (id) {
