@@ -178,7 +178,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 $scope.showTotales = true;
                 $scope.showSelCartera = true;
                 //LQMA  07032016
-                $scope.ObtieneLotes();
+                $scope.ObtieneLotes(0);// borra todos los lotes
 
             }, function errorCallback(response) {
                 //oculta la información y manda el total a cero y llena el input del modal
@@ -192,10 +192,10 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         );
     };
 
-    $scope.ObtieneLotes = function()
+    $scope.ObtieneLotes = function(borraLote) //borraLote, 0 para borrar lotes sin relacion, 1 para conservarlos
     {
         $rootScope.NuevoLote = true;
-        pagoRepository.getLotes($scope.idEmpresa,$rootScope.currentEmployee)
+        pagoRepository.getLotes($scope.idEmpresa,$rootScope.currentEmployee,borraLote)
                 .then(function successCallback(data) {
 
                     $rootScope.noLotes = data;
@@ -308,7 +308,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 }   
                 $('#inicioModal').modal('hide');
 
-                $scope.ObtieneLotes();
+                $scope.ObtieneLotes(1); //conserva el lote recien insertado
 
             }, function errorCallback(response) {                
                 alertFactory.error('Error al insertar Lote.');
