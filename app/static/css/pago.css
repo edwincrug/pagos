@@ -1,4 +1,7 @@
 @charset "UTF-8";
+#contentManager {
+  margin-left: 50px; }
+
 #container {
   margin-right: 6%;
   margin-left: 6%; }
@@ -16,12 +19,11 @@
   padding-left: 15px; }
 
 .panelTotales {
-  display: inline-block;
+  position: absolute;
   width: 550px;
-  float: right;
-  padding-right: 15px;
-  margin-top: 70px;
-  position: relative; }
+  right: 0;
+  margin-right: 320px;
+  margin-top: 70px; }
 
 #clsPagar {
   display: inline-block;
@@ -31,11 +33,20 @@
 #clsComplemento {
   position: absolute;
   right: 0;
-  margin-top: -118px;
-  width: 39%;
-  text-align: left;
-  margin-right: 10px;
-  padding-left: 20px; }
+  margin-top: -45px;
+  margin-right: 95px;
+  width: 600px;
+  text-align: right; }
+
+.clsNoPagable {
+  display: inline-block; }
+
+.separadorNoPagable {
+  font-size: 40px;
+  color: gray;
+  font-weight: 100;
+  padding-left: 2px;
+  padding-right: 2px; }
 
 #clsMainLabel {
   font-size: 14px;
@@ -140,7 +151,7 @@
 #chkPagable0 {
   position: absolute;
   top: 0;
-  margin-top: 97px;
+  margin-top: 135px;
   left: 0;
   margin-left: 6%; }
 
@@ -270,6 +281,13 @@
   width: 39%;
   padding-right: 6%; }
 
+#mdContentSuma3 {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 39%;
+  padding-right: 6%; }
+
 #title {
   width: 100%;
   padding-left: 6%;
@@ -375,7 +393,10 @@
   color: #D29935; }
 
 .rayaLightBlue {
-  border: 1px solid #D29935; }
+  border: 1px solid gray; }
+
+.rayaBlueInfo {
+  border: 1px solid gray; }
 
 .blueInfo {
   color: #5BC0DE; }
@@ -392,3 +413,7 @@
   width: 100%;
   position: relative;
   height: 200px; }
+
+#btnNuevoLote {
+  background-color: #B4B4B8;
+  color: white; }

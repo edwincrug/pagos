@@ -1,6 +1,6 @@
 <link href="../../css/pago.css" rel="stylesheet" />
 
-<div cg-busy="myPromise" ng-init="init()" resize>
+<div cg-busy="myPromise" ng-init="init()" id="contentManager" resize>
 
 	<section id="global">
 		<div id="tituloEmpresa">
@@ -15,7 +15,7 @@
 					{{TotalxEmpresa.sumaSaldo | currency}}
 				</div>
 			</div>
-			<div class="rows"> <div class="raya"></div></div>
+			<div class="rows"> <div class="raya rayaLightBlue"></div></div>
 			<div class="rows">
 				<div class="sumTexto">
 					A pagar
@@ -258,35 +258,47 @@
 				<div class="sumTexto">
 					{{TotalxEmpresa.cuentaPagadora}}
 				</div>
-				<div class="sumMonto lightBlue">
+				<div class="sumMonto blueInfo">
 					{{TotalxEmpresa.sumaSaldo | currency}}
 				</div>
 			</div>
-			<div class="rows"> <div class="raya rayaLightBlue"></div></div>
+			<div class="rows"> <div class="raya rayaBlueInfo"></div></div>
 			<div class="rows">
 				<div class="sumTexto">
 					A pagar
 				</div>
-				<div class="sumMonto montoFinal lightBlue">
+				<div class="sumMonto montoFinal blueInfo">
 					{{GranTotal | currency}}
 				</div>
 			</div>
 			</div> 
 			<div class="row panelTotales">
-				<div id="clsPagar">
+<!-- 				<div id="clsPagar">
 					<span id="clsMainLabel">Incluido</span><span id="clsPagarText" class="blueInfo"> {{cantidadTotal | currency}} </span>
-				</div>
+				</div> -->
 				<div id="clsComplemento">
-					<div id="clsTotal">
-						<span class="clsDetailLabel">Cartera vencida</span> <span class="clsDetailText blueInfo">{{carteraVencida | currency}}</span>
+					<div class="clsNoPagable">
+						<span class="clsDetailLabel">No pagable</span> <span class="clsDetailText blueInfo">{{carteraVencida | currency}}</span>
 					</div>
-					<div class="clsPendiente">
+					<div class="clsNoPagable separadorNoPagable">
+						/
+					</div>
+					<div class="clsNoPagable">
 						<span class="clsDetailLabel">No Incluido</span> <span class="clsDetailText blueInfo"> {{ noPagable | currency }} </span>
 					</div>
-<!-- 					<div class="clsPendiente">
+					<div class="clsNoPagable separadorNoPagable">
+						/
+					</div>
+					<div class="clsNoPagable">
+						<span class="clsDetailLabel">Reprogramado</span> <span class="clsDetailText blueInfo"> {{ noPagable | currency }} </span>
+					</div>
+					<div class="clsNoPagable separadorNoPagable">
+						/
+					</div>
+					<!-- <div class="clsPendiente">
 						<span class="clsDetailLabel">Reprogramado</span> <span class="clsDetailText blue"> {{ Reprogramable | currency }} </span>
 					</div> -->
-					<div class="clsPendiente">
+					<div class="clsNoPagable">
 						<span class="clsDetailLabel">Porcentaje a pagar</span> <span class="clsDetailText blueInfo"> {{ ((cantidadTotal * 100) / carteraVencida ) | number:2 }} %</span>
 					</div>
 				</div>
