@@ -5,7 +5,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
    $scope.idUsuario = 4;
 
    //LQMA 04032016
-   $rootScope.currentEmployee = 7;
+   $rootScope.currentEmployee = 11;
    $rootScope.currentId = null;
    $rootScope.currentIdOp = null;
    $scope.idLote = 0;
@@ -745,7 +745,8 @@ $scope.Guardar = function() {
                  var jsTransf = angular.toJson($scope.transferencias);
                  var jsEgresos = angular.toJson($rootScope.egresos);
 
-                 pagoRepository.setDatos(array,$rootScope.currentEmployee,$rootScope.idLotePadre,jsIngresos,jsTransf,$scope.caja,$scope.cobrar,jsEgresos)
+                    //pagoRepository.setDatos(array,$rootScope.currentEmployee,$rootScope.idLotePadre,jsIngresos,$scope.transferencia,$scope.caja,$scope.cobrar,$rootScope.egresos)
+                    pagoRepository.setDatos(array,$rootScope.currentEmployee,$rootScope.idLotePadre,jsIngresos,jsTransf,$scope.caja,$scope.cobrar,jsEgresos)
                         .then(function successCallback(response) {
                             
                             alertFactory.success('Se guardaron los datos.');
