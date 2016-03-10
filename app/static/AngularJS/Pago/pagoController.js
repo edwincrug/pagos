@@ -902,7 +902,7 @@ $scope.Guardar = function() {
 
                 egreso.aTransferir = totalDestino;
                 var sss = parseInt(egreso.ingreso);
-                var suma = (sss == 1)?parseInt(egreso.saldoIngreso):parseInt(egreso.saldo)
+                var suma = (sss == 1)?parseInt(egreso.saldoIngreso):parseInt(egreso.saldo);
                 egreso.total = parseInt(egreso.aTransferir) + suma;
                 //egreso.excedente = egreso.totalPagar - egreso.total;
                 egreso.excedente = parseInt(egreso.totalPagar) - parseInt(egreso.total);
