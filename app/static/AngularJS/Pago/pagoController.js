@@ -205,7 +205,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
                     if($rootScope.noLotes.data.length > 0) //mostrar boton crear lote
                     {   
-                        alertFactory.info('Total de lotes: ' +  $rootScope.noLotes.data.length);
+                        alertFactory.success('Total de lotes: ' +  $rootScope.noLotes.data.length);
                         $rootScope.idLotePadre = $rootScope.noLotes.data[$rootScope.noLotes.data.length - 1].idLotePago;
                         $rootScope.NuevoLote = false;
                     }
@@ -895,7 +895,14 @@ $scope.Guardar = function() {
             angular.forEach($scope.transferencias, function(transferencia, key){
                 if(ingreso.cuenta == transferencia.bancoOrigen)
                     ingreso.disponible = ingreso.disponible - transferencia.importe;
-            });           
+            });
+
+            /*angular.forEach($rootScope.TotalxEmpresas, function(empresa, key){
+                    angular.forEach($rootScope.egresos, function(egreso, key){
+                            if(empresa.cuentaPagadora == egreso.cuenta) 
+                                empresa.sumaSaldo = egreso.total;
+                    });
+                });*/
 
         });        
     }
