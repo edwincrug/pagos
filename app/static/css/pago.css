@@ -1,34 +1,40 @@
 @charset "UTF-8";
 #contentManager {
-  margin-left: 50px; }
+  margin-left: 50px;
+}
 
 #container {
   margin-right: 3%;
-  margin-left: 3%; }
+  margin-left: 3%;
+}
 
 #accion {
   width: 100%;
   margin-top: 50px;
   text-align: right;
-  padding-right: 5%; }
+  padding-right: 5%;
+}
 
 .panelEncabezado {
   display: inline-block;
   width: 400px;
   float: left;
-  padding-left: 15px; }
+  padding-left: 15px;
+}
 
 .panelTotales {
   position: absolute;
   width: 550px;
   right: 0;
   margin-right: 320px;
-  margin-top: 70px; }
+  margin-top: 70px;
+}
 
 #clsPagar {
   display: inline-block;
   width: 60%;
-  text-align: right; }
+  text-align: right;
+}
 
 #clsComplemento {
   position: absolute;
@@ -36,47 +42,57 @@
   margin-top: -45px;
   margin-right: 95px;
   width: 600px;
-  text-align: right; }
+  text-align: right;
+}
 
 .clsNoPagable {
-  display: inline-block; }
+  display: inline-block;
+}
 
 .separadorNoPagable {
   font-size: 40px;
   color: gray;
   font-weight: 100;
   padding-left: 2px;
-  padding-right: 2px; }
+  padding-right: 2px;
+}
 
 #clsMainLabel {
   font-size: 14px;
-  display: block; }
+  display: block;
+}
 
 .clsDetailText {
   font-size: 22px;
   display: block;
-  font-weight: 300; }
+  font-weight: 300;
+}
 
 .clsDetailLabel {
-  font-size: 12px; }
+  font-size: 12px;
+}
 
 #clsPagarText {
-  font-size: 33px; }
+  font-size: 33px;
+}
 
 .rows {
   width: 100%;
-  border: 1px solid transparent; }
+  border: 1px solid transparent;
+}
 
 .raya {
   width: 55%;
   border: 1px solid rgba(51, 122, 183, 0.61);
-  float: right; }
+  float: right;
+}
 
 .resTexto {
   width: 39%;
   display: inline-block;
   text-align: right;
-  font-weight: 400; }
+  font-weight: 400;
+}
 
 .resSigno {
   width: 20%;
@@ -84,7 +100,8 @@
   text-align: right;
   font-size: 11px;
   font-weight: 100;
-  color: rgba(51, 122, 183, 0.61); }
+  color: rgba(51, 122, 183, 0.61);
+}
 
 .resMonto {
   width: 39%;
@@ -92,31 +109,38 @@
   text-align: right;
   font-size: 18px;
   color: #484747;
-  font-weight: 300; }
+  font-weight: 300;
+}
 
 .flujo {
   float: right;
-  margin-right: -10px; }
+  margin-right: -10px;
+}
 
 .flujoHeader {
-  height: 35px; }
+  height: 35px;
+}
 
 .rojo {
-  color: red; }
+  color: red;
+}
 
 .blue {
-  color: #337ab7; }
+  color: #337ab7;
+}
 
 #resumenColapsado {
   position: relative;
   right: 0;
   bottom: 0;
-  height: 155px; }
+  height: 155px;
+}
 
 #colFlujoEfectivo {
   display: inline-block;
   width: 300px;
-  float: right; }
+  float: right;
+}
 
 #colCobranza {
   position: absolute;
@@ -124,7 +148,8 @@
   width: 300px;
   float: right;
   margin-right: 64%;
-  margin-top: 39px; }
+  margin-top: 39px;
+}
 
 #colCaja {
   position: absolute;
@@ -132,111 +157,134 @@
   width: 300px;
   float: right;
   margin-right: 34%;
-  margin-top: 39px; }
+  margin-top: 39px;
+}
 
 .colLabel {
   font-weight: 600;
-  font-size: 15px; }
+  font-size: 15px;
+}
 
 .colText {
-  font-size: 24px; }
+  font-size: 24px;
+}
 
 .linkManual {
-  color: #474343; }
+  color: #474343;
+}
 
 .linkManual:hover {
   text-decoration: none;
-  color: #474343; }
+  color: #474343;
+}
 
 #chkPagable0 {
   position: absolute;
   top: 0;
   margin-top: 135px;
   left: 0;
-  margin-left: 3%; }
+  margin-left: 3%;
+}
 
 #chkPagable1 {
   position: absolute;
   top: 0;
   margin-top: 97px;
   left: 0;
-  margin-left: 37%; }
+  margin-left: 37%;
+}
 
 #txtCartera {
   padding-right: 5px;
-  font-size: 16px; }
+  font-size: 16px;
+}
 
 #chkPagable2 {
   position: absolute;
   top: 0;
   right: 0;
   margin-right: 34%;
-  margin-top: 30px; }
+  margin-top: 30px;
+}
 
 .resaltado {
-  font-weight: 600; }
+  font-weight: 600;
+}
 
 .selectNormal .ui-grid-cell-contents {
   background-color: #97B2F7;
-  color: black; }
+  color: black;
+}
 
 .ordenBloqueada .ui-grid-cell-contents {
   background-color: gray;
-  color: white; }
+  color: white;
+}
 
 .bloqueadaSelec .ui-grid-cell-contents {
   background-color: #5F6F97 !important;
-  color: white; }
+  color: white;
+}
 
 .docIncompletos .ui-grid-cell-contents {
   background-color: orange;
-  color: white; }
+  color: white;
+}
 
 .bloqDocIncom .ui-grid-cell-contents {
   background: #FC9F14;
   background: -webkit-linear-gradient(180deg, gray, #FC9F14);
   background: -o-linear-gradient(180deg, gray, #FC9F14);
   background: -moz-linear-gradient(180deg, gray, #FC9F14);
-  background: linear-gradient(180deg, gray, #FC9F14); }
+  background: linear-gradient(180deg, gray, #FC9F14);
+}
 
 /*  Nuevo diseño pantalla de pagos */
 /* ventana modal */
 #memberModalLabel {
   text-align: center;
-  font-size: 22px; }
+  font-size: 22px;
+}
 
 #selEmpresa {
   width: 100%;
-  margin-top: 20px; }
+  margin-top: 20px;
+}
 
 #selEmpresaLabel {
   display: inline-block;
   width: 20%;
-  position: relative; }
+  position: relative;
+}
 
 #spanEmpresaLabel {
   position: absolute;
   top: 0;
   margin-top: -26px;
   padding-left: 14px;
-  font-size: 15px; }
+  font-size: 15px;
+}
 
 #selEmpresaCombo {
   display: inline-block;
-  width: 79%; }
+  width: 79%;
+}
 
 .mdPagarLabel {
   margin-top: 10px;
   margin-left: 12px;
-  font-size: 15px; }
+  font-size: 15px;
+}
 
 #mdContentSuma {
   width: 400px;
   margin-left: calc(50% - 200px);
-  margin-bottom: 15px; }
+  margin-bottom: 15px;
+}
 
 .mdLineSuma {
-  margin-bottom: 5px; }
+  margin-bottom: 5px;
+}
 
 .sumTexto {
   display: inline-block;
@@ -244,54 +292,64 @@
   text-align: right;
   font-weight: 600;
   font-size: 15px;
-  padding-right: 5px; }
+  padding-right: 5px;
+}
 
 .sumMonto {
   display: inline-block;
   width: 49%;
   text-align: right;
   font-size: 22px;
-  font-weight: 300; }
+  font-weight: 300;
+}
 
 .montoFinal {
   font-size: 30px;
-  font-weight: 400; }
+  font-weight: 400;
+}
 
 #mdRadio {
-  text-align: center; }
+  text-align: center;
+}
 
 #contenedorGrid {
-  margin-top: 20px; }
+  margin-top: 20px;
+}
 
 /* Estilo del header de Pagos */
 #global {
   position: relative;
-  height: 145px; }
+  height: 145px;
+}
 
 #tituloEmpresa {
   position: absolute;
   left: 0;
   top: 0;
-  width: 60%; }
+  width: 60%;
+}
 
 #mdContentSuma2 {
   position: absolute;
   right: 0;
   top: 0;
   width: 39%;
-  padding-right: 3%; }
+  padding-right: 3%;
+}
 
 #mdContentSuma3 {
   position: absolute;
   right: 0;
   top: 0;
   width: 39%;
-  padding-right: 3%; }
+  padding-right: 3%;
+}
 
 #title {
   width: 100%;
   padding-left: 3%;
-  padding-top: 10px; }
+  padding-top: 10px;
+}
 
 .tituloBloque1 {
   font-size: 20px;
@@ -299,7 +357,8 @@
   border-bottom: 4px dotted #D29935;
   width: 50%;
   margin-bottom: 10px;
-  color: #D29935; }
+  color: #D29935;
+}
 
 .tituloBloque2 {
   font-size: 20px;
@@ -307,23 +366,28 @@
   border-bottom: 4px dotted #5BC0DE;
   width: 50%;
   margin-bottom: 10px;
-  color: #5BC0DE; }
+  color: #5BC0DE;
+}
 
 /* Panel colapsable de flujo de efectivo */
 #flujoEfectivo {
-  position: relative; }
+  position: relative;
+}
 
 #collapsePanel {
-  position: relative; }
+  position: relative;
+}
 
 #contenedorTablas {
   margin-left: 3%;
-  margin-right: 3%; }
+  margin-right: 3%;
+}
 
 .rowTablas {
   display: block;
   position: relative;
-  padding-top: 15px; }
+  padding-top: 15px;
+}
 
 #tblBancos {
   box-shadow: 2px 2px 2px rgba(206, 206, 206, 0.48);
@@ -332,7 +396,9 @@
   vertical-align: top;
   padding-right: 10px;
   height: 250px;
-  overflow-y: auto; }
+  overflow-y: auto;
+  overflow-x: hidden;
+}
 
 #tblTransfer {
   box-shadow: 2px 2px 2px rgba(206, 206, 206, 0.48);
@@ -340,7 +406,8 @@
   width: 49%;
   margin-left: 2.5%;
   vertical-align: top;
-  padding-right: 10px; }
+  padding-right: 10px;
+}
 
 #tblOtros {
   box-shadow: 2px 2px 2px rgba(206, 206, 206, 0.48);
@@ -348,7 +415,8 @@
   width: 20%;
   margin-left: 2.5%;
   vertical-align: top;
-  padding-right: 10px; }
+  padding-right: 10px;
+}
 
 #tblTotales {
   box-shadow: 2px 2px 2px rgba(206, 206, 206, 0.48);
@@ -356,20 +424,25 @@
   width: 60%;
   margin-left: calc(50% - 30%);
   vertical-align: top;
-  padding-right: 10px; }
+  padding-right: 10px;
+}
 
 .titleBloque {
   font-size: 20px;
-  font-weight: 400; }
+  font-weight: 400;
+}
 
 #tablaING {
-  width: 100%; }
+  width: 100%;
+}
 
 #tablaTR {
-  width: 100%; }
+  width: 100%;
+}
 
 .txtIngresos {
-  width: 85px; }
+  width: 85px;
+}
 
 #colapsar {
   position: absolute;
@@ -384,40 +457,51 @@
   cursor: pointer;
   text-align: center;
   margin-bottom: -10px;
-  margin-right: 15px; }
+  margin-right: 15px;
+}
 
 #btnAdd {
-  float: right; }
+  float: right;
+}
 
 .lightBlue {
-  color: #D29935; }
+  color: #D29935;
+}
 
 .rayaLightBlue {
-  border: 1px solid gray; }
+  border: 1px solid gray;
+}
 
 .rayaBlueInfo {
-  border: 1px solid gray; }
+  border: 1px solid gray;
+}
 
 .blueInfo {
-  color: #5BC0DE; }
+  color: #5BC0DE;
+}
 
 .rayaDottedLightBlue {
-  border-bottom: 4px dotted #D29935; }
+  border-bottom: 4px dotted #D29935;
+}
 
 /* Encabezado de grid y filtros */
 #filtros {
   position: relative;
-  margin-top: 10px; }
+  margin-top: 10px;
+}
 
 #filtrosContenedor {
   width: 100%;
   position: relative;
-  height: 200px; }
+  height: 200px;
+}
 
 #btnNuevoLote {
   background-color: #B4B4B8;
-  color: white; }
+  color: white;
+}
 
 #btnMas {
   font-size: 17px;
-  margin-top: 19px; }
+  margin-top: 19px;
+}

@@ -5,7 +5,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
    $scope.idUsuario = 4;
 
    //LQMA 04032016
-   $rootScope.currentEmployee = 9;
+   $rootScope.currentEmployee = 7;
    $rootScope.currentId = null;
    $rootScope.currentIdOp = null;
    $scope.idLote = 0;
@@ -179,6 +179,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 $scope.showSelCartera = true;
                 //LQMA  07032016
                 $scope.ObtieneLotes(0);// borra todos los lotes
+                $scope.LlenaIngresos();
 
             }, function errorCallback(response) {
                 //oculta la información y manda el total a cero y llena el input del modal
@@ -219,7 +220,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
     $scope.LlenaIngresos = function () {       
         pagoRepository.getIngresos($scope.idEmpresa,$scope.idLote)  //$scope.idEmpresa
             .then(function successCallback(response) {
-                $scope.ingresos = response.data;
+                $rootScope.ingresos = response.data;
                 $scope.LlenaEgresos();
             }, function errorCallback(response) {
                 alertFactory.error('Error al obtener los Ingresos');
@@ -230,7 +231,14 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
     $scope.LlenaEgresos = function () {
         pagoRepository.getEgresos($scope.idEmpresa,$scope.idLote) //$scope.idEmpresa
             .then(function successCallback(response) {
-                $scope.egresos = response.data;                
+                $rootScope.egresos = response.data;
+
+                angular.forEach($rootScope.TotalxEmpresas, function(empresa, key){
+                    angular.forEach($rootScope.egresos, function(egreso, key){
+                            if(empresa.cuentaPagadora == egreso.cuenta) 
+                                egreso.totalPagar = empresa.sumaSaldo;
+                    });
+                });
                 
                 $scope.calculaTotalOperaciones();
                 recalculaIngresos();               
@@ -672,7 +680,7 @@ $rootScope.ConsultaLote = function(Lote,index) {
 $scope.Guardar = function() {
 
     var negativos = 0;
-    angular.forEach($scope.ingresos, function(ingreso, key){
+    angular.forEach($rootScope.ingresos, function(ingreso, key){
             if(parseInt(ingreso.disponible) < 0)
                 negativos += 1;
         });
@@ -719,9 +727,9 @@ $scope.Guardar = function() {
 
                             });    
 
-                 var jsIngresos = angular.toJson($scope.ingresos); //delete $scope.ingresos['$$hashKey'];
+                 var jsIngresos = angular.toJson($rootScope.ingresos); //delete $scope.ingresos['$$hashKey'];
                  var jsTransf = angular.toJson($scope.transferencias);
-                 var jsEgresos = angular.toJson($scope.egresos);
+                 var jsEgresos = angular.toJson($rootScope.egresos);
 
                  pagoRepository.setDatos(array,$rootScope.currentEmployee,$rootScope.idLotePadre,jsIngresos,jsTransf,$scope.caja,$scope.cobrar,jsEgresos)
                         .then(function successCallback(response) {
@@ -771,7 +779,7 @@ $scope.Guardar = function() {
         else
             if(transferencia.bancoOrigen != ingreso.cuenta)
             {
-                angular.forEach($scope.ingresos, function(ingreso, key){     
+                angular.forEach($rootScope.ingresos, function(ingreso, key){     
                     if(ingreso.cuenta == transferencia.bancoOrigen)                
                             ingreso.disponible = parseInt(ingreso.disponible) + parseInt(transferencia.importe);
                 });
@@ -807,7 +815,7 @@ $scope.Guardar = function() {
 
         ingreso.disponible = parseInt(ingreso.saldo) - parseInt(total);
 
-        angular.forEach($scope.egresos, function(egreso, key){
+        angular.forEach($rootScope.egresos, function(egreso, key){
                     if((ingreso.cuenta == egreso.cuenta) && egreso.ingreso == 1)
                         egreso.saldoIngreso = ingreso.disponible;
             });
@@ -845,7 +853,7 @@ $scope.Guardar = function() {
         }
         else
         {
-            angular.forEach($scope.ingresos, function(ingreso, key){
+            angular.forEach($rootScope.ingresos, function(ingreso, key){
                 if(ingreso.cuenta == transferencia.bancoOrigen)
                 {
                     if(ingreso.disponible - transferencia.importe < 0)    
@@ -867,7 +875,7 @@ $scope.Guardar = function() {
 
     var recalculaIngresos = function()
     {
-        angular.forEach($scope.ingresos, function(ingreso, key){
+        angular.forEach($rootScope.ingresos, function(ingreso, key){
             ingreso.disponible = ingreso.saldo;
             angular.forEach($scope.transferencias, function(transferencia, key){
                 if(ingreso.cuenta == transferencia.bancoOrigen)
@@ -880,15 +888,24 @@ $scope.Guardar = function() {
     $scope.calculaTotalOperaciones = function()
     {        
         //$scope.egresos = [{id: 1,nombre:'HSBC', cuenta: 228139,saldo: 90000, aTransferir: 25000, total:0,excedente:0, ingreso:1, egreso:0},
-        angular.forEach($scope.egresos, function(egreso, key){
+        angular.forEach($rootScope.egresos, function(egreso, key){
                 var totalDestino = 0;
                 angular.forEach($scope.transferencias, function(transferencia, key){
                     if(transferencia.bancoDestino == egreso.cuenta)
                          totalDestino = totalDestino + parseInt(transferencia.importe);
                 });
+
+                angular.forEach($rootScope.ingresos, function(ingreso, key){
+                            if((ingreso.cuenta == egreso.cuenta) && egreso.ingreso == 1)
+                                egreso.saldoIngreso = ingreso.saldo;
+                });
+
                 egreso.aTransferir = totalDestino;
-                egreso.total = egreso.aTransferir + (egreso.ingreso == 1)?parseInt(egreso.saldoIngreso):parseInt(egreso.saldo);
-                egreso.excedente = egreso.totalPagar - egreso.total;
+                var sss = parseInt(egreso.ingreso);
+                var suma = (sss == 1)?parseInt(egreso.saldoIngreso):parseInt(egreso.saldo)
+                egreso.total = parseInt(egreso.aTransferir) + suma;
+                //egreso.excedente = egreso.totalPagar - egreso.total;
+                egreso.excedente = parseInt(egreso.totalPagar) - parseInt(egreso.total);
         });
     };
 
@@ -907,26 +924,26 @@ $scope.Guardar = function() {
         switch(opcion){
 
         case 'egresosTotal':
-                angular.forEach($scope.egresos, function(egreso, key){        
+                angular.forEach($rootScope.egresos, function(egreso, key){        
                     total += parseInt(egreso.total);
                 });
                 $rootScope.FlujoEfectivo = total;
                 break;
 
         case 'ingresoSaldo':
-                angular.forEach($scope.ingresos, function(ingreso, key){
+                angular.forEach($rootScope.ingresos, function(ingreso, key){
                    total += parseInt((ingreso.saldo == '')?0:ingreso.saldo); 
                 });
                 break;
 
         case 'ingresoDisponible':
-                angular.forEach($scope.ingresos, function(ingreso, key){
+                angular.forEach($rootScope.ingresos, function(ingreso, key){
                    total += parseInt((ingreso.disponible == '')?0:ingreso.disponible); 
                 });
                 break;
 
         case 'excedente':
-                angular.forEach($scope.egresos, function(egreso, key){
+                angular.forEach($rootScope.egresos, function(egreso, key){
                     total += parseInt(egreso.excedente);
                 });
                 break;
@@ -941,12 +958,12 @@ $scope.Guardar = function() {
                     });     
                 break;
         case 'saldo':
-                    angular.forEach($scope.egresos, function(egreso, key){
+                    angular.forEach($rootScope.egresos, function(egreso, key){
                         total += (egreso.ingreso == 1)?parseInt(egreso.saldoIngreso):parseInt(egreso.saldo);
                     });     
                 break;                                
         case 'aTransferir':
-                    angular.forEach($scope.egresos, function(egreso, key){
+                    angular.forEach($rootScope.egresos, function(egreso, key){
                         total += parseInt(egreso.aTransferir);
                     });     
                 break;
