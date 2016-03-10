@@ -5,7 +5,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
    $scope.idUsuario = 4;
 
    //LQMA 04032016
-   $rootScope.currentEmployee = 9;
+   $rootScope.currentEmployee = 7;
    $rootScope.currentId = null;
    $rootScope.currentIdOp = null;
    $scope.idLote = 0;
@@ -327,6 +327,11 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
          //LQMA 10032016
         var newLote = {idLotePago:'0',idEmpresa:$scope.idEmpresa,idUsuario:$rootScope.currentEmployee,fecha:'',nombre:$rootScope.nombreLoteNuevo,estatus:0};
         $scope.ObtieneLotes(newLote);
+        
+        if($rootScope.showGrid) {
+            $rootScope.modalSeleccionados = $scope.gridApi.selection.getSelectedRows();
+            $rootScope.gridOptions.data = $rootScope.modalSeleccionados;
+        }
         
         $('#inicioModal').modal('hide');
 
@@ -694,11 +699,9 @@ $scope.Guardar = function() {
                 negativos += 1;
         });
 
-
     setTimeout(function(){guardaValida(negativos);},500);
     
   };//fin de funcion guardar
-
 
   var guardaValida=function(negativos){
 
@@ -707,9 +710,12 @@ $scope.Guardar = function() {
     else 
     {
         //alertFactory.success('Se guardaron los datos.');
-        /*pagoRepository.getPagosPadre($rootScope.currentEmployee)
+        //pagoRepository.getPagosPadre($rootScope.currentEmployee)
+          pagoRepository.getPagosPadre($scope.idEmpresa,$rootScope.currentEmployee,$rootScope.nombreLoteNuevo)
             .then(function successCallback(response) 
-            {        */
+            {   
+                $rootScope.idLotePadre = response.data;
+
                 var array = [];
                 var rows =  $scope.gridApi.grid.rows;
                 var count = 0;
@@ -733,7 +739,6 @@ $scope.Guardar = function() {
                                     elemento.tab_revision = 0;
 
                                 array.push(elemento);
-
                             });    
 
                  var jsIngresos = angular.toJson($rootScope.ingresos); //delete $scope.ingresos['$$hashKey'];
@@ -749,9 +754,9 @@ $scope.Guardar = function() {
                             alertFactory.error('Error al guardar Datos');
                         }
                     );     
-            /*}, function errorCallback(response) {                
+            }, function errorCallback(response) {                
                 alertFactory.error('Error al insertar en tabla padre.');
-            });*/
+            });
         }//fin else
   };
 
@@ -958,7 +963,7 @@ $scope.Guardar = function() {
                 break;
 
         case 'otrosIngresos':                
-                    total += parseInt($scope.caja) + parseInt($scope.cobrar);                
+                    total += parseInt(($scope.caja == '' || $scope.caja == null )?0:$scope.caja) + parseInt(($scope.cobrar == '' || $scope.cobrar == null)?0:$scope.cobrar);
                 break;
 
         case 'transferencias':
