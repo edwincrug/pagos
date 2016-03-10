@@ -99,9 +99,7 @@
           <ul class="cbp-vimenu">
           <li><a class="icon-logo"></a></li>
             <li><a id="btnNuevoLote" tooltip="nuevo lote" ng-click="CrearNuevoLote()"><span id="btnMas" class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></li>
-
             <li ng-repeat="Lote in noLotes.data"><a ng-click="ConsultaLote(Lote,{{$index + 1}})"> Lote {{$index +1}} </a></li>
-
           </ul>
           <div class="main">
             <div ng-view></div>

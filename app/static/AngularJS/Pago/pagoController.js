@@ -5,7 +5,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
    $scope.idUsuario = 4;
 
    //LQMA 04032016
-   $rootScope.currentEmployee = 7;
+   $rootScope.currentEmployee = 9;
    $rootScope.currentId = null;
    $rootScope.currentIdOp = null;
    $scope.idLote = 0;
@@ -193,13 +193,16 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         );
     };
 
-    $scope.ObtieneLotes = function(borraLote) //borraLote, 0 para borrar lotes sin relacion, 1 para conservarlos
+    $scope.ObtieneLotes = function(newLote) //borraLote, 0 para borrar lotes sin relacion, 1 para conservarlos
     {
         $rootScope.NuevoLote = true;
-        pagoRepository.getLotes($scope.idEmpresa,$rootScope.currentEmployee,borraLote)
+        pagoRepository.getLotes($scope.idEmpresa,$rootScope.currentEmployee,0)
                 .then(function successCallback(data) {
 
                     $rootScope.noLotes = data;
+                    if(newLote!=0)
+                        $rootScope.noLotes.data.push(newLote);
+
                     if($rootScope.noLotes.data.length > 0) //mostrar boton crear lote
                     {   
                         alertFactory.info('Total de lotes: ' +  $rootScope.noLotes.data.length);
@@ -305,8 +308,8 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
         /*if(($rootScope.nombreLoteNuevo == null) || ($rootScope.nombreLoteNuevo == ''))
               alertFactory.warning('Debe capturar el nombre del Lote');
-        else  */
-        pagoRepository.getPagosPadre($scope.idEmpresa,$rootScope.currentEmployee,$rootScope.nombreLoteNuevo)
+        else  */ //LQMA 10032016
+        /*pagoRepository.getPagosPadre($scope.idEmpresa,$rootScope.currentEmployee,$rootScope.nombreLoteNuevo)
             .then(function successCallback(response) 
             {  
                 $rootScope.idLotePadre = response.data;
@@ -320,7 +323,13 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
             }, function errorCallback(response) {                
                 alertFactory.error('Error al insertar Lote.');
-            });
+            });*/
+         //LQMA 10032016
+        var newLote = {idLotePago:'0',idEmpresa:$scope.idEmpresa,idUsuario:$rootScope.currentEmployee,fecha:'',nombre:$rootScope.nombreLoteNuevo,estatus:0};
+        $scope.ObtieneLotes(newLote);
+        
+        $('#inicioModal').modal('hide');
+
     }; //FIN inicia Lote
 
     $scope.llenaGrid = function () {
@@ -971,10 +980,19 @@ $scope.Guardar = function() {
 
         return total;
     } //get total end
-
+    //LQMA 10032016
     $rootScope.CrearNuevoLote = function(){
-        $rootScope.NuevoLote = true;
-        $('#inicioModal').modal('show');
+
+      var lotesPendientes = $.grep($rootScope.noLotes.data, function( n, i ) {
+                    return n.estatus===0;
+                });
+
+        if(lotesPendientes.length > 0)
+            alertFactory.warning('Existe lotes sin guardar.');
+        else{
+            $rootScope.NuevoLote = true;
+            $('#inicioModal').modal('show');
+        }        
     }
 
 /***************************************************************************************************************
