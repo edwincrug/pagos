@@ -5,7 +5,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
    $scope.idUsuario = 4;
 
    //LQMA 04032016
-   $rootScope.currentEmployee = 21;
+   $rootScope.currentEmployee = 25;
    $rootScope.currentId = null;
    $rootScope.currentIdOp = null;
    $scope.idLote = 0;
@@ -744,6 +744,7 @@ $rootScope.ConsultaLote = function(Lote,index) {
     alertFactory.info('Consulta de Lote ' + index);
 
     $scope.idLote = Lote.idLotePago;
+    $rootScope.nombreLote = Lote.nombre;
 
     $scope.LlenaIngresos(); 
     $scope.LlenaEgresos();
