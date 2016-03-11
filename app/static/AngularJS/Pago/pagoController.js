@@ -372,6 +372,8 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 for (var i = 0; i < $scope.data.length; i++)
                 {
                      $scope.data[i].Pagar = $scope.data[i].saldo;
+                     $scope.data[i].estGrid = 'Inicio';
+                     
                      if ($scope.data[i].ordenBloqueada=='True')
                     {
                         $scope.data[i].Pagar = 0;
@@ -478,8 +480,9 @@ $rootScope.gridOptions = {
          //{ name: 'annio', width: '5%' },
          // { name: 'proveedorBloqueado', width: '5%' },
          { name: 'documentoPagable', width: '15%', displayName: 'Estatus del Documento'},
-         { name: 'ordenBloqueada', displayName: 'Bloqueada', width: '20%' , cellTemplate: '<button ng-click="row.entity.ordenBloqueada = !row.entity.ordenBloqueada" ng-model="row.entity.ordenBloqueada" style="{{row.entity.ordenBloqueada ? "background-color: lightgreen" : ""}}"></button>' },
-         { name: 'cuentaPagadora', width: '15%', displayName: 'Banco'}
+         { name: 'ordenBloqueada', displayName: 'Bloqueada', width: '20%'},
+         { name: 'cuentaPagadora', width: '15%', displayName: 'Banco'},
+         { name: 'estGrid', width: '15%', displayName: 'Estatus Grid'}
          // { name: 'diasCobro', width: '5%' },
          // { name: 'aprobado', width: '5%' },
          // { name: 'contReprog', width: '5%' }
@@ -521,6 +524,7 @@ $rootScope.gridOptions = {
                                 {
                                         $scope.grdBancos[i].subtotal = Math.round($scope.grdBancos[i].subtotal * 100) / 100 + Math.round(rowChanged.entity.Pagar * 100) / 100;
                                         $scope.grdApagar = $scope.grdApagar + rowChanged.entity.Pagar;
+                                        rowChanged.entity.estGrid = 'Inicio'
                                    }
                                    
                                    i++;                           
@@ -529,7 +533,7 @@ $rootScope.gridOptions = {
                         }
                         else{
                             $scope.grdNoIncluido = Math.round($scope.grdNoIncluido * 100) / 100 + Math.round(rowChanged.entity.Pagar * 100) / 100;
-                           
+                            
                             //FAL actualizar cuenta pagadoras
                             i=0;
                             if ($scope.grdinicia) {
@@ -539,6 +543,7 @@ $rootScope.gridOptions = {
                                    {
                                         $scope.grdBancos[i].subtotal = Math.round($scope.grdBancos[i].subtotal * 100) / 100 - Math.round(rowChanged.entity.Pagar * 100) / 100;
                                         $scope.grdApagar = $scope.grdApagar - rowChanged.entity.Pagar;
+                                        rowChanged.entity.estGrid = 'No Incluido'
                                    }
                                    i++;                           
                                 });
@@ -563,7 +568,7 @@ $rootScope.gridOptions = {
 
             gridApi.edit.on.afterCellEdit($scope, function (rowEntity, colDef, newValue, oldValue) 
             {
-                                //FAL trabaja con las variables dependiendo si se edita o cambia la fecha
+               //FAL trabaja con las variables dependiendo si se edita o cambia la fecha
                 $scope.cantidadUpdate = newValue - oldValue;
                 
                 if (colDef.name == 'fechaPromesaPago') {
@@ -577,7 +582,7 @@ $rootScope.gridOptions = {
                             else
                             {
                                 old_date = Date.now();
-                                var new_date = new Date(newValue);
+                                 new_date = new Date(newValue);
                                 if (new_date < old_date)
                                 {
                                     alertFactory.warning('La fecha promesa de pago no puede ser menor a ' + old_date + ' !!!');
@@ -587,8 +592,10 @@ $rootScope.gridOptions = {
                         } 
 
                     else{
-                         old_date = Date.now();
-                         var new_date = new Date(newValue);
+                         dtHoy = Date.now();
+                          new_date = new Date(newValue);
+                          old_date = new Date(oldValue);
+
                             if (new_date < old_date)
                             {
                                 alertFactory.warning('La fecha promesa de pago no puede ser menor a ' + old_date + '  !!!');
@@ -597,6 +604,7 @@ $rootScope.gridOptions = {
                             else{
                                 $scope.grdReprogramado =  Math.round($scope.grdReprogramado * 100) / 100 + Math.round(rowEntity.Pagar * 100) / 100;
                                 $scope.grdApagar = Math.round($scope.grdApagar * 100) / 100 - Math.round(rowEntity.Pagar* 100) / 100
+                                rowEntity.estGrid = 'Reprogramado'
                             }
                     }        
                     
@@ -618,6 +626,7 @@ $rootScope.gridOptions = {
                                 else{
                                     $scope.grdNoIncluido =  Math.round($scope.grdNoIncluido * 100) / 100 - Math.round($scope.cantidadUpdate * 100) / 100;
                                     $scope.grdApagar = Math.round($scope.grdApagar * 100) / 100 + Math.round($scope.cantidadUpdate* 100) / 100
+                                    rowEntity.estGrid = 'No Incluido'
                                 }
                             }
                  }
@@ -690,9 +699,21 @@ $rootScope.gridOptions = {
       $scope.gridApi.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
 };       
 
-$scope.FiltrarCartera = function (value) {
+//FAL filtros en base a variables
+$scope.Filtrar = function (value,campo) {
     console.log(value);
-    $scope.gridApi.grid.columns[21].filters[0].term=value;
+    $scope.gridApi.grid.columns[campo].filters[0].term=value;
+    $scope.gridApi.core.notifyDataChange(uiGridConstants.dataChange.COLUMN);
+    $scope.gridApi.grid.refresh();
+    }
+
+//Quita filtros
+$scope.BorraFiltros = function () {
+    console.log(value);
+    $scope.gridApi.grid.columns.forEach(function(col,i)
+    {
+      $scope.gridApi.grid.columns[i].filters[0].term='';
+    }); 
     $scope.gridApi.core.notifyDataChange(uiGridConstants.dataChange.COLUMN);
     $scope.gridApi.grid.refresh();
     }

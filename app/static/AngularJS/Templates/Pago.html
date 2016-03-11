@@ -279,19 +279,31 @@
 				<!--FAL variables en base al grid-->
 				<div id="clsComplemento">
 					<div class="clsNoPagable">
-						<span class="clsDetailLabel">No pagable</span> <span class="clsDetailText blueInfo">{{grdnoPagable | currency}}</span>
+						<span class="clsDetailLabel">Todos</span> <span class="clsDetailText blueInfo">
+						<button type="button" class="btn btn-primary"  ng-click="BorraFiltros()">{{GranTotal | currency}}</button>
+						</span>
 					</div>
 					<div class="clsNoPagable separadorNoPagable">
 						/
 					</div>
 					<div class="clsNoPagable">
-						<span class="clsDetailLabel">No Incluido</span> <span class="clsDetailText blueInfo"> {{ grdNoIncluido | currency }} </span>
+						<span class="clsDetailLabel">No pagable</span> <span class="clsDetailText blueInfo">
+						<button type="button" class="btn btn-primary"  ng-click="Filtrar('True',23)">{{grdnoPagable | currency}}</button>
+						</span>
+					</div>
+					<div class="clsNoPagable separadorNoPagable">
+						/
+					</div>
+					<div class="clsNoPagable" >
+						<span class="clsDetailLabel">No Incluido</span> <span class="clsDetailText blueInfo"> <button type="button" class="btn btn-primary"  ng-click="Filtrar('No Incluido',25)"> {{ grdNoIncluido | currency }}</button></span>
 					</div>
 					<div class="clsNoPagable separadorNoPagable">
 						/
 					</div>
 					<div class="clsNoPagable">
-						<span class="clsDetailLabel">Reprogramado</span> <span class="clsDetailText blueInfo"> {{ grdReprogramado | currency }} </span>
+						<span class="clsDetailLabel">Reprogramado</span> <span class="clsDetailText blueInfo">
+						<button type="button" class="btn btn-primary"  ng-click="Filtrar('Reprogramado',25)">{{ grdReprogramado | currency }}</button>
+						  </span>
 					</div>
 					<div class="clsNoPagable separadorNoPagable">
 						/
@@ -303,14 +315,14 @@
 				</div>
 
 			</div>
-			<div id="chkPagable0">
+			<!--div id="chkPagable0">
 				<div class="btn-group" role="group">
 					<button type="button" class="btn btn-primary" ng-click="FiltrarCartera('')">Todos</button>
 					<button type="button" class="btn btn-primary"  ng-click="FiltrarCartera('True')">Pagable</button>
 					<button type="button" class="btn btn-primary"  ng-click="FiltrarCartera('False')">Incluida</button>
 					<button type="button" class="btn btn-primary"  ng-click="FiltrarCartera('False')">No Incluida</button>
 				</div>
-			</div>
+			</div-->
 <!-- 			<div id="chkPagable1">
 				<div class="btn-group" role="group">
 					<button type="button" class="btn btn-info" ng-click="FiltrarCartera('')">BANAMEX 7187 </button>
