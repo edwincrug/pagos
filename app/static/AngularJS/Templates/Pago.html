@@ -254,12 +254,12 @@
 		</div>
 		<div id="filtrosContenedor">
 			<div id="mdContentSuma3">
-			<div class="mdLineSuma" ng-repeat="TotalxEmpresa in TotalxEmpresas">
+			<div class="mdLineSuma" ng-repeat="grdBanco in grdBancos">
 				<div class="sumTexto">
-					{{TotalxEmpresa.cuentaPagadora}}
+					{{grdBanco.banco}}
 				</div>
 				<div class="sumMonto blueInfo">
-					{{TotalxEmpresa.sumaSaldo | currency}}
+					{{grdBanco.subtotal | currency}}
 				</div>
 			</div>
 			<div class="rows"> <div class="raya rayaBlueInfo"></div></div>
@@ -268,7 +268,7 @@
 					A pagar
 				</div>
 				<div class="sumMonto montoFinal blueInfo">
-					{{GranTotal | currency}}
+					{{grdApagar - grdnoPagable | currency}}
 				</div>
 			</div>
 			</div> 
@@ -276,30 +276,29 @@
 <!-- 				<div id="clsPagar">
 					<span id="clsMainLabel">Incluido</span><span id="clsPagarText" class="blueInfo"> {{cantidadTotal | currency}} </span>
 				</div> -->
+				<!--FAL variables en base al grid-->
 				<div id="clsComplemento">
 					<div class="clsNoPagable">
-						<span class="clsDetailLabel">No pagable</span> <span class="clsDetailText blueInfo">{{carteraVencida | currency}}</span>
+						<span class="clsDetailLabel">No pagable</span> <span class="clsDetailText blueInfo">{{grdnoPagable | currency}}</span>
 					</div>
 					<div class="clsNoPagable separadorNoPagable">
 						/
 					</div>
 					<div class="clsNoPagable">
-						<span class="clsDetailLabel">No Incluido</span> <span class="clsDetailText blueInfo"> {{ noPagable | currency }} </span>
+						<span class="clsDetailLabel">No Incluido</span> <span class="clsDetailText blueInfo"> {{ grdNoIncluido | currency }} </span>
 					</div>
 					<div class="clsNoPagable separadorNoPagable">
 						/
 					</div>
 					<div class="clsNoPagable">
-						<span class="clsDetailLabel">Reprogramado</span> <span class="clsDetailText blueInfo"> {{ noPagable | currency }} </span>
+						<span class="clsDetailLabel">Reprogramado</span> <span class="clsDetailText blueInfo"> {{ grdReprogramado | currency }} </span>
 					</div>
 					<div class="clsNoPagable separadorNoPagable">
 						/
 					</div>
-					<!-- <div class="clsPendiente">
-						<span class="clsDetailLabel">Reprogramado</span> <span class="clsDetailText blue"> {{ Reprogramable | currency }} </span>
-					</div> -->
+					
 					<div class="clsNoPagable">
-						<span class="clsDetailLabel">Porcentaje a pagar</span> <span class="clsDetailText blueInfo"> {{ ((cantidadTotal * 100) / carteraVencida ) | number:2 }} %</span>
+						<span class="clsDetailLabel">Porcentaje a pagar</span> <span class="clsDetailText blueInfo"> {{ (((grdApagar - grdnoPagable) * 100) / ( GranTotal )) | number:2 }} %</span>
 					</div>
 				</div>
 
