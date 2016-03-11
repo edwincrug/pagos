@@ -983,12 +983,12 @@ $scope.Guardar = function() {
                     ingreso.disponible = ingreso.disponible - transferencia.importe;
             });
 
-            /*angular.forEach($rootScope.TotalxEmpresas, function(empresa, key){
+            angular.forEach($rootScope.TotalxEmpresas, function(empresa, key){
                     angular.forEach($rootScope.egresos, function(egreso, key){
                             if(empresa.cuentaPagadora == egreso.cuenta) 
-                                empresa.sumaSaldo = egreso.total;
+                                empresa.saldoLote = egreso.total;
                     });
-                });*/
+                });
 
         });        
     }
