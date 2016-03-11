@@ -5,7 +5,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
    $scope.idUsuario = 4;
 
    //LQMA 04032016
-   $rootScope.currentEmployee = 12;
+   $rootScope.currentEmployee = 21;
    $rootScope.currentId = null;
    $rootScope.currentIdOp = null;
    $scope.idLote = 0;
@@ -33,6 +33,9 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
              //GetEmpleado();
              $scope.traeEmpresas();
        }*/
+       //LQMA 11032016
+       $scope.caja = 0;       
+       $scope.cobrar = 0;
 
        /***********************************************************/
        GetEmpleado();
@@ -807,9 +810,8 @@ $scope.Guardar = function() {
                  var jsIngresos = angular.toJson($rootScope.ingresos); //delete $scope.ingresos['$$hashKey'];
                  var jsTransf = angular.toJson($scope.transferencias);
                  var jsEgresos = angular.toJson($rootScope.egresos);
-
-                    //pagoRepository.setDatos(array,$rootScope.currentEmployee,$rootScope.idLotePadre,jsIngresos,$scope.transferencia,$scope.caja,$scope.cobrar,$rootScope.egresos)
-                    pagoRepository.setDatos(array,$rootScope.currentEmployee,$rootScope.idLotePadre,jsIngresos,jsTransf,$scope.caja,$scope.cobrar,jsEgresos)
+                    
+                    pagoRepository.setDatos(array,$rootScope.currentEmployee,$rootScope.idLotePadre,jsIngresos,jsTransf,$scope.caja,$scope.cobrar,jsEgresos,1)
                         .then(function successCallback(response) {
                             
                             alertFactory.success('Se guardaron los datos.');
