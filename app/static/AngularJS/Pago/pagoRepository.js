@@ -43,8 +43,9 @@ registrationModule.factory('pagoRepository', function ($http) {
                 url: pagoUrl                
                 ,method: 'POST'                
                 //,params: { id: '1|' + idEmpleado + '|' + idPadre + '|' + JSON.stringify(ingresos) + '|' + JSON.stringify(transfer) + '|' + caja + '|' + cobrar + '|' + JSON.stringify(total)}
-                ,params: { id: '9|' + idEmpleado + '|' + idPadre + '|' + ingresos + '|' + transfer + '|' + caja + '|' + cobrar + '|' + total}
-                ,data:JSON.stringify(id)
+                //,params: { id: '9|' + idEmpleado + '|' + idPadre + '|' + ingresos + '|' + transfer + '|' + caja + '|' + cobrar + '|' + total}
+                ,params: { id: '1|' + idEmpleado + '|' + idPadre + '|' + caja + '|' + cobrar}
+                ,data:[JSON.stringify(id),ingresos,transfer,total]
                 //dataType: "json",                
                 //traditional: true,
                 //contentType: 'application/json'
