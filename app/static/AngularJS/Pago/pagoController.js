@@ -211,6 +211,8 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                         alertFactory.success('Total de lotes: ' +  $rootScope.noLotes.data.length);
                         $rootScope.idLotePadre = $rootScope.noLotes.data[$rootScope.noLotes.data.length - 1].idLotePago;
                         $rootScope.NuevoLote = false;
+
+                        $rootScope.ConsultaLote($rootScope.noLotes.data[$rootScope.noLotes.data.length - 1],$rootScope.noLotes.data.length);
                     }
                     else
                     {
@@ -745,6 +747,7 @@ $rootScope.ConsultaLote = function(Lote,index) {
 
     $scope.idLote = Lote.idLotePago;
     $rootScope.nombreLote = Lote.nombre;
+    $rootScope.estatusLote = Lote.estatus;
 
     $scope.LlenaIngresos(); 
     $scope.LlenaEgresos();
@@ -752,8 +755,11 @@ $rootScope.ConsultaLote = function(Lote,index) {
     pagoRepository.getOtrosIngresos($scope.idLote)
             .then(function successCallback(response) 
             {  
-                $scope.caja = response.data[0].pio_caja;
-                $scope.cobrar = response.data[0].pio_cobranzaEsperada;
+                if(response.data.length > 0)
+                {           
+                    $scope.caja = response.data[0].pio_caja;
+                    $scope.cobrar = response.data[0].pio_cobranzaEsperada;
+                }
 
             }, function errorCallback(response) {                
                 alertFactory.error('Error al obtener Otros Ingresos.');
@@ -762,12 +768,15 @@ $rootScope.ConsultaLote = function(Lote,index) {
     pagoRepository.getTransferencias($scope.idLote)
             .then(function successCallback(response) 
             {  
-                $scope.transferencias = [];
+                if(response.data.length > 0)
+                {
+                    $scope.transferencias = [];
 
-                angular.forEach(response.data, function(transferencia, key){                    
-                    var newTransferencia = transferencia;
-                    $scope.transferencias.push(newTransferencia);
-                });                
+                    angular.forEach(response.data, function(transferencia, key){                    
+                        var newTransferencia = transferencia;
+                        $scope.transferencias.push(newTransferencia);
+                    });                
+                }
 
             }, function errorCallback(response) {                
                 alertFactory.error('Error al obtener Transferencias.');
