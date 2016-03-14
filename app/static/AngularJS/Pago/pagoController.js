@@ -5,7 +5,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
    $scope.idUsuario = 4;
 
    //LQMA 04032016
-   $rootScope.currentEmployee = 25;//25:1;
+   $rootScope.currentEmployee = 75;//25:1;
    $rootScope.currentId = null;
    $rootScope.currentIdOp = null;
    $scope.idLote = 0;
@@ -282,36 +282,44 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
      //lo configura para que no se edite y solo presente los campos principales
     $scope.MuestraGridModal = function (value) 
     {       
-        $rootScope.showGrid = true;
-        $scope.init();
-        pagoRepository.getDatos($scope.idEmpresa)
-            .success(llenaGridSuccessCallback)
-            .error(errorCallBack);
+    
+    ConfiguraGridModal();
+    $rootScope.gridModal.data = $rootScope.gridOptions.data;
 
-        $rootScope.gridOptions.columnDefs = [
-         
-         {
-           name: 'nombreAgrupador', grouping: { groupPriority: 0 }, sort: { priority: 0, direction: 'asc' }, width: '15%',displayName: 'Grupo', enableCellEdit: false
-         },
-         {
-           name: 'proveedor', grouping: { groupPriority: 1 }, sort: { priority: 1, direction: 'asc' }, name: 'proveedor', enableCellEdit: false
-           , width: '35%'
-           ,cellTemplate: '<div><div ng-if="!col.grouping || col.grouping.groupPriority === undefined || col.grouping.groupPriority === null || ( row.groupHeader && col.grouping.groupPriority === row.treeLevel )" class="ui-grid-cell-contents" title="TOOLTIP">{{COL_FIELD CUSTOM_FILTERS}}</div></div>'
-         },
-         {
-             field: 'Pagar', displayName: 'Pagar (total)', width: '25%', cellFilter: 'currency', aggregationType: uiGridConstants.aggregationTypes.sum,
-             treeAggregationType: uiGridGroupingConstants.aggregation.SUM, enableCellEdit: false,
-             editableCellTemplate: '<div><form name="inputForm"><input type="number" ng-class="\'colt\' + col.uid" ui-grid-editor ng-model="MODEL_COL_FIELD"></form></div>',
-             customTreeAggregationFinalizerFn: function (aggregation) {
-                 aggregation.rendered = aggregation.value;
-             }
-         },
-         { name: 'fechaPromesaPago', displayName: 'Fecha Promesa de Pago', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '15%', enableCellEdit: false},
-         { name: 'cuentaPagadora', width: '15%', displayName: 'Banco'}
-        ];  
+     setTimeout(function()
+                { 
+
+                 $scope.selectAllModal  ();
+                 //FAL evita que se alteren los datos al seleccionar todos
+                 $scope.grdinicia = true;
+                }, 500);
 
         /************************************************************************************************************************/  
     };
+
+//FAL se analizan los registros para selccionarlos y se obtienen los totales relacionados al grid
+$scope.selectAllModal = function() {
+    
+
+    $rootScope.gridModal.data.forEach(function (grDatosSel, i)
+    {
+       if(grDatosSel.ordenBloqueada == 'False')
+       {
+              $scope.gridApi.selection.selectRow($rootScope.gridModal.data[i]);
+       };
+    });
+
+    $rootScope.gridModal.isRowSelectable = function(row){
+        if(row.entity.ordenBloqueada == 'True'){
+          return false;
+        } else {
+          return true;
+        }
+      };
+      $scope.gridApi.core.notifyDataChange(uiGridConstants.dataChange.OPTIONS);
+      $scope.gridApi.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
+};
+
     //FAl--Oculta el grid del Modal y asigna la variable toda la cartera true
     $scope.OcultaGridModal = function (value) 
     {
@@ -328,7 +336,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         if($rootScope.showGrid) {
                 ConfiguraGrid();
                 setTimeout(function(){ 
-                                        $rootScope.modalSeleccionados = $scope.gridApi.selection.getSelectedRows();
+                                        $rootScope.modalSeleccionados = $rootScope.mySelections;
                                         $rootScope.gridOptions.data = $rootScope.modalSeleccionados;}
                             , 1000);
             }//if
@@ -1124,6 +1132,79 @@ $scope.Guardar = function() {
             $('#inicioModal').modal('show');
         }        
     }
+//FAL funciones de catga para el modal.
+
+var ConfiguraGridModal = function () {
+    $rootScope.showGrid = true;
+    $rootScope.gridModal = {
+        enableRowSelection: true,
+        enableGridMenu: true,
+        enableFiltering: true,
+        enableGroupHeaderSelection: true,
+        treeRowHeaderAlwaysVisible: true,
+        showColumnFooter: true,
+        showGridFooter: true,
+        height: 900,
+        cellEditableCondition: function ($scope) {
+            return $scope.row.entity.ordenBloqueada; 
+        },
+       columnDefs: [
+         {
+             name: 'nombreAgrupador', grouping: { groupPriority: 0 }, sort: { priority: 0, direction: 'asc' }, width: '15%', displayName: 'Grupo', enableCellEdit: false
+
+         },
+         {
+             name: 'proveedor', grouping: { groupPriority: 1 }, sort: { priority: 1, direction: 'asc' }, name: 'proveedor', enableCellEdit: false
+           , width: '35%'
+           , cellTemplate: '<div><div ng-if="!col.grouping || col.grouping.groupPriority === undefined || col.grouping.groupPriority === null || ( row.groupHeader && col.grouping.groupPriority === row.treeLevel )" class="ui-grid-cell-contents" title="TOOLTIP">{{COL_FIELD CUSTOM_FILTERS}}</div></div>'
+         },
+         {
+             field: 'Pagar', displayName: 'Pagar (total)', width: '30%', cellFilter: 'currency', aggregationType: uiGridConstants.aggregationTypes.sum,
+             treeAggregationType: uiGridGroupingConstants.aggregation.SUM, enableCellEdit: ($rootScope.currentIdOp == 1) ? false : true,
+             editableCellTemplate: '<div><form name="inputForm"><input type="number" ng-class="\'colt\' + col.uid" ui-grid-editor ng-model="MODEL_COL_FIELD"></form></div>',
+             customTreeAggregationFinalizerFn: function (aggregation) {
+                 aggregation.rendered = aggregation.value;
+             }
+         },
+         { name: 'fechaPromesaPago', displayName: 'Fecha Promesa de Pago', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '17%' },
+         { name: 'ordenBloqueada', displayName: 'Bloqueada', width: '20%' },
+         { name: 'estGrid', width: '15%', displayName: 'Estatus Grid' },
+         {
+             field: 'saldoPorcentaje', displayName: 'Porcentaje %', width: '10%', cellFilter: 'number: 6', aggregationType: uiGridConstants.aggregationTypes.sum,
+             treeAggregationType: uiGridGroupingConstants.aggregation.SUM, enableCellEdit: false,
+             customTreeAggregationFinalizerFn: function (aggregation) {
+                 aggregation.rendered = aggregation.value;
+             }
+         }
+        ],
+        rowTemplate: '<div ng-class="{\'ordenBloqueada\':(row.entity.ordenBloqueada==\'True\' && ((row.entity.idEstatus < 1 || row.entity.idEstatus > 5) && row.entity.idEstatus != 20) && !row.isSelected)' +
+                                    ',\'bloqueadaSelec\': (row.isSelected && row.entity.ordenBloqueada==\'True\') || (row.isSelected && ((row.entity.idEstatus >= 1 && row.entity.idEstatus <= 5) || row.entity.idEstatus == 20)),' +
+                                    '\'selectNormal\': (row.isSelected && row.entity.ordenBloqueada==\'False\' && ((row.entity.idEstatus < 1 || row.entity.idEstatus > 5) && row.entity.idEstatus != 20))' +
+                                    ',\'docIncompletos\': (!row.isSelected && ((row.entity.idEstatus >= 1 && row.entity.idEstatus <= 5) || row.entity.idEstatus == 20) && row.entity.ordenBloqueada==\'False\')' +
+                                    ',\'bloqDocIncom\': (!row.isSelected && ((row.entity.idEstatus >= 1 && row.entity.idEstatus <= 5) || row.entity.idEstatus == 20) && row.entity.ordenBloqueada==\'True\')}"> <div ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader == \'True\'}" ui-grid-cell></div></div>',
+        onRegisterApi: function (gridApi) {
+            $scope.gridApi = gridApi;
+            $scope.cantidadTotal = $scope.cantidadTotal;
+            $scope.gridApi.selection.on.rowSelectionChanged($scope, function (rowChanged) {
+                if (typeof (rowChanged.treeLevel) !== 'undefined' && rowChanged.treeLevel > -1) {
+                    children = $scope.gridApi.treeBase.getRowChildren(rowChanged);
+                    children.forEach(function (child) {
+                        if (rowChanged.isSelected) {
+                            $scope.gridApi.selection.selectRow(child.entity);
+                        } else {
+                            $scope.gridApi.selection.unSelectRow(child.entity);
+                        }
+                    });
+                }
+            });
+            gridApi.selection.on.rowSelectionChanged($scope, function (rows) {
+                $rootScope.mySelections = gridApi.selection.getSelectedRows();
+            });
+            $scope.gridApi.selection.selectAllRows(true);
+        }
+    }
+};//funcion
+
 
 /***************************************************************************************************************
     Funciones de guardado de datos
