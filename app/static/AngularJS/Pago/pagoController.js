@@ -740,13 +740,23 @@ var isNumeric = function(obj){
 
 $rootScope.ConsultaLote = function(Lote,index) {
 
-    if($rootScope.estatusLote == 0 && $rootScope.NuevoLote == false)
-        alertFactory.confirm('Al cambiar de lote se perderan los cambios no guardados. Desea continuar?');
+    if($rootScope.estatusLote == 0 && $rootScope.NuevoLote == false){
+        //alertFactory.confirm('Al cambiar de lote se perderan los cambios no guardados. Desea continuar?');
+        if(confirm('¿Al cambiar de lote se perderan los cambios no guardados. Desea continuar??')){
+               $rootScope.ConsultaLoteObtiene(Lote,index); 
+        }
+    }
     else{
-            alertFactory.info('Estatus lote: ' + $rootScope.estatusLote);
-            alertFactory.info('Consulta de Lote ' + index);
+          $rootScope.ConsultaLoteObtiene(Lote,index); 
+    }               
+}
+
+$rootScope.ConsultaLoteObtiene = function(Lote,index){
+
+    alertFactory.info('Consulta de Lote ' + index);
 
             $scope.idLote = Lote.idLotePago;
+            $rootScope.idLotePadre = Lote.idLotePago;
             $rootScope.nombreLote = Lote.nombre;
             $rootScope.estatusLote = Lote.estatus;
 
@@ -792,16 +802,11 @@ $rootScope.ConsultaLote = function(Lote,index) {
 
             pagoRepository.getDatosAprob($scope.idLote)
                         .success(llenaGridSuccessCallback)
-                        .error(errorCallBack);
-        } //else confirm
+                        .error(errorCallBack);        
 
         $rootScope.NuevoLote = false;
 }
 
-$rootScope.mensaje =function()
-{
-    alertFactory.error('lllll');
-}
 
 //LQMA funcion para guardar datos del grid (se implementara para guardar Ingresos bancos, otros , Transferencias)
 $scope.Guardar = function() {
@@ -817,14 +822,14 @@ $scope.Guardar = function() {
   };//fin de funcion guardar
 
   var guardaValida=function(negativos){
-
     if(negativos > 0)
         alertFactory.warning('Existen disponibles en valores negativos. Verifique las transferencias.');
-    else 
-    {
+    else{
         //alertFactory.success('Se guardaron los datos.');
         //pagoRepository.getPagosPadre($rootScope.currentEmployee)
-          pagoRepository.getPagosPadre($scope.idEmpresa,$rootScope.currentEmployee,$rootScope.nombreLoteNuevo)
+
+            alertFactory.error($rootScope.idLotePadre);
+         /* pagoRepository.getPagosPadre($scope.idEmpresa,$rootScope.currentEmployee,$rootScope.nombreLoteNuevo)
             .then(function successCallback(response) 
             {   
                 $rootScope.idLotePadre = response.data;
@@ -869,9 +874,9 @@ $scope.Guardar = function() {
                     );     
             }, function errorCallback(response) {                
                 alertFactory.error('Error al insertar en tabla padre.');
-            });
+            });*/
         }//fin else
-  };
+    };
 
 /***************************************************************************************************************
     Funciones de guardado de datos
