@@ -5,7 +5,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
    $scope.idUsuario = 4;
 
    //LQMA 04032016
-   $rootScope.currentEmployee = 25;
+   $rootScope.currentEmployee = 25;//25:1;
    $rootScope.currentId = null;
    $rootScope.currentIdOp = null;
    $scope.idLote = 0;
@@ -204,13 +204,17 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
                     $rootScope.noLotes = data;
                     if(newLote!=0)
+                    {
                         $rootScope.noLotes.data.push(newLote);
+                        $rootScope.estatusLote = 0;
+                    }
 
                     if($rootScope.noLotes.data.length > 0) //mostrar boton crear lote
                     {   
                         alertFactory.success('Total de lotes: ' +  $rootScope.noLotes.data.length);
                         $rootScope.idLotePadre = $rootScope.noLotes.data[$rootScope.noLotes.data.length - 1].idLotePago;
                         $rootScope.NuevoLote = false;
+                        $rootScope.estatusLote = $rootScope.noLotes.data[$rootScope.noLotes.data.length - 1].estatus;
 
                         $rootScope.ConsultaLote($rootScope.noLotes.data[$rootScope.noLotes.data.length - 1],$rootScope.noLotes.data.length);
                     }
@@ -247,6 +251,13 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                                 egreso.totalPagar = empresa.sumaSaldo;
                     });
                 });
+
+                angular.forEach($rootScope.egresos, function(egreso, key){
+                            angular.forEach($rootScope.ingresos, function(ingreso, key){
+                                if(ingreso.cuenta == egreso.cuenta) 
+                                    egreso.ingreso = 1;
+                        });    
+                    });
                 
                 $scope.calculaTotalOperaciones();
                 recalculaIngresos();               
@@ -334,11 +345,15 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         $scope.ObtieneLotes(newLote);
         
         if($rootScope.showGrid) {
-            $rootScope.modalSeleccionados = $scope.gridApi.selection.getSelectedRows();
-            $rootScope.gridOptions.data = $rootScope.modalSeleccionados;
-        }
+                ConfiguraGrid();
+                setTimeout(function(){ 
+                                        $rootScope.modalSeleccionados = $scope.gridApi.selection.getSelectedRows();
+                                        $rootScope.gridOptions.data = $rootScope.modalSeleccionados;}
+                            , 1000);
+            }//if
         
         $('#inicioModal').modal('hide');
+        $rootScope.estatusLote = 0;
 
     }; //FIN inicia Lote
 
@@ -743,6 +758,8 @@ var isNumeric = function(obj){
 //LQMA 08032016
 
 $rootScope.ConsultaLote = function(Lote,index) {
+
+    alertFactory.info('Estatus lote: ' + $rootScope.estatusLote);
     alertFactory.info('Consulta de Lote ' + index);
 
     $scope.idLote = Lote.idLotePago;
@@ -755,11 +772,14 @@ $rootScope.ConsultaLote = function(Lote,index) {
     pagoRepository.getOtrosIngresos($scope.idLote)
             .then(function successCallback(response) 
             {  
+                $scope.caja = 0;
+                $scope.cobrar = 0;
                 if(response.data.length > 0)
                 {           
                     $scope.caja = response.data[0].pio_caja;
                     $scope.cobrar = response.data[0].pio_cobranzaEsperada;
                 }
+
 
             }, function errorCallback(response) {                
                 alertFactory.error('Error al obtener Otros Ingresos.');
@@ -768,14 +788,18 @@ $rootScope.ConsultaLote = function(Lote,index) {
     pagoRepository.getTransferencias($scope.idLote)
             .then(function successCallback(response) 
             {  
+                $scope.transferencias = [];
                 if(response.data.length > 0)
                 {
-                    $scope.transferencias = [];
-
-                    angular.forEach(response.data, function(transferencia, key){                    
+                        angular.forEach(response.data, function(transferencia, key){                    
                         var newTransferencia = transferencia;
                         $scope.transferencias.push(newTransferencia);
                     });                
+                }
+                else
+                {
+                    var newTransferencia = {bancoOrigen:'', bancoDestino: '', importe:0, index:index};
+                    $scope.transferencias.push(newTransferencia);
                 }
 
             }, function errorCallback(response) {                
@@ -842,7 +866,7 @@ $scope.Guardar = function() {
                  var jsTransf = angular.toJson($scope.transferencias);
                  var jsEgresos = angular.toJson($rootScope.egresos);
                     
-                    pagoRepository.setDatos(array,$rootScope.currentEmployee,$rootScope.idLotePadre,jsIngresos,jsTransf,$scope.caja,$scope.cobrar,jsEgresos,1)
+                    pagoRepository.setDatos(array,$rootScope.currentEmployee,$rootScope.idLotePadre,jsIngresos,jsTransf,$scope.caja,$scope.cobrar,jsEgresos,($rootScope.estatusLote == 0)?1:2)
                         .then(function successCallback(response) {
                             
                             alertFactory.success('Se guardaron los datos.');
