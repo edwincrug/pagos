@@ -828,8 +828,8 @@ $scope.Guardar = function() {
         //alertFactory.success('Se guardaron los datos.');
         //pagoRepository.getPagosPadre($rootScope.currentEmployee)
 
-            alertFactory.error($rootScope.idLotePadre);
-         /* pagoRepository.getPagosPadre($scope.idEmpresa,$rootScope.currentEmployee,$rootScope.nombreLoteNuevo)
+            //alertFactory.error($rootScope.idLotePadre);
+          pagoRepository.getPagosPadre($scope.idEmpresa,$rootScope.currentEmployee,$rootScope.nombreLoteNuevo,$rootScope.idLotePadre)
             .then(function successCallback(response) 
             {   
                 $rootScope.idLotePadre = response.data;
@@ -874,7 +874,7 @@ $scope.Guardar = function() {
                     );     
             }, function errorCallback(response) {                
                 alertFactory.error('Error al insertar en tabla padre.');
-            });*/
+            });
         }//fin else
     };
 
