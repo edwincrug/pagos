@@ -197,23 +197,23 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
     };
 
     $scope.ObtieneLotes = function(newLote) //borraLote, 0 para borrar lotes sin relacion, 1 para conservarlos
-    {
-        $rootScope.NuevoLote = true;
+    {        
         pagoRepository.getLotes($scope.idEmpresa,$rootScope.currentEmployee,0)
                 .then(function successCallback(data) {
 
+                    //$rootScope.NuevoLote = false;
                     $rootScope.noLotes = data;
                     if(newLote!=0)
                     {
                         $rootScope.noLotes.data.push(newLote);
                         $rootScope.estatusLote = 0;
+                        //$rootScope.NuevoLote = true;
                     }
 
                     if($rootScope.noLotes.data.length > 0) //mostrar boton crear lote
                     {   
                         alertFactory.success('Total de lotes: ' +  $rootScope.noLotes.data.length);
-                        $rootScope.idLotePadre = $rootScope.noLotes.data[$rootScope.noLotes.data.length - 1].idLotePago;
-                        $rootScope.NuevoLote = false;
+                        $rootScope.idLotePadre = $rootScope.noLotes.data[$rootScope.noLotes.data.length - 1].idLotePago;                        
                         $rootScope.estatusLote = $rootScope.noLotes.data[$rootScope.noLotes.data.length - 1].estatus;
 
                         $rootScope.ConsultaLote($rootScope.noLotes.data[$rootScope.noLotes.data.length - 1],$rootScope.noLotes.data.length);
@@ -221,11 +221,11 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                     else
                     {
                         alertFactory.info('No existen Lotes');
-                    }
+                    }                    
                 }, 
                 function errorCallback(response) {
                     alertFactory.error('Error al obtener los Lotes');
-                });
+                });                
     };
 
     //LQMA 04032016 obtiene ingresos y egresos
@@ -319,28 +319,9 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
     };
 
     //LQMA 07032016
-    $scope.IniciaLote = function(){
-        //$("#modalNuevoLote").modal('show');
-
-        /*if(($rootScope.nombreLoteNuevo == null) || ($rootScope.nombreLoteNuevo == ''))
-              alertFactory.warning('Debe capturar el nombre del Lote');
-        else  */ //LQMA 10032016
-        /*pagoRepository.getPagosPadre($scope.idEmpresa,$rootScope.currentEmployee,$rootScope.nombreLoteNuevo)
-            .then(function successCallback(response) 
-            {  
-                $rootScope.idLotePadre = response.data;
-                if($rootScope.showGrid) {
-                    $rootScope.modalSeleccionados = $scope.gridApi.selection.getSelectedRows();
-                    $rootScope.gridOptions.data = $rootScope.modalSeleccionados;
-                }   
-                $('#inicioModal').modal('hide');
-
-                $scope.ObtieneLotes(1); //conserva el lote recien insertado
-
-            }, function errorCallback(response) {                
-                alertFactory.error('Error al insertar Lote.');
-            });*/
+    $scope.IniciaLote = function(){        
          //LQMA 10032016
+        $rootScope.NuevoLote = true;
         var newLote = {idLotePago:'0',idEmpresa:$scope.idEmpresa,idUsuario:$rootScope.currentEmployee,fecha:'',nombre:$rootScope.nombreLoteNuevo,estatus:0};
         $scope.ObtieneLotes(newLote);
         
@@ -759,56 +740,67 @@ var isNumeric = function(obj){
 
 $rootScope.ConsultaLote = function(Lote,index) {
 
-    alertFactory.info('Estatus lote: ' + $rootScope.estatusLote);
-    alertFactory.info('Consulta de Lote ' + index);
+    if($rootScope.estatusLote == 0 && $rootScope.NuevoLote == false)
+        alertFactory.confirm('Al cambiar de lote se perderan los cambios no guardados. Desea continuar?');
+    else{
+            alertFactory.info('Estatus lote: ' + $rootScope.estatusLote);
+            alertFactory.info('Consulta de Lote ' + index);
 
-    $scope.idLote = Lote.idLotePago;
-    $rootScope.nombreLote = Lote.nombre;
-    $rootScope.estatusLote = Lote.estatus;
+            $scope.idLote = Lote.idLotePago;
+            $rootScope.nombreLote = Lote.nombre;
+            $rootScope.estatusLote = Lote.estatus;
 
-    $scope.LlenaIngresos(); 
-    $scope.LlenaEgresos();
+            $scope.LlenaIngresos(); 
+            $scope.LlenaEgresos();
 
-    pagoRepository.getOtrosIngresos($scope.idLote)
-            .then(function successCallback(response) 
-            {  
-                $scope.caja = 0;
-                $scope.cobrar = 0;
-                if(response.data.length > 0)
-                {           
-                    $scope.caja = response.data[0].pio_caja;
-                    $scope.cobrar = response.data[0].pio_cobranzaEsperada;
-                }
+            pagoRepository.getOtrosIngresos($scope.idLote)
+                    .then(function successCallback(response) 
+                    {  
+                        $scope.caja = 0;
+                        $scope.cobrar = 0;
+                        if(response.data.length > 0)
+                        {           
+                            $scope.caja = response.data[0].pio_caja;
+                            $scope.cobrar = response.data[0].pio_cobranzaEsperada;
+                        }
 
 
-            }, function errorCallback(response) {                
-                alertFactory.error('Error al obtener Otros Ingresos.');
-            });
+                    }, function errorCallback(response) {                
+                        alertFactory.error('Error al obtener Otros Ingresos.');
+                    });
 
-    pagoRepository.getTransferencias($scope.idLote)
-            .then(function successCallback(response) 
-            {  
-                $scope.transferencias = [];
-                if(response.data.length > 0)
-                {
-                        angular.forEach(response.data, function(transferencia, key){                    
-                        var newTransferencia = transferencia;
-                        $scope.transferencias.push(newTransferencia);
-                    });                
-                }
-                else
-                {
-                    var newTransferencia = {bancoOrigen:'', bancoDestino: '', importe:0, index:index};
-                    $scope.transferencias.push(newTransferencia);
-                }
+            pagoRepository.getTransferencias($scope.idLote)
+                    .then(function successCallback(response) 
+                    {  
+                        $scope.transferencias = [];
+                        if(response.data.length > 0)
+                        {
+                                angular.forEach(response.data, function(transferencia, key){                    
+                                var newTransferencia = transferencia;
+                                $scope.transferencias.push(newTransferencia);
+                            });                
+                        }
+                        else
+                        {
+                            var newTransferencia = {bancoOrigen:'', bancoDestino: '', importe:0, index:index};
+                            $scope.transferencias.push(newTransferencia);
+                        }
 
-            }, function errorCallback(response) {                
-                alertFactory.error('Error al obtener Transferencias.');
-            });
+                    }, function errorCallback(response) {                
+                        alertFactory.error('Error al obtener Transferencias.');
+                    });
 
-    pagoRepository.getDatosAprob($scope.idLote)
-                .success(llenaGridSuccessCallback)
-                .error(errorCallBack);
+            pagoRepository.getDatosAprob($scope.idLote)
+                        .success(llenaGridSuccessCallback)
+                        .error(errorCallBack);
+        } //else confirm
+
+        $rootScope.NuevoLote = false;
+}
+
+$rootScope.mensaje =function()
+{
+    alertFactory.error('lllll');
 }
 
 //LQMA funcion para guardar datos del grid (se implementara para guardar Ingresos bancos, otros , Transferencias)
