@@ -99,7 +99,7 @@
           <ul class="cbp-vimenu">
           <li><a class="icon-logo"></a></li>
             <li><a id="btnNuevoLote" tooltip="nuevo lote" ng-click="CrearNuevoLote()"><span id="btnMas" class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></li>
-            <li ng-repeat="Lote in noLotes.data"><a ng-click="ConsultaLote(Lote,{{$index + 1}})" > Lote {{$index +1}} </a></li>
+            <li ng-repeat="Lote in noLotes.data"><a ng-click="ConsultaLote(Lote,{{$index + 1}},1)" > Lote {{$index +1}} </a></li>
           </ul>
           <div class="main">
             <div ng-view></div>
@@ -159,23 +159,23 @@
           </div>
         </div>
       </div>              
-        <div ng-if="showSelCartera" >
-          <div class="mdPagarLabel">
+      <div ng-if="showSelCartera" ng-show="NuevoLote">
+        <div class="mdPagarLabel">
             ¿Que contenido tendrá el nuevo lote?
-          </div>
-          <div id="mdRadio">
-           <div class="btn-group" role="group" >
+        </div>
+        <div id="mdRadio">
+          <div class="btn-group" role="group" >
             <button type="button" class="btn btn-primary"  ng-click="OcultaGridModal(false)">Con toda la cartera</button>
             <button type="button" class="btn btn-primary"  ng-click="MuestraGridModal(true)">Seleccionar cartera</button>
           </div>
         </div>
       </div>
-      <div ng-if="showGrid">
+      <div ng-if="showGrid" ng-show="showGrid">
         <div class="mdPagarLabel">
           Seleccione los registros
         </div>
         <div id="contenedorGrid">          
-         <div id="gridModal" ui-grid="gridModal" ui-grid-grouping ui-grid-edit ui-grid-selection ui-grid-cellNav class="gridStyle"></div>         
+         <div id="gridModal" ui-grid="gridOptionsModal" ui-grid-grouping ui-grid-edit ui-grid-selection ui-grid-cellNav class="gridStyle"></div>         
        </div>
      </div>
      <div>
@@ -189,7 +189,7 @@
     </div>
     <div class="modal-footer">
      <button class="btn btn-info" data-toggle="modal" href="#stack2" ng-click="IniciaLote()" ng-show="NuevoLote">Crear Lote</button>
-     <button type="button" class="btn btn-primary" data-dismiss="modal" ng-hide="NuevoLote">Ir a Programación Pago</button>
+     <button type="button" class="btn btn-primary" data-dismiss="modal" ng-hide="NuevoLote" ng-click="ProgramacionPagos()">Ir a Programación Pago</button>
      <button type="button" class="btn btn-primary" data-dismiss="modal" ng-show="NuevoLote">Cancelar</button>
    </div>
  </div>

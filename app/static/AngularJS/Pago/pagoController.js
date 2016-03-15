@@ -38,7 +38,12 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
        $scope.cobrar = 0;
 
        /***********************************************************/
-       GetEmpleado();
+       //LQMA 14032016
+       //GetEmpleado();
+       ConfiguraGrid();
+       $rootScope.accionPagina = false; //iniciarl el grid modal en llenagrid
+       //ConfiguraGridModal();
+
        //getId();       
 
        //Inicializamos el switch
@@ -48,7 +53,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
        $('.switch-checkbox').bootstrapSwitch();      
        $scope.showSelCartera = true;
        /***********************************************************/ 
-       //configuraGridModal();
+       //configuragridOptionsModal();
        //*******************************
        //                   id=no esta, nombre y cuenta = cuenta, saldo = saldo, disponible = disponible,
        /*$scope.ingresos = [{id: 1, nombre:'Santander', cuenta: 94039,saldo: 40000, disponible: 40000, ingreso:1, egreso:0},         
@@ -62,8 +67,8 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
         $scope.egresos = [{nombre:'HSBC', cuenta: 228139,saldo: 90000, aTransferir: 0, total:90000,excedente:0, ingreso:0, egreso:1,totalPagar:200000,saldoIngreso:0},
                          {nombre:'Bancomer', cuenta: 594833,saldo: 120000, aTransferir: 0,total:120000,excedente:0, ingreso:1, egreso:1,totalPagar:450000,saldoIngreso:0}];*/
-
-        $scope.LlenaIngresos();
+        //LQMA 14032016
+        //$scope.LlenaIngresos();
 
         // SEL_CUENTAS_EGRESOS_SP
        /*$scope.egresos = [{id: 1,nombre:'HSBC', cuenta: 228139,saldo: 90000, aTransferir: 0, total:90000,excedente:0, ingreso:0, egreso:1,totalPagar:200000,saldoIngreso:0},
@@ -74,10 +79,11 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
     };//Fin funcion Init
     
+    /*//LQMA 14032016
     var Prepagos = function(){
         $scope.llenaGrid();
         $scope.llenaEncabezado();
-    };
+    };*/
 
     /////////////////////////////////////////////
     //Obtiene ID de empleado
@@ -181,8 +187,9 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 $scope.showTotales = true;
                 $scope.showSelCartera = true;
                 //LQMA  07032016
+                //LQMA 14032016
                 $scope.ObtieneLotes(0);// borra todos los lotes
-                $scope.LlenaIngresos();
+                //$scope.LlenaIngresos();
 
             }, function errorCallback(response) {
                 //oculta la información y manda el total a cero y llena el input del modal
@@ -216,11 +223,12 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                         $rootScope.idLotePadre = $rootScope.noLotes.data[$rootScope.noLotes.data.length - 1].idLotePago;                        
                         $rootScope.estatusLote = $rootScope.noLotes.data[$rootScope.noLotes.data.length - 1].estatus;
 
-                        $rootScope.ConsultaLote($rootScope.noLotes.data[$rootScope.noLotes.data.length - 1],$rootScope.noLotes.data.length);
+                        $rootScope.ConsultaLote($rootScope.noLotes.data[$rootScope.noLotes.data.length - 1],$rootScope.noLotes.data.length,0);
                     }
                     else
                     {
                         alertFactory.info('No existen Lotes');
+                        $rootScope.NuevoLote = true;
                     }                    
                 }, 
                 function errorCallback(response) {
@@ -283,33 +291,36 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
     $scope.MuestraGridModal = function (value) 
     {       
     
-    ConfiguraGridModal();
-    $rootScope.gridModal.data = $rootScope.gridOptions.data;
+    //ConfiguraGridModal();
+    //LQMA 14032016
+    //$rootScope.gridOptionsModal.data = $rootScope.gridOptions.data;
+    $rootScope.showGrid = value;
+    $rootScope.gridOptionsModal = null;
+        $scope.llenaGrid();
 
-     setTimeout(function()
-                { 
+         setTimeout(function()
+                    { 
 
-                 $scope.selectAllModal  ();
-                 //FAL evita que se alteren los datos al seleccionar todos
-                 $scope.grdinicia = true;
-                }, 500);
+                     $scope.selectAllModal();
+                     //FAL evita que se alteren los datos al seleccionar todos
+                     $scope.grdinicia = true;
+                    }, 500);
 
         /************************************************************************************************************************/  
     };
 
 //FAL se analizan los registros para selccionarlos y se obtienen los totales relacionados al grid
-$scope.selectAllModal = function() {
-    
+$scope.selectAllModal = function() {    
 
-    $rootScope.gridModal.data.forEach(function (grDatosSel, i)
+    $rootScope.gridOptionsModal.data.forEach(function (grDatosSel, i)
     {
        if(grDatosSel.ordenBloqueada == 'False')
        {
-              $scope.gridApi.selection.selectRow($rootScope.gridModal.data[i]);
+              $scope.gridApi.selection.selectRow($rootScope.gridOptionsModal.data[i]);
        };
     });
 
-    $rootScope.gridModal.isRowSelectable = function(row){
+    $rootScope.gridOptionsModal.isRowSelectable = function(row){
         if(row.entity.ordenBloqueada == 'True'){
           return false;
         } else {
@@ -323,7 +334,12 @@ $scope.selectAllModal = function() {
     //FAl--Oculta el grid del Modal y asigna la variable toda la cartera true
     $scope.OcultaGridModal = function (value) 
     {
+        //ConfiguraGridModal();
+        //setTimeout(function(){$scope.llenaGrid();},1000);
+        $rootScope.gridOptionsModal = null;
         $rootScope.showGrid = value;
+        $scope.llenaGrid();
+        
     };
 
     //LQMA 07032016
@@ -334,41 +350,76 @@ $scope.selectAllModal = function() {
         $scope.ObtieneLotes(newLote);
         
         if($rootScope.showGrid) {
+                $rootScope.gridOptions = null;
                 ConfiguraGrid();
                 setTimeout(function(){ 
                                         $rootScope.modalSeleccionados = $rootScope.mySelections;
-                                        $rootScope.gridOptions.data = $rootScope.modalSeleccionados;}
+                                        $rootScope.gridOptions.data = $rootScope.modalSeleccionados;
+                                    }
                             , 1000);
+                $rootScope.showGrid = false;
             }//if
-        
+        else{
+                $rootScope.gridOptions.data = $rootScope.gridOptionsModal.data;
+            }
+
+        //$scope.selectAll();
+        //LQMA 15032016
+        //$rootScope.NuevoLote = false;
+        //$rootScope.NuevoLote = true;
+        $scope.LlenaIngresos();
+        //$rootScope.NuevoLote = false;
+
         $('#inicioModal').modal('hide');
         $rootScope.estatusLote = 0;
-
+        //LQMA 15032016
+        $rootScope.accionPagina = true;
     }; //FIN inicia Lote
+
+    $scope.ProgramacionPagos = function(){
+        $scope.ObtieneLotes(0);
+        //LQMA 15032016    
+        $scope.LlenaIngresos();
+        $rootScope.accionPagina = true;
+    }
 
     $scope.llenaGrid = function () {
 
+            //LQMA 14032016
+            ConfiguraGridModal();
+
         if(!$rootScope.showGrid){ //LQMA  si esta oculto, consultamos toda la cartera
-            if ($rootScope.currentId != null){
-                pagoRepository.getDatosAprob($rootScope.currentId)
+            //if ($rootScope.currentId != null){
+                //pagoRepository.getDatosAprob($rootScope.currentId)                
+                pagoRepository.getDatos($scope.idEmpresa)
                 .success(llenaGridSuccessCallback)
                 .error(errorCallBack);
-                $scope.llenaEncabezado();
+                $scope.llenaEncabezado();//}            
             }
             else
                 pagoRepository.getDatos($scope.idEmpresa)
                 .success(llenaGridSuccessCallback)
                 .error(errorCallBack);
-        }// esta oculto
+        /*}// esta oculto
         else{
-            ConfiguraGrid();
+            //ConfiguraGrid();
+
             $rootScope.gridOptions.data = $rootScope.modalSeleccionados;
 
-        }
+        }*/
     };  //Propiedades    
 
     var llenaGridSuccessCallback = function (data, status, headers, config) {
-                $rootScope.gridOptions.data = data;
+                
+                //LQMA 14032016                
+                if($rootScope.accionPagina)
+                        if(!$rootScope.NuevoLote)
+                            $rootScope.gridOptions.data = data;
+                        else
+                            $rootScope.NuevoLote = false;
+                else
+                    $rootScope.gridOptionsModal.data = data;
+
                 $scope.data = data;
                 $scope.carteraVencida = 0;
                 $scope.cantidadTotal = 0;
@@ -392,12 +443,18 @@ $scope.selectAllModal = function() {
 
                 }
                 $scope.noPagable = $scope.carteraVencida -$scope.cantidadTotal;
-                $rootScope.gridOptions.data = $scope.data;                
+
+                if($rootScope.accionPagina)
+                    $rootScope.gridOptions.data = data;
+                else    
+                    $rootScope.gridOptionsModal.data = $scope.data;
  
                 setTimeout(function()
                 { 
-
-                 $scope.selectAll();
+                 //LQMA 15032016   
+                 //$scope.selectAll();
+                 if($rootScope.showGrid)
+                    $scope.selectAllModal();
                  //FAL evita que se alteren los datos al seleccionar todos
                  $scope.grdinicia = true;
                 }, 500);
@@ -649,6 +706,8 @@ $rootScope.gridOptions = {
     $scope.grdnoPagable = 0;
     $scope.grdBancos = [];
     $scope.grdinicia = false;
+    //LQMA 14032016
+    //$rootScope.gridOptions.data.forEach(function (grDatosSel, i)
     $rootScope.gridOptions.data.forEach(function (grDatosSel, i)
     {
        if(grDatosSel.ordenBloqueada == 'True')
@@ -659,7 +718,8 @@ $rootScope.gridOptions = {
        else
        {
         $scope.grdApagar = Math.round($scope.grdApagar * 100) / 100 + Math.round(grDatosSel.saldo * 100) / 100;
-        $scope.gridApi.selection.selectRow($scope.gridOptions.data[i]);
+        $scope.gridApi.selection.selectRow($scope.gridOptions.data[i]); 
+        //$scope.gridApi.selection.selectRow($scope.gridOptions.data[i]); 
        };
        if (i == 0)
        {
@@ -703,6 +763,7 @@ $rootScope.gridOptions = {
       };
       $scope.gridApi.core.notifyDataChange(uiGridConstants.dataChange.OPTIONS);
       $scope.gridApi.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
+
 };       
 
 //FAL filtros en base a variables
@@ -746,10 +807,11 @@ var isNumeric = function(obj){
 ****************************************************************************************************************/
 //LQMA 08032016
 
-$rootScope.ConsultaLote = function(Lote,index) {
+$rootScope.ConsultaLote = function(Lote,index,mensaje) {
 
-    if($rootScope.estatusLote == 0 && $rootScope.NuevoLote == false){
+    //if($rootScope.estatusLote == 0 && $rootScope.NuevoLote == false){
         //alertFactory.confirm('Al cambiar de lote se perderan los cambios no guardados. Desea continuar?');
+      if(mensaje == 1){  
         if(confirm('¿Al cambiar de lote se perderan los cambios no guardados. Desea continuar??')){
                $rootScope.ConsultaLoteObtiene(Lote,index); 
         }
@@ -768,10 +830,14 @@ $rootScope.ConsultaLoteObtiene = function(Lote,index){
             $rootScope.nombreLote = Lote.nombre;
             $rootScope.estatusLote = Lote.estatus;
 
-            $scope.LlenaIngresos(); 
-            $scope.LlenaEgresos();
+            //LQMA 14032016
 
-            pagoRepository.getOtrosIngresos($scope.idLote)
+            if($rootScope.accionPagina){ //LQMA 15032016: true: indica que se esta trabajando sobre la pagina para consultar data, false: consulta desde el modal
+
+                    $scope.LlenaIngresos(); 
+                    //$scope.LlenaEgresos();
+
+                    pagoRepository.getOtrosIngresos($scope.idLote)
                     .then(function successCallback(response) 
                     {  
                         $scope.caja = 0;
@@ -787,7 +853,7 @@ $rootScope.ConsultaLoteObtiene = function(Lote,index){
                         alertFactory.error('Error al obtener Otros Ingresos.');
                     });
 
-            pagoRepository.getTransferencias($scope.idLote)
+                    pagoRepository.getTransferencias($scope.idLote)
                     .then(function successCallback(response) 
                     {  
                         $scope.transferencias = [];
@@ -808,11 +874,16 @@ $rootScope.ConsultaLoteObtiene = function(Lote,index){
                         alertFactory.error('Error al obtener Transferencias.');
                     });
 
-            pagoRepository.getDatosAprob($scope.idLote)
-                        .success(llenaGridSuccessCallback)
-                        .error(errorCallBack);        
+                    if($rootScope.estatusLote == 0){
+                        $rootScope.gridOptions.data = $rootScope.modalSeleccionados;
+                    }
+                    else
+                        pagoRepository.getDatosAprob($scope.idLote)
+                            .success(llenaGridSuccessCallback)
+                            .error(errorCallBack);
+                        }
 
-        $rootScope.NuevoLote = false;
+        //$rootScope.NuevoLote = false;
 }
 
 
@@ -828,6 +899,23 @@ $scope.Guardar = function() {
     setTimeout(function(){guardaValida(negativos);},500);
     
   };//fin de funcion guardar
+
+  $scope.Cancelar = function() {
+    $rootScope.noLotes = null;
+    $scope.ObtieneLotes(0);
+    //$scope.traeEmpresas();
+
+    setTimeout(function(){         
+                            if($rootScope.noLotes.data.length == 0)
+                            {
+                                $rootScope.NuevoLote = true;
+                                $rootScope.estatusLote = 0;
+                                //$scope.traeEmpresas();
+                                //$('#inicioModal').modal('show');
+                                $rootScope.CrearNuevoLote();
+                            }
+                         },100);
+  };//fin de funcion cancelar  
 
   var guardaValida=function(negativos){
     if(negativos > 0)
@@ -1130,13 +1218,14 @@ $scope.Guardar = function() {
         else{
             $rootScope.NuevoLote = true;
             $('#inicioModal').modal('show');
-        }        
+            $rootScope.accionPagina = false;
+        }
     }
 //FAL funciones de catga para el modal.
 
 var ConfiguraGridModal = function () {
-    $rootScope.showGrid = true;
-    $rootScope.gridModal = {
+    //$rootScope.showGrid = true;
+    $rootScope.gridOptionsModal = {
         enableRowSelection: true,
         enableGridMenu: true,
         enableFiltering: true,
