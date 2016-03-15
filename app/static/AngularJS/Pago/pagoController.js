@@ -914,7 +914,7 @@ $scope.Guardar = function() {
                                 //$('#inicioModal').modal('show');
                                 $rootScope.CrearNuevoLote();
                             }
-                         },100);
+                         },500);
   };//fin de funcion cancelar  
 
   var guardaValida=function(negativos){
