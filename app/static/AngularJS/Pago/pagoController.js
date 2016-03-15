@@ -5,7 +5,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
    $scope.idUsuario = 4;
 
    //LQMA 04032016
-   $rootScope.currentEmployee = 75;//25:1;
+   $rootScope.currentEmployee = 27;//25:1;
    $rootScope.currentId = null;
    $rootScope.currentIdOp = null;
    $scope.idLote = 0;
@@ -355,6 +355,7 @@ $scope.selectAllModal = function() {
                 setTimeout(function(){ 
                                         $rootScope.modalSeleccionados = $rootScope.mySelections;
                                         $rootScope.gridOptions.data = $rootScope.modalSeleccionados;
+                                        $scope.selectAll();
                                     }
                             , 1000);
                 $rootScope.showGrid = false;
