@@ -188,7 +188,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 $scope.showSelCartera = true;
                 //LQMA  07032016
                 //LQMA 14032016
-                $scope.ObtieneLotes(0);// borra todos los lotes
+                //$scope.ObtieneLotes(0);// borra todos los lotes
                 //$scope.LlenaIngresos();
 
             }, function errorCallback(response) {
@@ -294,14 +294,14 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
     //ConfiguraGridModal();
     //LQMA 14032016
     //$rootScope.gridOptionsModal.data = $rootScope.gridOptions.data;
-    $rootScope.showGrid = value;
-    $rootScope.gridOptionsModal = null;
+        $rootScope.showGrid = value;
+        $rootScope.gridOptionsModal = null;
         $scope.llenaGrid();
 
          setTimeout(function()
                     { 
 
-                     $scope.selectAllModal();
+                     //$scope.selectAllModal();
                      //FAL evita que se alteren los datos al seleccionar todos
                      $scope.grdinicia = true;
                     }, 500);
@@ -309,8 +309,27 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         /************************************************************************************************************************/  
     };
 
+    //FAl--Oculta el grid del Modal y asigna la variable toda la cartera true
+    $scope.OcultaGridModal = function (value) 
+    {
+        //ConfiguraGridModal();
+        //setTimeout(function(){$scope.llenaGrid();},1000);
+        
+        $rootScope.showGrid = value;
+        $rootScope.gridOptionsModal = null;        
+        $scope.llenaGrid();
+
+        /*setTimeout(function()
+                    { 
+
+                     //$scope.selectAllModal();
+                     //FAL evita que se alteren los datos al seleccionar todos
+                     $scope.grdinicia = true;
+                    }, 500);*/
+    };
+
 //FAL se analizan los registros para selccionarlos y se obtienen los totales relacionados al grid
-$scope.selectAllModal = function() {    
+    $scope.selectAllModal = function() {    
 
     $rootScope.gridOptionsModal.data.forEach(function (grDatosSel, i)
     {
@@ -329,17 +348,6 @@ $scope.selectAllModal = function() {
       };
       $scope.gridApi.core.notifyDataChange(uiGridConstants.dataChange.OPTIONS);
       $scope.gridApi.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
-};
-
-    //FAl--Oculta el grid del Modal y asigna la variable toda la cartera true
-    $scope.OcultaGridModal = function (value) 
-    {
-        //ConfiguraGridModal();
-        //setTimeout(function(){$scope.llenaGrid();},1000);
-        $rootScope.gridOptionsModal = null;
-        $rootScope.showGrid = value;
-        $scope.llenaGrid();
-        
     };
 
     //LQMA 07032016
@@ -347,23 +355,27 @@ $scope.selectAllModal = function() {
          //LQMA 10032016
         $rootScope.NuevoLote = true;
         var newLote = {idLotePago:'0',idEmpresa:$scope.idEmpresa,idUsuario:$rootScope.currentEmployee,fecha:'',nombre:$rootScope.nombreLoteNuevo,estatus:0};
-        $scope.ObtieneLotes(newLote);
         
-        if($rootScope.showGrid) {
-                $rootScope.gridOptions = null;
-                ConfiguraGrid();
-                setTimeout(function(){ 
-                                        $rootScope.modalSeleccionados = $rootScope.mySelections;
-                                        $rootScope.gridOptions.data = $rootScope.modalSeleccionados;
-                                        $scope.selectAll();
-                                    }
-                            , 1000);
-                $rootScope.showGrid = false;
-            }//if
-        else{
-                $rootScope.gridOptions.data = $rootScope.gridOptionsModal.data;
-            }
+        $scope.ObtieneLotes(newLote);
+                               
+        setTimeout(function(){ 
+                              if($rootScope.showGrid) {
+                                    $rootScope.gridOptions = null;
+                                    ConfiguraGrid();
+                                    $rootScope.modalSeleccionados = $rootScope.mySelections;
+                                    $rootScope.gridOptions.data = $rootScope.modalSeleccionados;
+                                    $scope.selectAll();
+                                }
+                                else{
+                                    $rootScope.gridOptions = null;
+                                    ConfiguraGrid();
+                                    $rootScope.gridOptions.data = $rootScope.gridOptionsModal.data;                                    
+                                    $scope.selectAll();
+                                }
+                            }, 500);
 
+        setTimeout(function(){$rootScope.showGrid = false;},1000);
+            
         //$scope.selectAll();
         //LQMA 15032016
         //$rootScope.NuevoLote = false;
@@ -698,7 +710,7 @@ $rootScope.gridOptions = {
                     
           $scope.gridApi.selection.selectAllRows(true);  
         }
-    } //grid options    
+    } //grid options        
 };//funcion
 
  $scope.selectAll = function() {
