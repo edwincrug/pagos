@@ -188,7 +188,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 $scope.showSelCartera = true;
                 //LQMA  07032016
                 //LQMA 14032016
-                //$scope.ObtieneLotes(0);// borra todos los lotes
+                $scope.ObtieneLotes(0);// borra todos los lotes
                 //$scope.LlenaIngresos();
 
             }, function errorCallback(response) {
