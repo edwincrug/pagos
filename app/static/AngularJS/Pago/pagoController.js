@@ -170,7 +170,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
     };
     //FAl--Trae el total de bancos de la empresa seleccionada
-    $scope.traeTotalxEmpresa = function (emp_idempresa,emp_nombre) {        
+    $scope.traeTotalxEmpresa = function (emp_idempresa,emp_nombre) {
       
         pagoRepository.getTotalxEmpresa(emp_idempresa)
             .then(function successCallback(response) {
@@ -311,8 +311,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
     //FAl--Oculta el grid del Modal y asigna la variable toda la cartera true
     $scope.OcultaGridModal = function (value){
       $scope.selectAllModal();
-      $rootScope.showGrid = value;     
-
+      $rootScope.showGrid = value;
     };
 
 //FAL se analizan los registros para selccionarlos y se obtienen los totales relacionados al grid
@@ -390,7 +389,8 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
     $scope.llenaGrid = function () {
 
-            //LQMA 14032016
+            //LQMA 16032016
+            $rootScope.gridOptionsModal = null;
             ConfiguraGridModal();
 
         if(!$rootScope.showGrid){ //LQMA  si esta oculto, consultamos toda la cartera
@@ -581,17 +581,17 @@ $rootScope.gridOptions = {
                 }
                  else
                         if (rowChanged.isSelected) {
-                           $scope.grdNoIncluido =  Math.round($scope.grdNoIncluido * 100) / 100 - Math.round(rowChanged.entity.Pagar * 100) / 100;
+                           $rootScope.grdNoIncluido =  Math.round($rootScope.grdNoIncluido * 100) / 100 - Math.round(rowChanged.entity.Pagar * 100) / 100;
                           
                           //FAL actualizar cuenta pagadoras
                             if ($scope.grdinicia){
                             i=0;
-                            $scope.grdBancos.forEach(function (banco, subtotal)
+                            $rootScope.grdBancos.forEach(function (banco, subtotal)
                             {
-                               if(rowChanged.entity.cuentaPagadora == $scope.grdBancos[i].banco)
+                               if(rowChanged.entity.cuentaPagadora == $rootScope.grdBancos[i].banco)
                                 {
-                                        $scope.grdBancos[i].subtotal = Math.round($scope.grdBancos[i].subtotal * 100) / 100 + Math.round(rowChanged.entity.Pagar * 100) / 100;
-                                        $scope.grdApagar = $scope.grdApagar + rowChanged.entity.Pagar;
+                                        $rootScope.grdBancos[i].subtotal = Math.round($rootScope.grdBancos[i].subtotal * 100) / 100 + Math.round(rowChanged.entity.Pagar * 100) / 100;
+                                        $rootScope.grdApagar = $rootScope.grdApagar + rowChanged.entity.Pagar;
                                         rowChanged.entity.estGrid = 'Inicio'
                                    }
                                    
@@ -600,17 +600,17 @@ $rootScope.gridOptions = {
                             }
                         }
                         else{
-                            $scope.grdNoIncluido = Math.round($scope.grdNoIncluido * 100) / 100 + Math.round(rowChanged.entity.Pagar * 100) / 100;
+                            $rootScope.grdNoIncluido = Math.round($rootScope.grdNoIncluido * 100) / 100 + Math.round(rowChanged.entity.Pagar * 100) / 100;
                             
                             //FAL actualizar cuenta pagadoras
                             i=0;
                             if ($scope.grdinicia) {
-                                $scope.grdBancos.forEach(function (banco, subtotal)
+                                $rootScope.grdBancos.forEach(function (banco, subtotal)
                                 {
-                                   if(rowChanged.entity.cuentaPagadora == $scope.grdBancos[i].banco)
+                                   if(rowChanged.entity.cuentaPagadora == $rootScope.grdBancos[i].banco)
                                    {
-                                        $scope.grdBancos[i].subtotal = Math.round($scope.grdBancos[i].subtotal * 100) / 100 - Math.round(rowChanged.entity.Pagar * 100) / 100;
-                                        $scope.grdApagar = $scope.grdApagar - rowChanged.entity.Pagar;
+                                        $rootScope.grdBancos[i].subtotal = Math.round($rootScope.grdBancos[i].subtotal * 100) / 100 - Math.round(rowChanged.entity.Pagar * 100) / 100;
+                                        $rootScope.grdApagar = $rootScope.grdApagar - rowChanged.entity.Pagar;
                                         rowChanged.entity.estGrid = 'No Incluido'
                                    }
                                    i++;                           
@@ -670,8 +670,8 @@ $rootScope.gridOptions = {
                                 rowEntity.fechaPromesaPago = old_date;
                             }
                             else{
-                                $scope.grdReprogramado =  Math.round($scope.grdReprogramado * 100) / 100 + Math.round(rowEntity.Pagar * 100) / 100;
-                                $scope.grdApagar = Math.round($scope.grdApagar * 100) / 100 - Math.round(rowEntity.Pagar* 100) / 100
+                                $rootScope.grdReprogramado =  Math.round($rootScope.grdReprogramado * 100) / 100 + Math.round(rowEntity.Pagar * 100) / 100;
+                                $rootScope.grdApagar = Math.round($rootScope.grdApagar * 100) / 100 - Math.round(rowEntity.Pagar* 100) / 100
                                 rowEntity.estGrid = 'Reprogramado'
                             }
                     }        
@@ -692,8 +692,8 @@ $rootScope.gridOptions = {
                                     rowEntity.Pagar = oldValue;
                                 }
                                 else{
-                                    $scope.grdNoIncluido =  Math.round($scope.grdNoIncluido * 100) / 100 - Math.round($scope.cantidadUpdate * 100) / 100;
-                                    $scope.grdApagar = Math.round($scope.grdApagar * 100) / 100 + Math.round($scope.cantidadUpdate* 100) / 100
+                                    $rootScope.grdNoIncluido =  Math.round($rootScope.grdNoIncluido * 100) / 100 - Math.round($scope.cantidadUpdate * 100) / 100;
+                                    $rootScope.grdApagar = Math.round($rootScope.grdApagar * 100) / 100 + Math.round($scope.cantidadUpdate* 100) / 100
                                     rowEntity.estGrid = 'No Incluido'
                                 }
                             }
@@ -707,9 +707,9 @@ $rootScope.gridOptions = {
 
  $scope.selectAll = function() {
     //FAL se analizan los registros para selccionarlos y se obtienen los totales relacionados al grid
-    $scope.grdApagar = 0;
-    $scope.grdnoPagable = 0;
-    $scope.grdBancos = [];
+    $rootScope.grdApagar = 0;
+    $rootScope.grdnoPagable = 0;
+    $rootScope.grdBancos = [];
     $scope.grdinicia = false;
     //LQMA 14032016
     //$rootScope.gridOptions.data.forEach(function (grDatosSel, i)
@@ -717,18 +717,18 @@ $rootScope.gridOptions = {
     {
        if(grDatosSel.ordenBloqueada == 'True')
        {
-        $scope.grdnoPagable = Math.round($scope.grdnoPagable * 100) / 100 + Math.round(grDatosSel.saldo * 100) / 100;
-        $scope.grdApagar = Math.round($scope.grdApagar * 100) / 100 + Math.round(grDatosSel.saldo * 100) / 100;
+        $rootScope.grdnoPagable = Math.round($rootScope.grdnoPagable * 100) / 100 + Math.round(grDatosSel.saldo * 100) / 100;
+        $rootScope.grdApagar = Math.round($rootScope.grdApagar * 100) / 100 + Math.round(grDatosSel.saldo * 100) / 100;
        }
        else
        {
-        $scope.grdApagar = Math.round($scope.grdApagar * 100) / 100 + Math.round(grDatosSel.saldo * 100) / 100;
+        $rootScope.grdApagar = Math.round($rootScope.grdApagar * 100) / 100 + Math.round(grDatosSel.saldo * 100) / 100;
         $scope.gridApi.selection.selectRow($scope.gridOptions.data[i]); 
         //$scope.gridApi.selection.selectRow($scope.gridOptions.data[i]); 
        };
        if (i == 0)
        {
-        $scope.grdBancos.push(
+        $rootScope.grdBancos.push(
                     {
                     banco: grDatosSel.cuentaPagadora,
                     subtotal: grDatosSel.saldo
@@ -738,17 +738,17 @@ $rootScope.gridOptions = {
        {    
             var add = true;
             var j = 0;
-            for (var j = 0; j < $scope.grdBancos.length; j++)
+            for (var j = 0; j < $rootScope.grdBancos.length; j++)
             {
-                if ($scope.grdBancos[j].banco == grDatosSel.cuentaPagadora)
+                if ($rootScope.grdBancos[j].banco == grDatosSel.cuentaPagadora)
                 {   
                     add = false
-                    $scope.grdBancos[j].subtotal = $scope.grdBancos[j].subtotal + grDatosSel.saldo
+                    $rootScope.grdBancos[j].subtotal = $rootScope.grdBancos[j].subtotal + grDatosSel.saldo
                 }
             }
             if (add)
             {
-                $scope.grdBancos.push(
+                $rootScope.grdBancos.push(
                     {
                     banco: grDatosSel.cuentaPagadora,
                     subtotal: grDatosSel.saldo
@@ -757,8 +757,8 @@ $rootScope.gridOptions = {
        };
     });
 
-        $scope.grdReprogramado = 0;
-        $scope.grdNoIncluido = 0;
+        $rootScope.grdReprogramado = 0;
+        $rootScope.grdNoIncluido = 0;
         $rootScope.gridOptions.isRowSelectable = function(row){
         if(row.entity.ordenBloqueada == 'True'){
           return false;
@@ -906,7 +906,12 @@ $scope.Guardar = function() {
   };//fin de funcion guardar
 
   $scope.Cancelar = function() {
-    $rootScope.noLotes = null;
+
+    //LQMA 16032016
+    //$scope.traeEmpresas();
+    $rootScope.gridOptions.data = [];
+
+    $rootScope.noLotes = null;    
     $scope.ObtieneLotes(0);
     //$scope.traeEmpresas();
 
@@ -1213,7 +1218,7 @@ $scope.Guardar = function() {
     } //get total end
     //LQMA 10032016
     $rootScope.CrearNuevoLote = function(){
-
+      
       var lotesPendientes = $.grep($rootScope.noLotes.data, function( n, i ) {
                     return n.estatus===0;
                 });
@@ -1224,6 +1229,11 @@ $scope.Guardar = function() {
             $rootScope.NuevoLote = true;
             $('#inicioModal').modal('show');
             $rootScope.accionPagina = false;
+
+            //LQMA 16032016
+            $scope.llenaGrid();
+
+            setTimeout(function(){$scope.selectAllModal();},500);
         }
     }
 //FAL funciones de catga para el modal.
