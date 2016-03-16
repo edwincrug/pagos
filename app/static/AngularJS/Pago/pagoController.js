@@ -191,6 +191,8 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 $scope.ObtieneLotes(0);// borra todos los lotes
                 //$scope.LlenaIngresos();
 
+                $scope.llenaGrid();
+
             }, function errorCallback(response) {
                 //oculta la información y manda el total a cero y llena el input del modal
                 $rootScope.TotalxEmpresas = [];
@@ -201,6 +203,8 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 $scope.traeTotalxEmpresa.emp_nombre = 'La empresa seleccionada no tiene información';
             }
         );
+
+
     };
 
     $scope.ObtieneLotes = function(newLote) //borraLote, 0 para borrar lotes sin relacion, 1 para conservarlos
@@ -291,17 +295,12 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
     $scope.MuestraGridModal = function (value) 
     {       
     
-    //ConfiguraGridModal();
     //LQMA 14032016
-    //$rootScope.gridOptionsModal.data = $rootScope.gridOptions.data;
         $rootScope.showGrid = value;
-        $rootScope.gridOptionsModal = null;
-        $scope.llenaGrid();
-
-         setTimeout(function()
+        setTimeout(function()
                     { 
 
-                     //$scope.selectAllModal();
+                     $scope.selectAllModal();
                      //FAL evita que se alteren los datos al seleccionar todos
                      $scope.grdinicia = true;
                     }, 500);
@@ -310,22 +309,10 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
     };
 
     //FAl--Oculta el grid del Modal y asigna la variable toda la cartera true
-    $scope.OcultaGridModal = function (value) 
-    {
-        //ConfiguraGridModal();
-        //setTimeout(function(){$scope.llenaGrid();},1000);
-        
-        $rootScope.showGrid = value;
-        $rootScope.gridOptionsModal = null;        
-        $scope.llenaGrid();
+    $scope.OcultaGridModal = function (value){
+      $scope.selectAllModal();
+      $rootScope.showGrid = value;     
 
-        /*setTimeout(function()
-                    { 
-
-                     //$scope.selectAllModal();
-                     //FAL evita que se alteren los datos al seleccionar todos
-                     $scope.grdinicia = true;
-                    }, 500);*/
     };
 
 //FAL se analizan los registros para selccionarlos y se obtienen los totales relacionados al grid
@@ -351,7 +338,12 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
     };
 
     //LQMA 07032016
-    $scope.IniciaLote = function(){        
+    $scope.IniciaLote = function(){   
+
+        //Configura GRID ECG 
+        //$rootScope.gridOptions = null;
+        //ConfiguraGrid();
+
          //LQMA 10032016
         $rootScope.NuevoLote = true;
         var newLote = {idLotePago:'0',idEmpresa:$scope.idEmpresa,idUsuario:$rootScope.currentEmployee,fecha:'',nombre:$rootScope.nombreLoteNuevo,estatus:0};
@@ -360,15 +352,15 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                                
         setTimeout(function(){ 
                               if($rootScope.showGrid) {
-                                    $rootScope.gridOptions = null;
-                                    ConfiguraGrid();
+                                    //$rootScope.gridOptions = null;
+                                    //ConfiguraGrid();
                                     $rootScope.modalSeleccionados = $rootScope.mySelections;
                                     $rootScope.gridOptions.data = $rootScope.modalSeleccionados;
                                     $scope.selectAll();
                                 }
                                 else{
-                                    $rootScope.gridOptions = null;
-                                    ConfiguraGrid();
+                                    //$rootScope.gridOptions = null;
+                                    //ConfiguraGrid();
                                     $rootScope.gridOptions.data = $rootScope.gridOptionsModal.data;                                    
                                     $scope.selectAll();
                                 }
