@@ -728,10 +728,11 @@ $rootScope.gridOptions = {
        };
        if (i == 0)
        {
-        $rootScope.grdBancos.push(
-                    {
-                    banco: grDatosSel.cuentaPagadora,
-                    subtotal: grDatosSel.saldo
+
+        if(grDatosSel.cuentaPagadora != 'Sin CuentaPagadora')
+            $rootScope.grdBancos.push({
+                        banco: grDatosSel.cuentaPagadora,
+                        subtotal: grDatosSel.saldo
                     });
        }
        else
@@ -748,10 +749,10 @@ $rootScope.gridOptions = {
             }
             if (add)
             {
-                $rootScope.grdBancos.push(
-                    {
-                    banco: grDatosSel.cuentaPagadora,
-                    subtotal: grDatosSel.saldo
+                if(grDatosSel.cuentaPagadora != 'Sin CuentaPagadora')
+                    $rootScope.grdBancos.push({
+                        banco: grDatosSel.cuentaPagadora,
+                        subtotal: grDatosSel.saldo
                     });
             }
        };
