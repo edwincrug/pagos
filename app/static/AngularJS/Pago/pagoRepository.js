@@ -105,6 +105,21 @@ registrationModule.factory('pagoRepository', function ($http) {
               url: pagoUrl,
               params: { id: '15|' + idLote }
             });
-        }
+        },
+
+        //FAL 15032016 manda el json para generar el archivo
+         setArchivo: function(id,dataArchivo)
+        {
+            
+            return $http({
+                url: pagoUrl,
+                method: "POST",
+                params: { id: '4|' + id},
+                //dataType: "json",
+                data:JSON.stringify(dataArchivo)
+               
+            });            
+        }//FAL
+
     };
 });
