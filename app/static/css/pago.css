@@ -505,3 +505,7 @@
   font-size: 17px;
   margin-top: 19px;
 }
+
+.close {
+  float: none;
+}
