@@ -332,8 +332,11 @@
 		</div>
 	</section>
 	
-	<section id="container">
-		<div id="grid1" ui-grid="gridOptions" ui-grid-grouping ui-grid-edit ui-grid-selection ui-grid-cellNav class="gridStyle"></div>
+	<section id="container">		
+		<button type="button" id="btnSelectAll" ng-hide="1 > 0" class="btn btn-success" ng-disabled="!gridApi1.grid.options.multiSelect" ng-click="seleccionaTodo()">Select All</button>
+		<div id="contenedor" ng-init="iniciaGrid()">
+			<div id="grid1" ui-grid="gridOptions" ui-grid-grouping ui-grid-edit ui-grid-selection ui-grid-cellNav class="gridStyle"></div>
+		</div>
 
 	</section>
 

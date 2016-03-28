@@ -26,7 +26,7 @@
   <link href="css/angular-busy.css" rel="stylesheet" />
 
   <!--Librearias JQuery y Bootstrap-->
-  <script src="js/jquery-2.1.4.min.js"></script>
+  <script src="js/jquery-2.1.4.js"></script>
   <!--Agrego FAL 24022016 para la funcion de order y selected-->
   <script src="js/jquery-ui.js"></script>
   <script src="js/bootstrap.js"></script>
@@ -112,7 +112,7 @@
   </div><!-- /st-container -->
 
   <!--Modal de inicio FAL-->
-  <div id="inicioModal" class="modal fade" tabindex="-1" data-focus-on="input:first" ng-controller="pagoController" ng-init="traeEmpresas()"  data-keyboard="false" data-backdrop="static">
+  <div id="inicioModal" class="modal fade" tabindex="-1" data-focus-on="input:first" ng-controller="pagoController" ng-init="traeEmpresas()" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
@@ -174,7 +174,7 @@
         <div class="mdPagarLabel">
           Seleccione los registros
         </div>
-        <div id="contenedorGrid">          
+        <div id="contenedorGrid" ng-controller="gridModalController" ng-init="inicia()">
          <div id="gridModal" ui-grid="gridOptionsModal" ui-grid-grouping ui-grid-edit ui-grid-selection ui-grid-cellNav class="gridStyle"></div>         
        </div>
      </div>
@@ -235,6 +235,8 @@
 <script src="AngularJS/Empleado/empleadoController.js"></script>
 <script src="AngularJS/Pago/pagoRepository.js"></script>
 <script src="AngularJS/Pago/pagoController.js"></script>
+<script src="AngularJS/Pago/gridModalController.js"></script>
+<script src="AngularJS/Pago/gridModalRepository.js"></script>
 <script src="AngularJS/Agrupador/agrupadorRepository.js"></script>
 <script src="AngularJS/Agrupador/agrupadorController.js"></script>
 <script src="AngularJS/CuentasProveedor/CuentasProveedorRepository.js"></script>
