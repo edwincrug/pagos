@@ -468,7 +468,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 if($rootScope.accionPagina)
                 {
                     $scope.gridOptions.data = data;
-                    alert('accion pagina: ' + $scope.gridOptions.data);
+                    //alert('accion pagina: ' + $scope.gridOptions.data);
                 }
                 else    
                     $rootScope.setDataGridModal($scope.data); //XXXX$scope.gridOptionsModal.data = $scope.data;
