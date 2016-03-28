@@ -174,8 +174,9 @@
         <div class="mdPagarLabel">
           Seleccione los registros
         </div>
-        <div id="contenedorGrid">          
-         <div id="gridModal" ui-grid="gridOptionsModal" ui-grid-grouping ui-grid-edit ui-grid-selection ui-grid-cellNav class="gridStyle"></div>         
+        <div id="contenedorGrid" ng-controller="gridModalController" ng-init="inicia()">
+            <div id="gridModal" ui-grid="gridOptionsModal" ui-grid-grouping ui-grid-edit ui-grid-selection ui-grid-cellNav class="gridStyle"></div>
+        </div>        
        </div>
      </div>
      <div>
@@ -250,6 +251,7 @@
 <script src="AngularJS/Empleado/empleadoController.js"></script>
 <script src="AngularJS/Pago/pagoRepository.js"></script>
 <script src="AngularJS/Pago/pagoController.js"></script>
+<script src="AngularJS/Pago/gridModalController.js"></script>
 <script src="AngularJS/Agrupador/agrupadorRepository.js"></script>
 <script src="AngularJS/Agrupador/agrupadorController.js"></script>
 <script src="AngularJS/CuentasProveedor/CuentasProveedorRepository.js"></script>

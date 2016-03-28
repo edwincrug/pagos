@@ -310,11 +310,13 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
     //FAl--Oculta el grid del Modal y asigna la variable toda la cartera true
     $scope.OcultaGridModal = function (value){
-      $scope.selectAllModal();
+      //$scope.selectAllModal();
+      $rootScope.selectAllModal();
       $rootScope.showGrid = value;
     };
 
 //FAL se analizan los registros para selccionarlos y se obtienen los totales relacionados al grid
+/*
     $scope.selectAllModal = function() {    
 
     $rootScope.gridOptionsModal.data.forEach(function (grDatosSel, i)
@@ -334,22 +336,28 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
       };
       $scope.gridApi.core.notifyDataChange(uiGridConstants.dataChange.OPTIONS);
       $scope.gridApi.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
-    };
+    };*/
 
     //LQMA 07032016
     $scope.IniciaLote = function(){   
 
         //Configura GRID ECG 
         //$rootScope.gridOptions = null;
-        //ConfiguraGrid();
+        $scope.gridOptions = null;
+        ConfiguraGrid();
 
          //LQMA 10032016
         $rootScope.NuevoLote = true;
         var newLote = {idLotePago:'0',idEmpresa:$scope.idEmpresa,idUsuario:$rootScope.currentEmployee,fecha:'',nombre:$rootScope.nombreLoteNuevo,estatus:0};
         
+        if($rootScope.showGrid)
+          $rootScope.datosModal = $rootScope.getSelectedRowsModal();
+        else
+          $rootScope.datosModal = $rootScope.getDataGridModal();  
+
         $scope.ObtieneLotes(newLote);
                                
-        setTimeout(function(){ 
+        /*setTimeout(function(){ 
                               if($rootScope.showGrid) {
                                     //$rootScope.gridOptions = null;
                                     //ConfiguraGrid();
@@ -363,9 +371,9 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                                     $rootScope.gridOptions.data = $rootScope.gridOptionsModal.data;                                    
                                     $scope.selectAll();
                                 }
-                            }, 500);
+                            }, 500);*/
 
-        setTimeout(function(){$rootScope.showGrid = false;},1000);
+        //setTimeout(function(){$rootScope.showGrid = false;},1000);
             
         //$scope.selectAll();
         //LQMA 15032016
@@ -378,6 +386,10 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         $rootScope.estatusLote = 0;
         //LQMA 15032016
         $rootScope.accionPagina = true;
+
+        setTimeout(function(){ 
+                                $( "#btnSelectAll" ).click();//$scope.selectAll();
+                                }, 500);
     }; //FIN inicia Lote
 
     $scope.ProgramacionPagos = function(){
@@ -390,8 +402,8 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
     $scope.llenaGrid = function () {
 
             //LQMA 16032016
-            $rootScope.gridOptionsModal = null;
-            ConfiguraGridModal();
+            //$rootScope.gridOptionsModal = null;
+            //ConfiguraGridModal();
 
         if(!$rootScope.showGrid){ //LQMA  si esta oculto, consultamos toda la cartera
             //if ($rootScope.currentId != null){
@@ -416,14 +428,16 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
     var llenaGridSuccessCallback = function (data, status, headers, config) {
                 
-                //LQMA 14032016                
                 if($rootScope.accionPagina)
                         if(!$rootScope.NuevoLote)
-                            $rootScope.gridOptions.data = data;
+                        {
+                            //alert('llenaGridSuccessCallback: ' + data)
+                            $scope.gridOptions.data = data;
+                        }
                         else
                             $rootScope.NuevoLote = false;
-                else
-                    $rootScope.gridOptionsModal.data = data;
+                //else
+                    //$rootScope.setDataGridModal(data);//$rootScope.gridOptionsModal.data = data;
 
                 $scope.data = data;
                 $scope.carteraVencida = 0;
@@ -448,18 +462,24 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
                 }
                 $scope.noPagable = $scope.carteraVencida -$scope.cantidadTotal;
-
+                
+                //$scope.gridOptions.data = data;
+                //$scope.selectAll();
                 if($rootScope.accionPagina)
-                    $rootScope.gridOptions.data = data;
+                {
+                    $scope.gridOptions.data = data;
+                    alert('accion pagina: ' + $scope.gridOptions.data);
+                }
                 else    
-                    $rootScope.gridOptionsModal.data = $scope.data;
+                    $rootScope.setDataGridModal($scope.data); //XXXX$scope.gridOptionsModal.data = $scope.data;
  
                 setTimeout(function()
                 { 
                  //LQMA 15032016   
                  //$scope.selectAll();
-                 if($rootScope.showGrid)
-                    $scope.selectAllModal();
+                 /*if($rootScope.showGrid)
+                      $rootScope.selectAllModal();*/
+                    //$scope.selectAllModal();
                  //FAL evita que se alteren los datos al seleccionar todos
                  $scope.grdinicia = true;
                 }, 500);
@@ -490,8 +510,8 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
 //LQMA congifura e inicializa el grid
 var ConfiguraGrid = function(){
-
-$rootScope.gridOptions = {
+$scope.gridOptions = {
+        enableRowSelection: true,
         enableGridMenu: true,
         enableFiltering: true,
         enableGroupHeaderSelection: true,
@@ -560,22 +580,22 @@ $rootScope.gridOptions = {
                                     '\'selectNormal\': (row.isSelected && row.entity.ordenBloqueada==\'False\' && ((row.entity.idEstatus < 1 || row.entity.idEstatus > 5) && row.entity.idEstatus != 20))'+
                                     ',\'docIncompletos\': (!row.isSelected && ((row.entity.idEstatus >= 1 && row.entity.idEstatus <= 5) || row.entity.idEstatus == 20) && row.entity.ordenBloqueada==\'False\')'+
                                     ',\'bloqDocIncom\': (!row.isSelected && ((row.entity.idEstatus >= 1 && row.entity.idEstatus <= 5) || row.entity.idEstatus == 20) && row.entity.ordenBloqueada==\'True\')}"> <div ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader == \'True\'}" ui-grid-cell></div></div>',
-        onRegisterApi: function (gridApi) {
-            $scope.gridApi = gridApi;
+        onRegisterApi: function (gridApi1) {
+            $scope.gridApi1 = gridApi1;
             // $scope.gridApi.grid.registerColumnsProcessor( setGroupValues, 410 );
             $scope.cantidadTotal = $scope.cantidadTotal;
             // marcando los padres.
 
-            $scope.gridApi.selection.on.rowSelectionChanged($scope, function (rowChanged) {
+            $scope.gridApi1.selection.on.rowSelectionChanged($scope, function (rowChanged) {
                 if (typeof (rowChanged.treeLevel) !== 'undefined' && rowChanged.treeLevel > -1) 
                 {
                     // this is a group header
-                    children = $scope.gridApi.treeBase.getRowChildren(rowChanged);
+                    children = $scope.gridApi1.treeBase.getRowChildren(rowChanged);
                     children.forEach(function (child) {
                         if (rowChanged.isSelected) {
-                            $scope.gridApi.selection.selectRow(child.entity);
+                            $scope.gridApi1.selection.selectRow(child.entity);
                         } else {
-                            $scope.gridApi.selection.unSelectRow(child.entity);
+                            $scope.gridApi1.selection.unSelectRow(child.entity);
                         }
                     });
                 }
@@ -619,7 +639,7 @@ $rootScope.gridOptions = {
                         }
             });
 
-            gridApi.selection.on.rowSelectionChangedBatch($scope, function (rows) {
+            gridApi1.selection.on.rowSelectionChangedBatch($scope, function (rows) {
 
 
                 rows.forEach(function (row,i) {
@@ -634,7 +654,7 @@ $rootScope.gridOptions = {
                 
             });
 
-            gridApi.edit.on.afterCellEdit($scope, function (rowEntity, colDef, newValue, oldValue) 
+            gridApi1.edit.on.afterCellEdit($scope, function (rowEntity, colDef, newValue, oldValue) 
             {
                //FAL trabaja con las variables dependiendo si se edita o cambia la fecha
                 $scope.cantidadUpdate = newValue - oldValue;
@@ -700,10 +720,16 @@ $rootScope.gridOptions = {
                  }
               });               
                     
-          $scope.gridApi.selection.selectAllRows(true);  
+          $scope.gridApi1.selection.selectAllRows(true);  
         }
     } //grid options        
 };//funcion
+
+
+$scope.seleccionaTodo = function() {
+      $scope.selectAll();
+      //$scope.gridApi1.selection.selectRow($scope.gridOptions.data[2]);
+} 
 
  $scope.selectAll = function() {
     //FAL se analizan los registros para selccionarlos y se obtienen los totales relacionados al grid
@@ -713,7 +739,7 @@ $rootScope.gridOptions = {
     $scope.grdinicia = false;
     //LQMA 14032016
     //$rootScope.gridOptions.data.forEach(function (grDatosSel, i)
-    $rootScope.gridOptions.data.forEach(function (grDatosSel, i)
+    $scope.gridOptions.data.forEach(function (grDatosSel, i)
     {
        if(grDatosSel.ordenBloqueada == 'True')
        {
@@ -723,7 +749,7 @@ $rootScope.gridOptions = {
        else
        {
         $rootScope.grdApagar = Math.round($rootScope.grdApagar * 100) / 100 + Math.round(grDatosSel.saldo * 100) / 100;
-        $scope.gridApi.selection.selectRow($scope.gridOptions.data[i]); 
+        $scope.gridApi1.selection.selectRow($scope.gridOptions.data[i]); 
         //$scope.gridApi.selection.selectRow($scope.gridOptions.data[i]); 
        };
        if (i == 0)
@@ -760,35 +786,35 @@ $rootScope.gridOptions = {
 
         $rootScope.grdReprogramado = 0;
         $rootScope.grdNoIncluido = 0;
-        $rootScope.gridOptions.isRowSelectable = function(row){
+        $scope.gridOptions.isRowSelectable = function(row){
         if(row.entity.ordenBloqueada == 'True'){
           return false;
         } else {
           return true;
         }
       };
-      $scope.gridApi.core.notifyDataChange(uiGridConstants.dataChange.OPTIONS);
-      $scope.gridApi.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
+      $scope.gridApi1.core.notifyDataChange(uiGridConstants.dataChange.OPTIONS);
+      $scope.gridApi1.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
 
 };       
 
 //FAL filtros en base a variables
 $scope.Filtrar = function (value,campo) {
     console.log(value);
-    $scope.gridApi.grid.columns[campo].filters[0].term=value;
-    $scope.gridApi.core.notifyDataChange(uiGridConstants.dataChange.COLUMN);
-    $scope.gridApi.grid.refresh();
+    $scope.gridApi1.grid.columns[campo].filters[0].term=value;
+    $scope.gridApi1.core.notifyDataChange(uiGridConstants.dataChange.COLUMN);
+    $scope.gridApi1.grid.refresh();
     }
 
 //Quita filtros
 $scope.BorraFiltros = function () {
     console.log(value);
-    $scope.gridApi.grid.columns.forEach(function(col,i)
+    $scope.gridApi1.grid.columns.forEach(function(col,i)
     {
-      $scope.gridApi.grid.columns[i].filters[0].term='';
+      $scope.gridApi1.grid.columns[i].filters[0].term='';
     }); 
-    $scope.gridApi.core.notifyDataChange(uiGridConstants.dataChange.COLUMN);
-    $scope.gridApi.grid.refresh();
+    $scope.gridApi1.core.notifyDataChange(uiGridConstants.dataChange.COLUMN);
+    $scope.gridApi1.grid.refresh();
     }
 
 var isNumeric = function(obj){
@@ -881,7 +907,8 @@ $rootScope.ConsultaLoteObtiene = function(Lote,index){
                     });
 
                     if($rootScope.estatusLote == 0){
-                        $rootScope.gridOptions.data = $rootScope.modalSeleccionados;
+                        $scope.gridOptions.data = $rootScope.datosModal;//$rootScope.modalSeleccionados;
+                        $scope.selectAll();
                     }
                     else
                         pagoRepository.getDatosAprob($scope.idLote)
@@ -910,7 +937,7 @@ $scope.Guardar = function() {
 
     //LQMA 16032016
     //$scope.traeEmpresas();
-    $rootScope.gridOptions.data = [];
+    $scope.gridOptions.data = [];
 
     $rootScope.noLotes = null;    
     $scope.ObtieneLotes(0);
@@ -942,7 +969,7 @@ $scope.Guardar = function() {
                 $rootScope.idLotePadre = response.data;
 
                 var array = [];
-                var rows =  $scope.gridApi.grid.rows;
+                var rows =  $scope.gridApi1.grid.rows;
                 var count = 0;
 
                 rows.forEach(function (row,i) {
@@ -1234,11 +1261,11 @@ $scope.Guardar = function() {
             //LQMA 16032016
             $scope.llenaGrid();
 
-            setTimeout(function(){$scope.selectAllModal();},500);
+            setTimeout(function(){$rootScope.selectAllModal();},500);
         }
     }
 //FAL funciones de catga para el modal.
-
+/*
 var ConfiguraGridModal = function () {
     //$rootScope.showGrid = true;
     $rootScope.gridOptionsModal = {
@@ -1308,7 +1335,7 @@ var ConfiguraGridModal = function () {
             $scope.gridApi.selection.selectAllRows(true);
         }
     }
-};//funcion
+};//funcion*/
 
 
 /***************************************************************************************************************
