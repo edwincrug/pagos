@@ -1316,6 +1316,37 @@ var ConfiguraGridModal = function () {
     END
 ****************************************************************************************************************/
 
+/***********************************************************************************************************
+FAL 15032016
+funciones necesarias para generar el archivo de pagos
+************************************************************************************************************/
+
+$scope.GenerarArchivo = function() {
+
+$('#processing-modal').modal('show');
+
+pagoRepository.setArchivo($scope.idEmpresa,$rootScope.gridOptions.data)
+                .then(function successCallback(response) 
+                {
+                   alertFactory.success('Se genero el archivo con exito.');
+                  
+                   setTimeout(function()
+                      {
+                        $('#processing-modal').modal('hide');
+                      },2500);
+
+                }, function errorCallback(response) 
+                {                
+                    alertFactory.error('Error al generar el archivo');
+                    setTimeout(function()
+                      {
+                        $('#processing-modal').modal('hide');
+                      },1500);
+                });
+
+  };
+
+
 })
  
 registrationModule.service('stats', function () {
