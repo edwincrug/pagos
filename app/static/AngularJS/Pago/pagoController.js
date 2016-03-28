@@ -300,7 +300,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         setTimeout(function()
                     { 
 
-                     $scope.selectAllModal();
+                     $rootScope.selectAllModal();
                      //FAL evita que se alteren los datos al seleccionar todos
                      $scope.grdinicia = true;
                     }, 500);
