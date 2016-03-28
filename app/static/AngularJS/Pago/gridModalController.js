@@ -1,13 +1,8 @@
-registrationModule.controller("gridModalController", function ($scope, $http, $interval, uiGridGroupingConstants, uiGridConstants,$filter, $rootScope, localStorageService, alertFactory, gridModalRepository,stats) {
-   
-    $rootScope.saludo = function() {
-      alert('hola desde modalIndexController');
-    }
-
+registrationModule.controller("gridModalController", function ($scope, $http, $interval, uiGridGroupingConstants, uiGridConstants,$filter, $rootScope, localStorageService, alertFactory,stats) {
+       
     $scope.inicia = function () {
        ConfiguraGridModal();
     };
-
           //FAL funciones de catga para el modal.
 
       var ConfiguraGridModal = function () {
@@ -118,89 +113,5 @@ registrationModule.controller("gridModalController", function ($scope, $http, $i
 
       return $scope.gridApi.selection.getSelectedRows();
     }
-
-   /*
-   var errorCallBack = function (data, status, headers, config) {
-        alertFactory.error('Ocurrio un problema');
-    };   
-    
-    $scope.llenaEncabezado = function () {        
-       
-        pagoRepository.getEncabezado($scope.idCuenta)
-            .then(function successCallback(response) {
-                $scope.scencabezado = response.data;
-
-            }, function errorCallback(response) {
-                alertFactory.error('Error al obtener los datos del encabezado.');
-            }
-        );
-
-    };
-
-  //Trae las empresas para el modal de inicio
-    $scope.traeEmpresas = function () { 
-        //Llamada a repository para obtener data
-        //LQMA 03032016
-        $rootScope.showGrid = false;
-        modalIndexRepository.getEmpresas($scope.idUsuario)
-            .then(function successCallback(response) {
-                $scope.empresas = response.data;
-                 $('#inicioModal').modal('show');
-                 $scope.showTotales = false;
-               
-            }, function errorCallback(response) {
-                 alertFactory.error('Error en empresas.');
-            }
-        );
-    };
-    //FAl--Trae el total de bancos de la empresa seleccionada
-    $scope.traeTotalxEmpresa = function (emp_idempresa,emp_nombre) {
-      
-        modalIndexRepository.getTotalxEmpresa(emp_idempresa)
-            .then(function successCallback(response) {
-                $rootScope.GranTotal = 0;
-                $rootScope.TotalxEmpresas = response.data;
-                $scope.idEmpresa = emp_idempresa;
-                i=0;
-                $rootScope.TotalxEmpresas.forEach(function (cuentaPagadora, sumaSaldo)
-                    {
-                    $rootScope.GranTotal = $rootScope.GranTotal + $rootScope.TotalxEmpresas[i].sumaSaldo; 
-                    i++;                          
-                    });
-                $scope.traeTotalxEmpresa.emp_nombre = emp_nombre;
-                $scope.showTotales = true;
-                $scope.showSelCartera = true;
-                //LQMA  07032016
-                //LQMA 14032016
-                $scope.ObtieneLotes(0);// borra todos los lotes
-                //$scope.LlenaIngresos();
-
-                $scope.llenaGrid();
-
-            }, function errorCallback(response) {
-                //oculta la información y manda el total a cero y llena el input del modal
-                $rootScope.TotalxEmpresas = [];
-                $rootScope.GranTotal = 0;
-                $rootScope.showGrid = false;
-                $scope.showSelCartera = false;
-                $scope.showTotales = false;
-                $scope.traeTotalxEmpresa.emp_nombre = 'La empresa seleccionada no tiene información';
-            }
-        );
-    };
-
-    $scope.MuestraGridModal = function (value) 
-    {
-    //LQMA 14032016
-        $rootScope.showGrid = value;
-        setTimeout(function()
-                    { 
-
-                     $scope.selectAllModal();
-                     //FAL evita que se alteren los datos al seleccionar todos
-                     $scope.grdinicia = true;
-                    }, 500);        
-    };   
-
-    */
+   
 });
