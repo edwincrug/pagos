@@ -1355,12 +1355,17 @@ $('#processing-modal').modal('show');
 pagoRepository.setArchivo($scope.idEmpresa,$rootScope.gridOptions.data)
                 .then(function successCallback(response) 
                 {
-                   alertFactory.success('Se genero el archivo con exito.');
-                  
+
+                   $scope.documentoIni = '<div><object id="ifDocument" data="' + response.data + '" type="application/txt" width="100%"><p>Descargar archivo de pagos <a href="../../files/' + response.data + '" target="_blank"><img border="0" alt="descargar" src="image/gifs/download.jpg" width="50" height="50"></a></p></object> </div>';
+                    
+                                     
                    setTimeout(function()
                       {
                         $('#processing-modal').modal('hide');
-                      },2500);
+                      },1000);
+
+                   $("#divDocumento").append($scope.documentoIni);
+                   
 
                 }, function errorCallback(response) 
                 {                
@@ -1368,11 +1373,10 @@ pagoRepository.setArchivo($scope.idEmpresa,$rootScope.gridOptions.data)
                     setTimeout(function()
                       {
                         $('#processing-modal').modal('hide');
-                      },1500);
+                      },1000);
                 });
 
   };
-
 
 })
  
