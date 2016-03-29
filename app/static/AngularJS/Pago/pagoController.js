@@ -350,10 +350,10 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         $rootScope.NuevoLote = true;
         var newLote = {idLotePago:'0',idEmpresa:$scope.idEmpresa,idUsuario:$rootScope.currentEmployee,fecha:'',nombre:$rootScope.nombreLoteNuevo,estatus:0};
         
-        //if($rootScope.showGrid)
+        if($rootScope.showGrid)
           $rootScope.datosModal = $rootScope.getSelectedRowsModal();
-        //else
-          //$rootScope.datosModal = $rootScope.getDataGridModal();  
+        else
+          $rootScope.datosModal = $rootScope.getDataGridModal();  
 
         $scope.ObtieneLotes(newLote);
                                
