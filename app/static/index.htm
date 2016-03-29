@@ -24,6 +24,7 @@
   <!--Loading-->
   <link href="css/toastr.css" rel="stylesheet" />
   <link href="css/angular-busy.css" rel="stylesheet" />
+  <link href="../css/pago.css" rel="stylesheet" />
 
   <!--Librearias JQuery y Bootstrap-->
   <script src="js/jquery-2.1.4.js"></script>
@@ -172,9 +173,9 @@
       </div>
       <div ng-show="showGrid">
         <div class="mdPagarLabel">
-          Seleccione los registros
+          Seleccione los registros          
         </div>
-        <div id="contenedorGrid" ng-controller="gridModalController" ng-init="inicia()">
+        <div id="contenedorGrid" ng-controller="gridModalController" ng-init="inicia()">            
             <div id="gridModal" ui-grid="gridOptionsModal" ui-grid-grouping ui-grid-edit ui-grid-selection ui-grid-cellNav class="gridStyle"></div>
         </div>
      </div>
@@ -189,7 +190,7 @@
     </div>
     <div class="modal-footer">
      <button class="btn btn-info" data-toggle="modal" href="#stack2" ng-click="IniciaLote()" ng-show="NuevoLote">Crear Lote</button>
-     <button type="button" class="btn btn-primary" data-dismiss="modal" ng-hide="NuevoLote" ng-click="ProgramacionPagos()">Ir a Programación Pago</button>
+     <button type="button" class="btn btn-primary" data-dismiss="modal" ng-show="ProgPago" ng-click="ProgramacionPagos()">Ir a Programación Pago</button>
      <button type="button" class="btn btn-primary" data-dismiss="modal" ng-show="NuevoLote">Cancelar</button>
    </div>
  </div>

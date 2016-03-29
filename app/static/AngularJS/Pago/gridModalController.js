@@ -3,6 +3,7 @@ registrationModule.controller("gridModalController", function ($scope, $http, $i
     $scope.inicia = function () {
        ConfiguraGridModal();
     };
+
           //FAL funciones de catga para el modal.
 
       var ConfiguraGridModal = function () {

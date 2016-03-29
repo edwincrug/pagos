@@ -228,11 +228,12 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                         $rootScope.estatusLote = $rootScope.noLotes.data[$rootScope.noLotes.data.length - 1].estatus;
 
                         $rootScope.ConsultaLote($rootScope.noLotes.data[$rootScope.noLotes.data.length - 1],$rootScope.noLotes.data.length,0);
+                        $rootScope.ProgPago = true;
                     }
                     else
                     {
                         alertFactory.info('No existen Lotes');
-                        $rootScope.NuevoLote = true;
+                        $rootScope.NuevoLote = true;                        
                     }                    
                 }, 
                 function errorCallback(response) {
@@ -301,9 +302,8 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                     { 
                      $rootScope.selectAllModal();
                      //FAL evita que se alteren los datos al seleccionar todos
-                     $scope.grdinicia = true;
-                    }, 500);
-
+                     $scope.grdinicia = true;                     
+                    }, 500);        
         /************************************************************************************************************************/  
     };
 
@@ -384,7 +384,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         $('#inicioModal').modal('hide');
         $rootScope.estatusLote = 0;
         //LQMA 15032016
-        $rootScope.accionPagina = true;
+        $rootScope.accionPagina = true;       
 
         setTimeout(function(){ 
                                 $( "#btnSelectAll" ).click();//$scope.selectAll();
@@ -1256,8 +1256,9 @@ $scope.Guardar = function() {
         return total;
     } //get total end
     //LQMA 10032016
-    $rootScope.CrearNuevoLote = function(){
-      
+    $rootScope.CrearNuevoLote = function(){      
+      $rootScope.ProgPago = false;
+
       var lotesPendientes = $.grep($rootScope.noLotes.data, function( n, i ) {
                     return n.estatus===0;
                 });
