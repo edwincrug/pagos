@@ -299,7 +299,6 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         $rootScope.showGrid = value;
         setTimeout(function()
                     { 
-
                      $rootScope.selectAllModal();
                      //FAL evita que se alteren los datos al seleccionar todos
                      $scope.grdinicia = true;
@@ -397,6 +396,10 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         //LQMA 15032016    
         $scope.LlenaIngresos();
         $rootScope.accionPagina = true;
+
+        setTimeout(function(){ 
+                                $( "#btnSelectAll" ).click();//$scope.selectAll();
+                                }, 500);        
     }
 
     $scope.llenaGrid = function () {
@@ -727,11 +730,14 @@ $scope.gridOptions = {
 
 
 $scope.seleccionaTodo = function() {
-      $scope.selectAll();
-      //$scope.gridApi1.selection.selectRow($scope.gridOptions.data[2]);
+      $scope.selectAll(0);      
 } 
 
- $scope.selectAll = function() {
+$scope.selecciona = function() {
+      $scope.selectAll(1);      
+} 
+
+$scope.selectAll = function(opcion) {
     //FAL se analizan los registros para selccionarlos y se obtienen los totales relacionados al grid
     $rootScope.grdApagar = 0;
     $rootScope.grdnoPagable = 0;
@@ -749,8 +755,8 @@ $scope.seleccionaTodo = function() {
        else
        {
         $rootScope.grdApagar = Math.round($rootScope.grdApagar * 100) / 100 + Math.round(grDatosSel.saldo * 100) / 100;
-        $scope.gridApi1.selection.selectRow($scope.gridOptions.data[i]); 
-        //$scope.gridApi.selection.selectRow($scope.gridOptions.data[i]); 
+        if(opcion == 0)
+          $scope.gridApi1.selection.selectRow($scope.gridOptions.data[i]);
        };
        if (i == 0)
        {
@@ -908,7 +914,7 @@ $rootScope.ConsultaLoteObtiene = function(Lote,index){
 
                     if($rootScope.estatusLote == 0){
                         $scope.gridOptions.data = $rootScope.datosModal;//$rootScope.modalSeleccionados;
-                        $scope.selectAll();
+                        $scope.selectAll(0);
                     }
                     else
                         pagoRepository.getDatosAprob($scope.idLote)
