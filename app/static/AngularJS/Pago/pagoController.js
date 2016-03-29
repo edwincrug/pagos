@@ -5,7 +5,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
    $scope.idUsuario = 4;
 
    //LQMA 04032016
-   $rootScope.currentEmployee = 25;//25:1;
+   $rootScope.currentEmployee = 44;//25:1;
    $rootScope.currentId = null;
    $rootScope.currentIdOp = null;
    $scope.idLote = 0;
@@ -350,10 +350,10 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         $rootScope.NuevoLote = true;
         var newLote = {idLotePago:'0',idEmpresa:$scope.idEmpresa,idUsuario:$rootScope.currentEmployee,fecha:'',nombre:$rootScope.nombreLoteNuevo,estatus:0};
         
-        if($rootScope.showGrid)
+        //if($rootScope.showGrid)
           $rootScope.datosModal = $rootScope.getSelectedRowsModal();
-        else
-          $rootScope.datosModal = $rootScope.getDataGridModal();  
+        //else
+          //$rootScope.datosModal = $rootScope.getDataGridModal();  
 
         $scope.ObtieneLotes(newLote);
                                
