@@ -5,7 +5,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
    $scope.idUsuario = 4;
 
    //LQMA 04032016
-   $rootScope.currentEmployee = 44;//25:1;
+   $rootScope.currentEmployee = 46;//25:1;
    $rootScope.currentId = null;
    $rootScope.currentIdOp = null;
    $scope.idLote = 0;
@@ -914,13 +914,17 @@ $rootScope.ConsultaLoteObtiene = function(Lote,index){
 
                     if($rootScope.estatusLote == 0){
                         $scope.gridOptions.data = $rootScope.datosModal;//$rootScope.modalSeleccionados;
-                        $scope.selectAll(0);
+                        //$scope.selectAll(0);
                     }
                     else
                         pagoRepository.getDatosAprob($scope.idLote)
                             .success(llenaGridSuccessCallback)
                             .error(errorCallBack);
-                        }
+
+                    setTimeout(function(){ 
+                                $( "#btnSelectAll" ).click();//$scope.selectAll();
+                                }, 500);
+            }
 
         //$rootScope.NuevoLote = false;
 }
@@ -1007,6 +1011,7 @@ $scope.Guardar = function() {
                         .then(function successCallback(response) {
                             
                             alertFactory.success('Se guardaron los datos.');
+                            $rootScope.estatusLote = 1;
 
                         }, function errorCallback(response) {                
                             alertFactory.error('Error al guardar Datos');
