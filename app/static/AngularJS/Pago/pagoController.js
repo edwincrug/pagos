@@ -5,7 +5,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
    $scope.idUsuario = 4;
 
    //LQMA 04032016
-   $rootScope.currentEmployee = 51;//25:1;
+   $rootScope.currentEmployee = 60;//25:1;
    $rootScope.currentId = null;
    $rootScope.currentIdOp = null;
    $scope.idLote = 0;
@@ -1012,7 +1012,17 @@ $scope.Guardar = function() {
                             
                             alertFactory.success('Se guardaron los datos.');
                             $rootScope.estatusLote = 1;
-                            $rootScope.noLotes.data[$rootScope.noLotes.data.length - 1].idLotePago = $rootScope.idLotePadre;
+
+                            angular.forEach($rootScope.noLotes.data, function(lote, key){
+                              if(lote.idLotePago == $scope.idLote)
+                              {
+                                  lote.idLotePago = $rootScope.idLotePadre;
+                                  lote.estatus = 1;
+                              }
+                            });
+
+                            //$rootScope.noLotes.data[$rootScope.noLotes.data.length - 1].idLotePago = $rootScope.idLotePadre;
+                            //$rootScope.noLotes.data[$rootScope.noLotes.data.length - 1].estatus = 1;
 
                         }, function errorCallback(response) {                
                             alertFactory.error('Error al guardar Datos');
