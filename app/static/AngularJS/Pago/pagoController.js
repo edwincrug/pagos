@@ -5,7 +5,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
    $scope.idUsuario = 4;
 
    //LQMA 04032016
-   $rootScope.currentEmployee = 46;//25:1;
+   $rootScope.currentEmployee = 51;//25:1;
    $rootScope.currentId = null;
    $rootScope.currentIdOp = null;
    $scope.idLote = 0;
@@ -224,7 +224,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                     if($rootScope.noLotes.data.length > 0) //mostrar boton crear lote
                     {   
                         alertFactory.success('Total de lotes: ' +  $rootScope.noLotes.data.length);
-                        $rootScope.idLotePadre = $rootScope.noLotes.data[$rootScope.noLotes.data.length - 1].idLotePago;                        
+                        $rootScope.idLotePadre = $rootScope.noLotes.data[$rootScope.noLotes.data.length - 1].idLotePago;
                         $rootScope.estatusLote = $rootScope.noLotes.data[$rootScope.noLotes.data.length - 1].estatus;
 
                         $rootScope.ConsultaLote($rootScope.noLotes.data[$rootScope.noLotes.data.length - 1],$rootScope.noLotes.data.length,0);
@@ -1012,6 +1012,7 @@ $scope.Guardar = function() {
                             
                             alertFactory.success('Se guardaron los datos.');
                             $rootScope.estatusLote = 1;
+                            $rootScope.noLotes.data[$rootScope.noLotes.data.length - 1].idLotePago = $rootScope.idLotePadre;
 
                         }, function errorCallback(response) {                
                             alertFactory.error('Error al guardar Datos');
