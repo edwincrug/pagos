@@ -22,27 +22,27 @@ registrationModule.controller("gridModalController", function ($scope, $http, $i
               },
              columnDefs: [
                {
-                   name: 'nombreAgrupador', grouping: { groupPriority: 0 }, sort: { priority: 0, direction: 'asc' }, width: '15%', displayName: 'Grupo', enableCellEdit: false
+                   name: 'nombreAgrupador', grouping: { groupPriority: 0 }, sort: { priority: 0, direction: 'asc' }, width: "100", resizable: true, displayName: 'Grupo', enableCellEdit: false
 
                },
                {
                    name: 'proveedor', grouping: { groupPriority: 1 }, sort: { priority: 1, direction: 'asc' }, name: 'proveedor', enableCellEdit: false
-                 , width: '35%'
-                 , cellTemplate: '<div><div ng-if="!col.grouping || col.grouping.groupPriority === undefined || col.grouping.groupPriority === null || ( row.groupHeader && col.grouping.groupPriority === row.treeLevel )" class="ui-grid-cell-contents" title="TOOLTIP">{{COL_FIELD CUSTOM_FILTERS}}</div></div>'
+                 , width: "200", resizable: true,
+                 cellTemplate: '<div><div ng-if="!col.grouping || col.grouping.groupPriority === undefined || col.grouping.groupPriority === null || ( row.groupHeader && col.grouping.groupPriority === row.treeLevel )" class="ui-grid-cell-contents" title="TOOLTIP">{{COL_FIELD CUSTOM_FILTERS}}</div></div>'
                },
                {
-                   field: 'Pagar', displayName: 'Pagar (total)', width: '30%', cellFilter: 'currency', aggregationType: uiGridConstants.aggregationTypes.sum,
+                   field: 'Pagar', displayName: 'Pagar (total)', width: "100", resizable: true, cellFilter: 'currency', aggregationType: uiGridConstants.aggregationTypes.sum,
                    treeAggregationType: uiGridGroupingConstants.aggregation.SUM, enableCellEdit: ($rootScope.currentIdOp == 1) ? false : true,
                    editableCellTemplate: '<div><form name="inputForm"><input type="number" ng-class="\'colt\' + col.uid" ui-grid-editor ng-model="MODEL_COL_FIELD"></form></div>',
                    customTreeAggregationFinalizerFn: function (aggregation) {
                        aggregation.rendered = aggregation.value;
                    }
                },
-               { name: 'fechaPromesaPago', displayName: 'Fecha Promesa de Pago', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '17%' },
-               { name: 'ordenBloqueada', displayName: 'Bloqueada', width: '20%' },
-               { name: 'estGrid', width: '15%', displayName: 'Estatus Grid' },
+               { name: 'fechaPromesaPago', displayName: 'Fecha Promesa de Pago', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: "150", resizable: true },
+               { name: 'ordenBloqueada', displayName: 'Bloqueada', width: "100", resizable: true },
+               { name: 'estGrid', width: "100", resizable: true, displayName: 'Estatus Grid' },
                {
-                   field: 'saldoPorcentaje', displayName: 'Porcentaje %', width: '10%', cellFilter: 'number: 6', aggregationType: uiGridConstants.aggregationTypes.sum,
+                   field: 'saldoPorcentaje', displayName: 'Porcentaje %', width: "100", resizable: true, cellFilter: 'number: 6', aggregationType: uiGridConstants.aggregationTypes.sum,
                    treeAggregationType: uiGridGroupingConstants.aggregation.SUM, enableCellEdit: false,
                    customTreeAggregationFinalizerFn: function (aggregation) {
                        aggregation.rendered = aggregation.value;
