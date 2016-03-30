@@ -1365,7 +1365,7 @@ $scope.GenerarArchivo = function() {
 
 $('#processing-modal').modal('show');
 
-pagoRepository.setArchivo($scope.idEmpresa,$scope.gridOptions.data)
+pagoRepository.setArchivo($scope.idEmpresa,$scope.gridOptions.data,$rootScope.idLotePadre)
                 .then(function successCallback(response) 
                 {
 

@@ -108,13 +108,13 @@ registrationModule.factory('pagoRepository', function ($http) {
         },
 
         //FAL 15032016 manda el json para generar el archivo
-         setArchivo: function(id,dataArchivo)
+         setArchivo: function(id,dataArchivo,lotePadre)
         {
             
             return $http({
                 url: pagoUrl,
                 method: "POST",
-                params: { id: '4|' + id},
+                params: { id: '4|' + id + '|' + lotePadre},
                 //dataType: "json",
                 data:JSON.stringify(dataArchivo)
                
