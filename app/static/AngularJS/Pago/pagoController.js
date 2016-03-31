@@ -5,10 +5,11 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
    $scope.idUsuario = 4;
 
    //LQMA 04032016
-   $rootScope.currentEmployee = 60;//25:1;
+   $rootScope.currentEmployee = 61;//25:1;
    $rootScope.currentId = null;
    $rootScope.currentIdOp = null;
-   $scope.idLote = 0;
+   $scope.idLote = 0;   
+   $rootScope.formData = {};
 
    var errorCallBack = function (data, status, headers, config) {
         alertFactory.error('Ocurrio un problema');
@@ -18,8 +19,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
     Funciones de incio  
     BEGIN
     ****************************************************************************************************************/
-
-
+    
     $scope.init = function () {
        //LQMA   leer parametros : id , idemployee
        
@@ -33,7 +33,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
              //GetEmpleado();
              $scope.traeEmpresas();
        }*/
-       //LQMA 11032016
+       //LQMA 11032016       
        $scope.caja = 0;       
        $scope.cobrar = 0;
 
@@ -153,8 +153,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
   //Trae las empresas para el modal de inicio
     $scope.traeEmpresas = function () {
-        //Llamada a repository para obtener data
-
+        //Llamada a repository para obtener data        
         //LQMA 03032016
         $rootScope.showGrid = false;
         pagoRepository.getEmpresas($scope.idUsuario)
@@ -340,55 +339,61 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
     //LQMA 07032016
     $scope.IniciaLote = function(){   
 
-        //Configura GRID ECG 
-        //$rootScope.gridOptions = null;
-        $scope.gridOptions = null;
-        ConfiguraGrid();
-
-         //LQMA 10032016
-        $rootScope.NuevoLote = true;
-        var newLote = {idLotePago:'0',idEmpresa:$scope.idEmpresa,idUsuario:$rootScope.currentEmployee,fecha:'',nombre:$rootScope.nombreLoteNuevo,estatus:0};
-        
-        if($rootScope.showGrid)
-          $rootScope.datosModal = $rootScope.getSelectedRowsModal();
+        if($rootScope.formData.nombreLoteNuevo == null)
+            alertFactory.warning('Debe proporcionar el nombre del nuevo lote.');
         else
-          $rootScope.datosModal = $rootScope.getDataGridModal();  
+        {    
 
-        $scope.ObtieneLotes(newLote);
-                               
-        /*setTimeout(function(){ 
-                              if($rootScope.showGrid) {
-                                    //$rootScope.gridOptions = null;
-                                    //ConfiguraGrid();
-                                    $rootScope.modalSeleccionados = $rootScope.mySelections;
-                                    $rootScope.gridOptions.data = $rootScope.modalSeleccionados;
-                                    $scope.selectAll();
-                                }
-                                else{
-                                    //$rootScope.gridOptions = null;
-                                    //ConfiguraGrid();
-                                    $rootScope.gridOptions.data = $rootScope.gridOptionsModal.data;                                    
-                                    $scope.selectAll();
-                                }
-                            }, 500);*/
+            //Configura GRID ECG 
+            //$rootScope.gridOptions = null;
+            $scope.gridOptions = null;
+            ConfiguraGrid();
 
-        //setTimeout(function(){$rootScope.showGrid = false;},1000);
+             //LQMA 10032016
+            $rootScope.NuevoLote = true;
+            var newLote = {idLotePago:'0',idEmpresa:$scope.idEmpresa,idUsuario:$rootScope.currentEmployee,fecha:'',nombre:$rootScope.formData.nombreLoteNuevo,estatus:0};
             
-        //$scope.selectAll();
-        //LQMA 15032016
-        //$rootScope.NuevoLote = false;
-        //$rootScope.NuevoLote = true;
-        $scope.LlenaIngresos();
-        //$rootScope.NuevoLote = false;
+            if($rootScope.showGrid)
+              $rootScope.datosModal = $rootScope.getSelectedRowsModal();
+            else
+              $rootScope.datosModal = $rootScope.getDataGridModal();  
 
-        $('#inicioModal').modal('hide');
-        $rootScope.estatusLote = 0;
-        //LQMA 15032016
-        $rootScope.accionPagina = true;       
+            $scope.ObtieneLotes(newLote);
+                                   
+            /*setTimeout(function(){ 
+                                  if($rootScope.showGrid) {
+                                        //$rootScope.gridOptions = null;
+                                        //ConfiguraGrid();
+                                        $rootScope.modalSeleccionados = $rootScope.mySelections;
+                                        $rootScope.gridOptions.data = $rootScope.modalSeleccionados;
+                                        $scope.selectAll();
+                                    }
+                                    else{
+                                        //$rootScope.gridOptions = null;
+                                        //ConfiguraGrid();
+                                        $rootScope.gridOptions.data = $rootScope.gridOptionsModal.data;                                    
+                                        $scope.selectAll();
+                                    }
+                                }, 500);*/
 
-        setTimeout(function(){ 
-                                $( "#btnSelectAll" ).click();//$scope.selectAll();
-                                }, 500);
+            //setTimeout(function(){$rootScope.showGrid = false;},1000);
+                
+            //$scope.selectAll();
+            //LQMA 15032016
+            //$rootScope.NuevoLote = false;
+            //$rootScope.NuevoLote = true;
+            $scope.LlenaIngresos();
+            //$rootScope.NuevoLote = false;
+
+            $('#inicioModal').modal('hide');
+            $rootScope.estatusLote = 0;
+            //LQMA 15032016
+            $rootScope.accionPagina = true;       
+
+            setTimeout(function(){ 
+                                    $( "#btnSelectAll" ).click();//$scope.selectAll();
+                                    }, 500);
+        }    
     }; //FIN inicia Lote
 
     $scope.ProgramacionPagos = function(){
@@ -973,7 +978,7 @@ $scope.Guardar = function() {
         //pagoRepository.getPagosPadre($rootScope.currentEmployee)
 
             //alertFactory.error($rootScope.idLotePadre);
-          pagoRepository.getPagosPadre($scope.idEmpresa,$rootScope.currentEmployee,$rootScope.nombreLoteNuevo,$rootScope.idLotePadre)
+          pagoRepository.getPagosPadre($scope.idEmpresa,$rootScope.currentEmployee,$rootScope.formData.nombreLoteNuevo,$rootScope.idLotePadre)
             .then(function successCallback(response) 
             {   
                 $rootScope.idLotePadre = response.data;
