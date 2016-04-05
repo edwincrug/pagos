@@ -5,7 +5,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
    $scope.idUsuario = 4;
 
    //LQMA 04032016
-   $rootScope.currentEmployee = 63;//25:1;
+   $rootScope.currentEmployee = 90;//25:1;
    $rootScope.currentId = null;
    $rootScope.currentIdOp = null;
    $scope.idLote = 0;   
@@ -52,6 +52,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
        $.fn.bootstrapSwitch.defaults.offText = 'Global';
        $('.switch-checkbox').bootstrapSwitch();      
        $scope.showSelCartera = true;
+        $scope.llenaEncabezado();
        /***********************************************************/ 
        //configuragridOptionsModal();
        //*******************************
@@ -170,7 +171,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
     };
     //FAl--Trae el total de bancos de la empresa seleccionada
     $scope.traeTotalxEmpresa = function (emp_idempresa,emp_nombre) {
-      $('#myButton').button('loading');
+      $('#btnTotalxEmpresa').button('loading');
       $scope.showTotales = false;
       $scope.showSelCartera = false;
         pagoRepository.getTotalxEmpresa(emp_idempresa)
@@ -195,7 +196,8 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 //$scope.LlenaIngresos();
 
                 $scope.llenaGrid();
-               $('#myButton').button('reset');
+
+               $('#btnTotalxEmpresa').button('reset');
             }, function errorCallback(response) {
                 //oculta la información y manda el total a cero y llena el input del modal
                 $rootScope.TotalxEmpresas = [];
@@ -204,7 +206,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 $scope.showSelCartera = false;
                 $scope.showTotales = false;
                 $scope.traeTotalxEmpresa.emp_nombre = 'La empresa seleccionada no tiene información';
-                 $('#myButton').button('reset');
+                 $('#btnTotalxEmpresa').button('reset');
             }
         );
 
@@ -301,21 +303,24 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
     {       
     
     //LQMA 14032016
-        $rootScope.showGrid = value;
+       
         setTimeout(function()
                     { 
                      $rootScope.selectAllModal();
                      //FAL evita que se alteren los datos al seleccionar todos
                      $scope.grdinicia = true;                     
-                    }, 500);        
+                    }, 500);   
+        $rootScope.showGrid = value;                  
         /************************************************************************************************************************/  
     };
 
     //FAl--Oculta el grid del Modal y asigna la variable toda la cartera true
     $scope.OcultaGridModal = function (value){
       //$scope.selectAllModal();
+    $('#btnTodalaCartera').button('loading');
       $rootScope.selectAllModal();
       $rootScope.showGrid = value;
+    $('#btnTodalaCartera').button('reset');    
     };
 
 //FAL se analizan los registros para selccionarlos y se obtienen los totales relacionados al grid
@@ -824,7 +829,6 @@ $scope.Filtrar = function (value,campo) {
 
 //Quita filtros
 $scope.BorraFiltros = function () {
-    console.log(value);
     $scope.gridApi1.grid.columns.forEach(function(col,i)
     {
       $scope.gridApi1.grid.columns[i].filters[0].term='';
@@ -1278,7 +1282,7 @@ $scope.Guardar = function() {
     } //get total end
     //LQMA 10032016
     $rootScope.CrearNuevoLote = function(){      
-      $rootScope.ProgPago = false;
+      $rootScope.ProgPago = true;
 
       var lotesPendientes = $.grep($rootScope.noLotes.data, function( n, i ) {
                     return n.estatus===0;
@@ -1298,11 +1302,8 @@ $scope.Guardar = function() {
         }
     }
 
-    $('#miEmpresa').on('click', function () {
-    var $btn = $('#myButton').button('loading')
-    // business logic...
-    $btn.button('reset')
-  })
+ 
+
 //FAL funciones de catga para el modal.
 /*
 var ConfiguraGridModal = function () {
