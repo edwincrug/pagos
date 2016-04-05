@@ -126,7 +126,7 @@
           <div class="input-group">
             <input type="text" class="form-control" ng-model='traeTotalxEmpresa.emp_nombre' aria-label="...">
             <div class="input-group-btn">
-              <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Seleccione <span class="caret"></span></button>
+              <button id="myButton" type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  data-loading-text="Leyendo..." autocomplete="off">Seleccione <span class="caret"></span></button>
               <ul class="dropdown-menu dropdown-menu-right">
                 <li ng-repeat="empresa in empresas">
                   <a href="#" ng-click="traeTotalxEmpresa(empresa.emp_idempresa, empresa.emp_nombre)">{{empresa.emp_nombre}}</a>

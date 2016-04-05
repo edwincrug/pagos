@@ -5,7 +5,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
    $scope.idUsuario = 4;
 
    //LQMA 04032016
-   $rootScope.currentEmployee = 61;//25:1;
+   $rootScope.currentEmployee = 63;//25:1;
    $rootScope.currentId = null;
    $rootScope.currentIdOp = null;
    $scope.idLote = 0;   
@@ -170,9 +170,13 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
     };
     //FAl--Trae el total de bancos de la empresa seleccionada
     $scope.traeTotalxEmpresa = function (emp_idempresa,emp_nombre) {
-      
+      $('#myButton').button('loading');
+      $scope.showTotales = false;
+      $scope.showSelCartera = false;
         pagoRepository.getTotalxEmpresa(emp_idempresa)
             .then(function successCallback(response) {
+               
+    
                 $rootScope.GranTotal = 0;
                 $rootScope.TotalxEmpresas = response.data;
                 $scope.idEmpresa = emp_idempresa;
@@ -191,7 +195,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 //$scope.LlenaIngresos();
 
                 $scope.llenaGrid();
-
+               $('#myButton').button('reset');
             }, function errorCallback(response) {
                 //oculta la información y manda el total a cero y llena el input del modal
                 $rootScope.TotalxEmpresas = [];
@@ -200,6 +204,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 $scope.showSelCartera = false;
                 $scope.showTotales = false;
                 $scope.traeTotalxEmpresa.emp_nombre = 'La empresa seleccionada no tiene información';
+                 $('#myButton').button('reset');
             }
         );
 
@@ -766,7 +771,7 @@ $scope.selectAll = function(opcion) {
        if (i == 0)
        {
 
-        if(grDatosSel.cuentaPagadora != 'Sin CuentaPagadora')
+        if(grDatosSel.cuentaPagadora != 'SCP')
             $rootScope.grdBancos.push({
                         banco: grDatosSel.cuentaPagadora,
                         subtotal: grDatosSel.saldo
@@ -1292,6 +1297,12 @@ $scope.Guardar = function() {
             setTimeout(function(){$rootScope.selectAllModal();},500);
         }
     }
+
+    $('#miEmpresa').on('click', function () {
+    var $btn = $('#myButton').button('loading')
+    // business logic...
+    $btn.button('reset')
+  })
 //FAL funciones de catga para el modal.
 /*
 var ConfiguraGridModal = function () {
