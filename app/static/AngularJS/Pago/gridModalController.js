@@ -38,16 +38,17 @@ registrationModule.controller("gridModalController", function ($scope, $http, $i
                        aggregation.rendered = aggregation.value;
                    }
                },
-               { name: 'fechaPromesaPago', displayName: 'Fecha Promesa de Pago', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: "150", resizable: true },
-               { name: 'ordenBloqueada', displayName: 'Bloqueada', width: "100", resizable: true },
-               { name: 'estGrid', width: "100", resizable: true, displayName: 'Estatus Grid' },
                {
                    field: 'saldoPorcentaje', displayName: 'Porcentaje %', width: "100", resizable: true, cellFilter: 'number: 6', aggregationType: uiGridConstants.aggregationTypes.sum,
                    treeAggregationType: uiGridGroupingConstants.aggregation.SUM, enableCellEdit: false,
                    customTreeAggregationFinalizerFn: function (aggregation) {
                        aggregation.rendered = aggregation.value;
                    }
-               }
+               },
+               { name: 'fechaPromesaPago', displayName: 'Fecha Promesa de Pago', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: "150", resizable: true },
+               { name: 'ordenBloqueada', displayName: 'Bloqueada', width: "100", resizable: true },
+               { name: 'estGrid', width: "100", resizable: true, displayName: 'Estatus Grid' }
+               
               ],
               rowTemplate: '<div ng-class="{\'ordenBloqueada\':(row.entity.ordenBloqueada==\'True\' && ((row.entity.idEstatus < 1 || row.entity.idEstatus > 5) && row.entity.idEstatus != 20) && !row.isSelected)' +
                                           ',\'bloqueadaSelec\': (row.isSelected && row.entity.ordenBloqueada==\'True\') || (row.isSelected && ((row.entity.idEstatus >= 1 && row.entity.idEstatus <= 5) || row.entity.idEstatus == 20)),' +
