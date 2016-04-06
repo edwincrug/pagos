@@ -14,7 +14,7 @@ registrationModule.controller("gridModalController", function ($scope, $http, $i
               enableFiltering: true,
               enableGroupHeaderSelection: true,
               treeRowHeaderAlwaysVisible: true,
-              showColumnFooter: true,
+              showColumnFooter: false,
               showGridFooter: true,
               height: 900,
               cellEditableCondition: function ($scope) {
@@ -32,12 +32,13 @@ registrationModule.controller("gridModalController", function ($scope, $http, $i
                },
                {
                    field: 'Pagar', displayName: 'Pagar (total)', width: "100", resizable: true, cellFilter: 'currency', aggregationType: uiGridConstants.aggregationTypes.sum,
-                   treeAggregationType: uiGridGroupingConstants.aggregation.SUM, enableCellEdit: ($rootScope.currentIdOp == 1) ? false : true,
+                   treeAggregationType: uiGridGroupingConstants.aggregation.SUM, enableCellEdit: false,
                    editableCellTemplate: '<div><form name="inputForm"><input type="number" ng-class="\'colt\' + col.uid" ui-grid-editor ng-model="MODEL_COL_FIELD"></form></div>',
                    customTreeAggregationFinalizerFn: function (aggregation) {
                        aggregation.rendered = aggregation.value;
                    }
                },
+               { name: 'documento', displayName: '# Documento', width: '200', enableCellEdit: false, headerTooltip: 'Documento # de factura del provedor', cellClass: 'cellToolTip' },
                {
                    field: 'saldoPorcentaje', displayName: 'Porcentaje %', width: "100", resizable: true, cellFilter: 'number: 6', aggregationType: uiGridConstants.aggregationTypes.sum,
                    treeAggregationType: uiGridGroupingConstants.aggregation.SUM, enableCellEdit: false,
@@ -46,8 +47,8 @@ registrationModule.controller("gridModalController", function ($scope, $http, $i
                    }
                },
                { name: 'fechaPromesaPago', displayName: 'Fecha Promesa de Pago', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: "150", resizable: true },
-               { name: 'ordenBloqueada', displayName: 'Bloqueada', width: "100", resizable: true },
-               { name: 'estGrid', width: "100", resizable: true, displayName: 'Estatus Grid' }
+               { name: 'ordenBloqueada', displayName: 'Bloqueada', width: "100", resizable: true, visible:false },
+               { name: 'estGrid', width: "100", resizable: true, displayName: 'Estatus Grid', visible:false}
                
               ],
               rowTemplate: '<div ng-class="{\'ordenBloqueada\':(row.entity.ordenBloqueada==\'True\' && ((row.entity.idEstatus < 1 || row.entity.idEstatus > 5) && row.entity.idEstatus != 20) && !row.isSelected)' +
@@ -73,7 +74,8 @@ registrationModule.controller("gridModalController", function ($scope, $http, $i
                   gridApi.selection.on.rowSelectionChanged($scope, function (rows) {
                       $scope.mySelections = gridApi.selection.getSelectedRows();
                   });
-                  $scope.gridApi.selection.selectAllRows(true);
+
+                  //$scope.gridApi.selection.selectAllRows(true);
               }
           }
       };//funcion
@@ -82,13 +84,13 @@ registrationModule.controller("gridModalController", function ($scope, $http, $i
     $rootScope.selectAllModal = function() {
 
         //alert('selectAllModal desde gridModalController');
-        $scope.gridOptionsModal.data.forEach(function (grDatosSel, i)
-        {
-           if(grDatosSel.ordenBloqueada == 'False')
-           {
-                  $scope.gridApi.selection.selectRow($scope.gridOptionsModal.data[i]);
-           };
-        });
+        // $scope.gridOptionsModal.data.forEach(function (grDatosSel, i)
+        // {
+        //    if(grDatosSel.ordenBloqueada == 'False')
+        //    {
+        //           $scope.gridApi.selection.selectRow($scope.gridOptionsModal.data[i]);
+        //    };
+        // });
 
         $scope.gridOptionsModal.isRowSelectable = function(row){
             if(row.entity.ordenBloqueada == 'True'){
@@ -99,6 +101,7 @@ registrationModule.controller("gridModalController", function ($scope, $http, $i
           };
         $scope.gridApi.core.notifyDataChange(uiGridConstants.dataChange.OPTIONS);
         $scope.gridApi.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
+          
     };//fin funcion selectAllModal
 
     $rootScope.getDataGridModal = function(){

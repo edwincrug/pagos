@@ -52,7 +52,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
        $.fn.bootstrapSwitch.defaults.offText = 'Global';
        $('.switch-checkbox').bootstrapSwitch();      
        $scope.showSelCartera = true;
-        $scope.llenaEncabezado();
+       $scope.llenaEncabezado();
        /***********************************************************/ 
        //configuragridOptionsModal();
        //*******************************
@@ -308,9 +308,11 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                     { 
                      $rootScope.selectAllModal();
                      //FAL evita que se alteren los datos al seleccionar todos
-                     $scope.grdinicia = true;                     
-                    }, 500);   
-        $rootScope.showGrid = value;                  
+                     $scope.grdinicia = true; 
+                     $rootScope.showGrid = true;                    
+                    }, 5000);
+
+                       
         /************************************************************************************************************************/  
     };
 
@@ -585,10 +587,10 @@ $scope.gridOptions = {
          // { name: 'idProveedor', width: '5%' },
          //{ name: 'annio', width: '5%' },
          // { name: 'proveedorBloqueado', width: '5%' },
-         { name: 'documentoPagable', width: '15%', displayName: 'Estatus del Documento'},
-         { name: 'ordenBloqueada', displayName: 'Bloqueada', width: '20%'},
+         { name: 'documentoPagable', width: '15%', displayName: 'Estatus del Documento',visible:false},
+         { name: 'ordenBloqueada', displayName: 'Bloqueada', width: '20%', visible:false},
          { name: 'cuentaPagadora', width: '15%', displayName: 'Banco'},
-         { name: 'estGrid', width: '15%', displayName: 'Estatus Grid'}
+         { name: 'estGrid', width: '15%', displayName: 'Estatus Grid', visible:false}
          // { name: 'diasCobro', width: '5%' },
          // { name: 'aprobado', width: '5%' },
          // { name: 'contReprog', width: '5%' }
@@ -738,7 +740,7 @@ $scope.gridOptions = {
                  }
               });               
                     
-          $scope.gridApi1.selection.selectAllRows(true);  
+          //$scope.gridApi1.selection.selectAllRows(true);  
         }
     } //grid options        
 };//funcion
@@ -987,6 +989,8 @@ $scope.Guardar = function() {
         //pagoRepository.getPagosPadre($rootScope.currentEmployee)
 
             //alertFactory.error($rootScope.idLotePadre);
+
+          $('#btnguardando').button('loading');  
           pagoRepository.getPagosPadre($scope.idEmpresa,$rootScope.currentEmployee,$rootScope.formData.nombreLoteNuevo,$rootScope.idLotePadre)
             .then(function successCallback(response) 
             {   
@@ -1041,9 +1045,11 @@ $scope.Guardar = function() {
                         }, function errorCallback(response) {                
                             alertFactory.error('Error al guardar Datos');
                         }
-                    );     
+                    );   
+                $('#btnguardando').button('reset');       
             }, function errorCallback(response) {                
                 alertFactory.error('Error al insertar en tabla padre.');
+                $('#btnguardando').button('reset'); 
             });
         }//fin else
     };

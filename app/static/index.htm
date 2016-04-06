@@ -53,16 +53,15 @@
         <ul>
           <li>
             <div class="labely" href="#"></div>
-            <input type="text" class="form-control" ng-model="folioBusca" >
+            <!-- <input type="text" class="form-control" ng-model="folioBusca" > -->
           </li>
-          <button type="button" class="btn btn-default btnSearch" id="closeMenu" ><span class="glyphicon glyphicon-remove " aria-hidden="true"></span> Cancelar</button>
-        </ul>
-
-     <!--    <ul class="cbp-vimenu">
           <li><a class="icon-logo"></a></li>
             <li><a id="btnNuevoLote" tooltip="nuevo lote" ng-click="CrearNuevoLote()"><span id="btnMas" class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></li>
             <li ng-repeat="Lote in noLotes.data"><a ng-click="ConsultaLote(Lote,{{$index + 1}},1)" > Lote {{$index +1}} </a></li>
-          </ul> -->
+          <button type="button" class="btn btn-default btnSearch" id="closeMenu" ><span class="glyphicon glyphicon-remove " aria-hidden="true"></span> Cancelar</button>
+        </ul>
+
+
 
       </nav>
       <div id="st-trigger-effects" class="column">
@@ -104,11 +103,11 @@
         </nav>
 
         <div id="maestroContenedor">
-          <ul class="cbp-vimenu">
+          <!-- <ul class="cbp-vimenu">
           <li><a class="icon-logo"></a></li>
             <li><a id="btnNuevoLote" tooltip="nuevo lote" ng-click="CrearNuevoLote()"><span id="btnMas" class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></li>
             <li ng-repeat="Lote in noLotes.data"><a ng-click="ConsultaLote(Lote,{{$index + 1}},1)" > Lote {{$index +1}} </a></li>
-          </ul>
+          </ul> -->
           <div class="main">
             <div ng-view></div>
           </div>
