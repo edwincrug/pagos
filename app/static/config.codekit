@@ -123,6 +123,17 @@
 		"outputStyle": 1,
 		"syntaxCheckerStyle": 1
 		},
+	"\/AngularJS\/Pago\/gridModalController.js": {
+		"fileType": 64,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"inputAbbreviatedPath": "\/AngularJS\/Pago\/gridModalController.js",
+		"outputAbbreviatedPath": "\/AngularJS\/Pago\/min\/gridModalController-min.js",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"outputStyle": 1,
+		"syntaxCheckerStyle": 1
+		},
 	"\/AngularJS\/Pago\/gridPagos.js": {
 		"fileType": 64,
 		"ignore": 0,
@@ -561,6 +572,17 @@
 		"initialSize": 1907,
 		"inputAbbreviatedPath": "\/image\/chat\/visto.png",
 		"outputAbbreviatedPath": "\/image\/chat\/visto.png",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
+	"\/image\/gifs\/download.jpg": {
+		"fileType": 16384,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 2126,
+		"inputAbbreviatedPath": "\/image\/gifs\/download.jpg",
+		"outputAbbreviatedPath": "\/image\/gifs\/download.jpg",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0,
 		"processed": 0
