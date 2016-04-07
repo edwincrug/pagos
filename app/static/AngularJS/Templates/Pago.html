@@ -279,15 +279,14 @@
 				<!--FAL variables en base al grid-->				
 				<div id="clsComplemento">
 					<div class="clsNoPagable">
-						<span class="clsDetailLabel">Todos</span> <span class="clsDetailText blueInfo">
-						<button type="button" class="btn btn-primary"  ng-click="BorraFiltros()">{{GranTotal | currency}}</button>
-						</span>
+						<span class="clsDetailLabel">Todos</span> <span class="clsDetailText blueInfo">{{grdApagar - grdnoPagable | currency}}</span>
 					</div>
 					<div class="clsNoPagable separadorNoPagable">
 						/
 					</div>
 					<div class="clsNoPagable">
 						<span class="clsDetailLabel">No pagable</span> <span class="clsDetailText blueInfo">
+						
 						<button type="button" class="btn btn-primary"  ng-click="Filtrar('True',23)">{{grdnoPagable | currency}}</button>
 						</span>
 					</div>

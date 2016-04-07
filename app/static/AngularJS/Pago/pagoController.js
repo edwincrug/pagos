@@ -451,7 +451,8 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 if($rootScope.accionPagina)
                         if(!$rootScope.NuevoLote)
                         {
-                            //alert('llenaGridSuccessCallback: ' + data)
+                            if($scope.gridOptions == null)
+                                 ConfiguraGrid();
                             $scope.gridOptions.data = data;
                         }
                         else
