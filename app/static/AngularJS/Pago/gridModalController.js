@@ -46,9 +46,10 @@ registrationModule.controller("gridModalController", function ($scope, $http, $i
                        aggregation.rendered = aggregation.value;
                    }
                },
-               { name: 'fechaPromesaPago', displayName: 'Fecha Promesa de Pago', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: "150", resizable: true },
+               { name: 'fechaPromesaPago', displayName: 'Fecha Promesa de Pago', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: "150", resizable: true, enableCellEdit: false },
                { name: 'ordenBloqueada', displayName: 'Bloqueada', width: "100", resizable: true, visible:false },
-               { name: 'estGrid', width: "100", resizable: true, displayName: 'Estatus Grid', visible:false}
+               { name: 'estGrid', width: "100", resizable: true, displayName: 'Estatus Grid', visible:false},
+               { name: 'fechaPago', displayName: 'fechaPago', width: '20%', visible:false},
                
               ],
               rowTemplate: '<div ng-class="{\'ordenBloqueada\':(row.entity.ordenBloqueada==\'True\' && ((row.entity.idEstatus < 1 || row.entity.idEstatus > 5) && row.entity.idEstatus != 20) && !row.isSelected)' +

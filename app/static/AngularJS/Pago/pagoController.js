@@ -468,8 +468,15 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 for (var i = 0; i < $scope.data.length; i++)
                 {
                      $scope.data[i].Pagar = $scope.data[i].saldo;
+                     $scope.data[i].fechaPago = $scope.data[i].fechaPromesaPago;
                      $scope.data[i].estGrid = 'Inicio';
                      
+                      if ($scope.data[i].fechaPromesaPago=="1900-01-01T00:00:00")
+                    {
+                        $scope.data[i].fechaPromesaPago = "";
+                    }
+
+
                      if ($scope.data[i].ordenBloqueada=='True')
                     {
                         $scope.data[i].Pagar = 0;
@@ -590,7 +597,8 @@ $scope.gridOptions = {
          { name: 'documentoPagable', width: '15%', displayName: 'Estatus del Documento',visible:false},
          { name: 'ordenBloqueada', displayName: 'Bloqueada', width: '20%', visible:false},
          { name: 'cuentaPagadora', width: '15%', displayName: 'Banco'},
-         { name: 'estGrid', width: '15%', displayName: 'Estatus Grid', visible:false}
+         { name: 'fechaPago', displayName: 'fechaPago', width: '20%', visible:false},
+         { name: 'estGrid', width: '15%', displayName: 'Estatus Grid'}
          // { name: 'diasCobro', width: '5%' },
          // { name: 'aprobado', width: '5%' },
          // { name: 'contReprog', width: '5%' }
@@ -677,55 +685,29 @@ $scope.gridOptions = {
             gridApi1.edit.on.afterCellEdit($scope, function (rowEntity, colDef, newValue, oldValue) 
             {
                //FAL trabaja con las variables dependiendo si se edita o cambia la fecha
-                $scope.cantidadUpdate = newValue - oldValue;
-                
+                                
                 if (colDef.name == 'fechaPromesaPago') {
-
-                    if (oldValue == '')
-                        {   
-                           if (newValue == '')
-                            {   
-                                //alertFactory.error('La fecha promesa de pago es invalida !!!');
-                            }  
-                            else
-                            {
-                                old_date = Date.now();
-                                 new_date = new Date(newValue);
-                                if (new_date < old_date)
-                                {
-                                    alertFactory.warning('La fecha promesa de pago no puede ser menor a ' + old_date + ' !!!');
-                                    rowEntity.fechaPromesaPago = old_date;
-                                }
-                            }    
-                        } 
-
-                    else{
-                         dtHoy = Date.now();
-                          new_date = new Date(newValue);
-                          old_date = new Date(oldValue);
-
-                            if (new_date < old_date)
-                            {
-                                alertFactory.warning('La fecha promesa de pago no puede ser menor a ' + old_date + '  !!!');
-                                rowEntity.fechaPromesaPago = old_date;
-                            }
-                            else{
-                                $rootScope.grdReprogramado =  Math.round($rootScope.grdReprogramado * 100) / 100 + Math.round(rowEntity.Pagar * 100) / 100;
-                                $rootScope.grdApagar = Math.round($rootScope.grdApagar * 100) / 100 - Math.round(rowEntity.Pagar* 100) / 100
-                                rowEntity.estGrid = 'Reprogramado'
-                            }
-                    }        
+                    dtHoy = Date.now();
+                    now_date = new Date(dtHoy);
+                    old_date = new Date(rowEntity.fechaPago);
+                    new_date = new Date(newValue);
+                    var today = new Date(); var dd = today.getDate(); var mm = today.getMonth()+1; var yyyy = today.getFullYear();
+                    if (new_date < now_date)
+                    {
+                        alertFactory.warning('La fecha promesa de pago no puede ser menor a ' + dd + '/' + mm + '/' + yyyy +' !!!');
+                        rowEntity.fechaPromesaPago = old_date;
+                    }
+                    if (new_date > now_date)
+                    {
+                        $rootScope.grdReprogramado =  Math.round($rootScope.grdReprogramado * 100) / 100 + Math.round(rowEntity.Pagar * 100) / 100;
+                        $rootScope.grdApagar = Math.round($rootScope.grdApagar * 100) / 100 - Math.round(rowEntity.Pagar* 100) / 100
+                        rowEntity.estGrid = 'Reprogramado'
+                    }
                     
                 } 
                 if (colDef.name == 'Pagar') {
-                        if (oldValue == '')
-                            {   
-                               if (newValue == '')
-                                {   
-                                    //alertFactory.warning('La fecha promesa de pago es invalida !!!');
-                                }  
-                            } 
-                        else{
+                        oldValue = rowEntity.saldo;
+                        
                               if (newValue > oldValue)
                                 {
                                     alertFactory.warning('El pago no puede ser mayor a ' + oldValue + '  !!!');
@@ -736,7 +718,7 @@ $scope.gridOptions = {
                                     $rootScope.grdApagar = Math.round($rootScope.grdApagar * 100) / 100 + Math.round($scope.cantidadUpdate* 100) / 100
                                     rowEntity.estGrid = 'No Incluido'
                                 }
-                            }
+                      
                  }
               });               
                     
