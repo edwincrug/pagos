@@ -526,11 +526,11 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
                      if ($scope.data[i].ordenBloqueada=='True')
                     {
-                        $scope.data[i].Pagar = 0;
+                        $scope.data[i].Pagar = $scope.data[i].saldo;
                     }
                      if ($scope.data[i].documentoPagable=='False')
                     {
-                        $scope.data[i].Pagar = 0;
+                        $scope.data[i].Pagar = $scope.data[i].saldo;
                     }
                 $scope.carteraVencida = $scope.carteraVencida + $scope.data[i].saldo
 
