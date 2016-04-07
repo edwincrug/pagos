@@ -58,9 +58,9 @@
           <li><a class="icon-logo"></a></li>
             <li><a id="btnNuevoLote" tooltip="nuevo lote" ng-click="CrearNuevoLote()"><span id="btnMas" class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></li>
             <li ng-repeat="Lote in noLotes.data"><a ng-click="ConsultaLote(Lote,{{$index + 1}},1)" > Lote {{$index +1}} </a></li>
-          <button type="button" class="btn btn-default btnSearch" id="closeMenu" ><span class="glyphicon glyphicon-remove " aria-hidden="true"></span> Cancelar</button>
         </ul>
-
+        <button type="button" class="btn btn-primary btnSearch" id="closeMenu" ><span class="glyphicon glyphicon-remove " aria-hidden="true"></span> Nuevo Lote</button>
+        <button type="button" class="btn btn-default btnSearch" id="closeMenu" ><span class="glyphicon glyphicon-remove " aria-hidden="true"></span> Cancelar</button>
 
 
       </nav>
@@ -132,7 +132,7 @@
           <div class="input-group">
             <input type="text" class="form-control" ng-model='traeTotalxEmpresa.emp_nombre' aria-label="...">
             <div class="input-group-btn">
-              <button id="btnTotalxEmpresa" type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  data-loading-text="Leyendo..." autocomplete="off">Seleccione <span class="caret"></span></button>
+              <button id="btnTotalxEmpresa" type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  data-loading-text="Obteniendo cartera..." autocomplete="off">Seleccione <span class="caret"></span></button>
               <ul class="dropdown-menu dropdown-menu-right">
                 <li ng-repeat="empresa in empresas">
                   <a href="#" ng-click="traeTotalxEmpresa(empresa.emp_idempresa, empresa.emp_nombre)">{{empresa.emp_nombre}}</a>
@@ -171,9 +171,12 @@
             ¿Que contenido tendrá el nuevo lote?
         </div>
         <div id="mdRadio">
-          <div class="btn-group" role="group" >
-            <button id="btnTodalaCartera" type="button" class="btn btn-primary" ng-model="radioModel"  ng-click="OcultaGridModal(false)" data-loading-text="Leyendo..." autocomplete="off" uncheckable>Con toda la cartera</button>
-            <button type="button" class="btn btn-primary" ng-model="radioModel" ng-click="MuestraGridModal(true)" id="btnSeleccionarCartera" data-loading-text="Leyendo..." autocomplete="off" uncheckable>Seleccionar cartera</button>
+          <div class="btn-group" role="group" >            
+            <!--input id="switch-onText" type="checkbox" checked data-on-text="Con toda la cartera" data-off-text="Seleccionar" ng-controller="pagoController" ng-init="iniciaCheck()" switchChange="selDatos()" ng-change="selDatos()" ng-model="confirmed"-->
+
+
+            <button id="btnTodalaCartera" type="button" class="btn btn-primary" ng-model="radioModel"  ng-click="OcultaGridModal(false)" data-loading-text="Leyendo..." autocomplete="off" uncheckable>Con</button>
+            <button type="button" class="btn btn-primary" ng-model="radioModel" ng-click="MuestraGridModal(true)" id="btnSeleccionarCartera" data-loading-text="Leyendo..." autocomplete="off" uncheckable>Sel</button>
           </div>
         </div>
       </div>
@@ -187,10 +190,13 @@
      </div>
      <div>
       <div class="rows" ng-show="NuevoLote">
-        <div class="sumTexto">
-          Nombre Lote:          
-          <input type="text" ng-model="formData.nombreLoteNuevo">          
+        <div class="mdPagarLabel">
+          Nombre del Lote
+
         </div>
+        <div id="mdContentSuma">        
+          <input class="form-control" type="text" ng-model="formData.nombreLoteNuevo">
+          </div>
       </div>
       <!-- Totales a pagar por bancos -->
     </div>
