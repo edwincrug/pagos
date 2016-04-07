@@ -68,9 +68,10 @@
   font-weight: 300;
 }
 
-.clsDetailMano:hover {
-  fcursor: pointer;
-  font-size: 12px;
+.clsDetailTextOver {
+  font-size: 22px;
+  display: block;
+  font-weight: 300;
 }
 
 .clsDetailLabel {

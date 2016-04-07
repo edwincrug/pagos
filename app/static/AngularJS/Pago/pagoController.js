@@ -1,5 +1,5 @@
 registrationModule.controller("pagoController", function ($scope, $http, $interval, uiGridGroupingConstants, uiGridConstants,$filter, $rootScope, localStorageService, alertFactory, pagoRepository, stats) {
-//FAL carga 07042016
+
    $scope.idEmpresa = 4;             
    $scope.idCuenta = 4;
    $scope.idUsuario = 4;
@@ -20,26 +20,6 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
     BEGIN
     ****************************************************************************************************************/
     
-    $scope.iniciaCheck = function()
-    {
-      $('#switch-onText').bootstrapSwitch();
-
-      $('#switch-onText').on('switchChange.bootstrapSwitch', function () {
-           var chkSeleccionado = $('#switch-onText').bootstrapSwitch('state');
-           if(chkSeleccionado)
-              $scope.OcultaGridModal(false);
-           else
-              $scope.MuestraGridModal(true);
-      });
-    }
-
-    $scope.selDatos = function()
-    {
-      alert('ssss');
-      var check = $('#switch-onText').prop("checked");
-      alert(check);
-    }
-
     $scope.init = function () {
        //LQMA   leer parametros : id , idemployee
        
@@ -473,7 +453,6 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                         {
                             if($scope.gridOptions == null)
                                  ConfiguraGrid();
-                               
                             $scope.gridOptions.data = data;
                         }
                         else
