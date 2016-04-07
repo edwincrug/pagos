@@ -1,5 +1,5 @@
 registrationModule.controller("pagoController", function ($scope, $http, $interval, uiGridGroupingConstants, uiGridConstants,$filter, $rootScope, localStorageService, alertFactory, pagoRepository, stats) {
-
+//FAL carga 07042016
    $scope.idEmpresa = 4;             
    $scope.idCuenta = 4;
    $scope.idUsuario = 4;
@@ -806,7 +806,7 @@ $scope.selectAll = function(opcion) {
 
 //FAL filtros en base a variables
 $scope.Filtrar = function (value,campo) {
-    console.log(value);
+    //console.log(value);
     $scope.gridApi1.grid.columns[campo].filters[0].term=value;
     $scope.gridApi1.core.notifyDataChange(uiGridConstants.dataChange.COLUMN);
     $scope.gridApi1.grid.refresh();
