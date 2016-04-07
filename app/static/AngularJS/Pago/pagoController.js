@@ -633,7 +633,7 @@ $scope.gridOptions = {
                            $rootScope.grdNoIncluido =  Math.round($rootScope.grdNoIncluido * 100) / 100 - Math.round(rowChanged.entity.Pagar * 100) / 100;
                           
                           //FAL actualizar cuenta pagadoras
-                            if ($scope.grdinicia){
+                            //if ($scope.grdinicia){
                             i=0;
                             $rootScope.grdBancos.forEach(function (banco, subtotal)
                             {
@@ -646,14 +646,14 @@ $scope.gridOptions = {
                                    
                                    i++;                           
                                 });
-                            }
+                           // }
                         }
                         else{
                             $rootScope.grdNoIncluido = Math.round($rootScope.grdNoIncluido * 100) / 100 + Math.round(rowChanged.entity.Pagar * 100) / 100;
                             
                             //FAL actualizar cuenta pagadoras
                             i=0;
-                            if ($scope.grdinicia) {
+                           // if ($scope.grdinicia) {
                                 $rootScope.grdBancos.forEach(function (banco, subtotal)
                                 {
                                    if(rowChanged.entity.cuentaPagadora == $rootScope.grdBancos[i].banco)
@@ -664,7 +664,7 @@ $scope.gridOptions = {
                                    }
                                    i++;                           
                                 });
-                            }
+                          //  }
                         }
             });
 
@@ -686,11 +686,11 @@ $scope.gridOptions = {
             gridApi1.edit.on.afterCellEdit($scope, function (rowEntity, colDef, newValue, oldValue) 
             {
                //FAL trabaja con las variables dependiendo si se edita o cambia la fecha
-                                
+                old_date = new Date(rowEntity.fechaPago); 
+                oldValue = rowEntity.saldo;               
                 if (colDef.name == 'fechaPromesaPago') {
                     dtHoy = Date.now();
                     now_date = new Date(dtHoy);
-                    old_date = new Date(rowEntity.fechaPago);
                     new_date = new Date(newValue);
                     var today = new Date(); var dd = today.getDate(); var mm = today.getMonth()+1; var yyyy = today.getFullYear();
                     if (new_date < now_date)
@@ -700,27 +700,33 @@ $scope.gridOptions = {
                     }
                     if (new_date > now_date)
                     {
-                        $rootScope.grdReprogramado =  Math.round($rootScope.grdReprogramado * 100) / 100 + Math.round(rowEntity.Pagar * 100) / 100;
+                      if(rowEntity.estGrid ='No Incluido'){
+                        $rootScope.grdNoIncluido =  Math.round($rootScope.grdNoIncluido * 100) / 100 - Math.round(rowEntity.saldo * 100) / 100;
+                        }
+                        $rootScope.grdReprogramado =  Math.round($rootScope.grdReprogramado * 100) / 100 - Math.round(rowEntity.saldo * 100) / 100;
                         $rootScope.grdApagar = Math.round($rootScope.grdApagar * 100) / 100 - Math.round(rowEntity.Pagar* 100) / 100
+                        rowEntity.Pagar = oldValue;
                         rowEntity.estGrid = 'Reprogramado'
                     }
                     
                 } 
                 if (colDef.name == 'Pagar') {
-                        oldValue = rowEntity.saldo;
-                        
-                              if (newValue > oldValue)
-                                {
-                                    alertFactory.warning('El pago no puede ser mayor a ' + oldValue + '  !!!');
-                                    rowEntity.Pagar = oldValue;
-                                }
-                                else{
-                                    $rootScope.grdNoIncluido =  Math.round($rootScope.grdNoIncluido * 100) / 100 - Math.round($scope.cantidadUpdate * 100) / 100;
-                                    $rootScope.grdApagar = Math.round($rootScope.grdApagar * 100) / 100 + Math.round($scope.cantidadUpdate* 100) / 100
-                                    rowEntity.estGrid = 'No Incluido'
-                                }
-                      
-                 }
+                    $scope.cantidadUpdate = newValue - oldValue;
+                    if (newValue > oldValue)
+                      {
+                          alertFactory.warning('El pago no puede ser mayor a ' + oldValue + '  !!!');
+                          rowEntity.Pagar = oldValue;
+                      }
+                      else{
+                          if(rowEntity.estGrid ='Reprogramado'){
+                            $rootScope.grdReprogramado =  Math.round($rootScope.grdReprogramado * 100) / 100 - Math.round(rowEntity.saldo * 100) / 100;
+                          }
+                          $rootScope.grdNoIncluido =  Math.round($rootScope.grdNoIncluido * 100) / 100 - Math.round($scope.cantidadUpdate * 100) / 100;
+                          $rootScope.grdApagar = Math.round($rootScope.grdApagar * 100) / 100 + Math.round($scope.cantidadUpdate* 100) / 100
+                          rowEntity.estGrid = 'No Incluido'
+                          rowEntity.fechaPromesaPago = old_date;
+                      }
+                }
               });               
                     
           //$scope.gridApi1.selection.selectAllRows(true);  

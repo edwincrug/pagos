@@ -522,3 +522,7 @@
   width: 50%;
   margin-bottom: 10px;
 }
+
+#mano:hover {
+  cursor: pointer;
+}
