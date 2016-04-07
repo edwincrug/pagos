@@ -19,6 +19,19 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
     Funciones de incio  
     BEGIN
     ****************************************************************************************************************/
+
+    $scope.iniciaCheck = function()
+    {
+      $('#switch-onText').bootstrapSwitch();
+
+      $('#switch-onText').on('switchChange.bootstrapSwitch', function () {
+           var chkSeleccionado = $('#switch-onText').bootstrapSwitch('state');
+           if(chkSeleccionado)
+              $scope.OcultaGridModal(false);
+           else
+              $scope.MuestraGridModal(true);
+      });
+    }
     
     $scope.init = function () {
        //LQMA   leer parametros : id , idemployee
@@ -933,12 +946,16 @@ $rootScope.ConsultaLoteObtiene = function(Lote,index){
 $scope.Guardar = function() {
 
     var negativos = 0;
+    var saldo = 0;
+
     angular.forEach($rootScope.ingresos, function(ingreso, key){
             if(parseInt(ingreso.disponible) < 0)
                 negativos += 1;
+
+            saldo =parseInt(saldo) + parseInt(ingreso.saldo);  
         });
 
-    setTimeout(function(){guardaValida(negativos);},500);
+    setTimeout(function(){guardaValida(negativos,saldo);},500);
     
   };//fin de funcion guardar
 
@@ -964,10 +981,13 @@ $scope.Guardar = function() {
                          },500);
   };//fin de funcion cancelar  
 
-  var guardaValida=function(negativos){
+  var guardaValida=function(negativos,saldo){
     if(negativos > 0)
         alertFactory.warning('Existen disponibles en valores negativos. Verifique las transferencias.');
-    else{
+    else
+      if(saldo <= 0)  
+            alertFactory.warning('La sumatoria del saldo de cuentas de Ingreso no puede ser cero.');    
+        else{
         //alertFactory.success('Se guardaron los datos.');
         //pagoRepository.getPagosPadre($rootScope.currentEmployee)
 

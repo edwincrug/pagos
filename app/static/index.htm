@@ -171,9 +171,12 @@
             ¿Que contenido tendrá el nuevo lote?
         </div>
         <div id="mdRadio">
-          <div class="btn-group" role="group" >
-            <button id="btnTodalaCartera" type="button" class="btn btn-primary" ng-model="radioModel"  ng-click="OcultaGridModal(false)" data-loading-text="Leyendo..." autocomplete="off" uncheckable>Con toda la cartera</button>
-            <button type="button" class="btn btn-primary" ng-model="radioModel" ng-click="MuestraGridModal(true)" id="btnSeleccionarCartera" data-loading-text="Leyendo..." autocomplete="off" uncheckable>Seleccionar cartera</button>
+          <div class="btn-group" role="group" >            
+            <!--input id="switch-onText" type="checkbox" checked data-on-text="Con toda la cartera" data-off-text="Seleccionar" ng-controller="pagoController" ng-init="iniciaCheck()" switchChange="selDatos()" ng-change="selDatos()" ng-model="confirmed"-->
+
+
+            <button id="btnTodalaCartera" type="button" class="btn btn-primary" ng-model="radioModel"  ng-click="OcultaGridModal(false)" data-loading-text="Leyendo..." autocomplete="off" uncheckable>Con</button>
+            <button type="button" class="btn btn-primary" ng-model="radioModel" ng-click="MuestraGridModal(true)" id="btnSeleccionarCartera" data-loading-text="Leyendo..." autocomplete="off" uncheckable>Sel</button>
           </div>
         </div>
       </div>
