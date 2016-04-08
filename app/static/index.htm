@@ -166,7 +166,7 @@
           </div>
         </div>
       </div>              
-      <div ng-if="showSelCartera" ng-show="NuevoLote">
+      <div ng-if="showSelCartera" ng-show="0==1">
         <div class="mdPagarLabel">
             ¿Que contenido tendrá el nuevo lote?
         </div>
@@ -177,6 +177,10 @@
 
             <button id="btnTodalaCartera" type="button" class="btn btn-primary" ng-model="radioModel"  ng-click="OcultaGridModal(false)" data-loading-text="Leyendo..." autocomplete="off" uncheckable>Con</button>
             <button type="button" class="btn btn-primary" ng-model="radioModel" ng-click="MuestraGridModal(true)" id="btnSeleccionarCartera" data-loading-text="Leyendo..." autocomplete="off" uncheckable>Sel</button>
+
+            <button id="btnTodalaCartera" type="button" class="btn btn-primary" data-loading-text="Cargando..." ng-model="radioModel" uib-btn-radio="'cartera'" ng-click="OcultaGridModal(false)" autocomplete="off">Con toda la cartera</button>            
+            <button id="btnSeleccionarCartera" type="button" class="btn btn-primary" data-loading-text="Cargando..." ng-model="radioModel" ng-click="MuestraGridModal(true)" autocomplete="off">Seleccionar cartera</button>
+
           </div>
         </div>
       </div>
@@ -191,17 +195,15 @@
      <div>
       <div class="rows" ng-show="NuevoLote">
         <div class="mdPagarLabel">
-          Nombre del Lote
-
+          <span>Nombre Lote:</span>
+        
+          <input type="text" class="form-control" ng-model="formData.nombreLoteNuevo"> 
         </div>
-        <div id="mdContentSuma">        
-          <input class="form-control" type="text" ng-model="formData.nombreLoteNuevo">
-          </div>
       </div>
       <!-- Totales a pagar por bancos -->
     </div>
     <div class="modal-footer">
-     <button class="btn btn-info" data-toggle="modal" href="#stack2" ng-click="IniciaLote()" ng-show="NuevoLote">Crear Lote</button>
+     <button class="btn btn-info" data-toggle="modal" id="btnCrealote" href="#stack2" ng-click="IniciaLote()" ng-show="NuevoLote" data-loading-text="Creando lote..." autocomplete="off">Crear Lote</button>
      <button type="button" class="btn btn-primary" data-dismiss="modal" ng-show="ProgPago" ng-click="ProgramacionPagos()">Ir a Programación Pago</button>
      <!-- <button type="button" class="btn btn-primary" data-dismiss="modal" ng-show="NuevoLote">Cancelar</button> -->
    </div>
@@ -232,7 +234,7 @@
 <script src="js/angular.min.js"></script>
 <script src="js/angular-animate.min.js"></script>
 <script src="js/angular-route.min.js"></script>
-<script src="js/angular-ui/ui-bootstrap-tpls.min.js"></script>
+<script src="js/ui-bootstrap-tpls-1.3.1.js"></script>
 <script src="js/angular-local-storage.min.js"></script>
 <script src="js/angular-touch.js"></script>
 <script src="js/ui-grid.js"></script>
