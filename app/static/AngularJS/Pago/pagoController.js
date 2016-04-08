@@ -717,58 +717,23 @@ $scope.gridOptions = {
             $scope.cantidadTotal = $scope.cantidadTotal;
             // marcando los padres.
 
-            $scope.gridApi1.selection.on.rowSelectionChanged($scope, function (rowChanged) {
-                if (typeof (rowChanged.treeLevel) !== 'undefined' && rowChanged.treeLevel > -1) 
-                {
-                    // this is a group header
-                    children = $scope.gridApi1.treeBase.getRowChildren(rowChanged);
-                    children.forEach(function (child) {
-                        if (rowChanged.isSelected) {
-                            $scope.gridApi1.selection.selectRow(child.entity);
-                        } else {
-                            $scope.gridApi1.selection.unSelectRow(child.entity);
-                        }
-                    });
+//FAL evento de selección de padres
+        gridApi1.selection.on.rowSelectionChanged($scope, function (row) {
+                
+           if(row.internalRow==true && row.isSelected==true){
+                var childRows = row.treeNode.children;
+                for (var j = 0, length = childRows.length; j < length; j++) {
+                  $scope.selectAllChildren(gridApi1,childRows[j]);
                 }
-                 else
-                        if (rowChanged.isSelected) {
-                           $rootScope.grdNoIncluido =  Math.round($rootScope.grdNoIncluido * 100) / 100 - Math.round(rowChanged.entity.Pagar * 100) / 100;
-                          
-                          //FAL actualizar cuenta pagadoras
-                            //if ($scope.grdinicia){
-                            i=0;
-                            $rootScope.grdBancos.forEach(function (banco, subtotal)
-                            {
-                               if(rowChanged.entity.cuentaPagadora == $rootScope.grdBancos[i].banco)
-                                {
-                                        $rootScope.grdBancos[i].subtotal = Math.round($rootScope.grdBancos[i].subtotal * 100) / 100 + Math.round(rowChanged.entity.Pagar * 100) / 100;
-                                        $rootScope.grdApagar = $rootScope.grdApagar + rowChanged.entity.Pagar;
-                                        rowChanged.entity.estGrid = 'Inicio'
-                                   }
-                                   
-                                   i++;                           
-                                });
-                           // }
-                        }
-                        else{
-                            $rootScope.grdNoIncluido = Math.round($rootScope.grdNoIncluido * 100) / 100 + Math.round(rowChanged.entity.Pagar * 100) / 100;
-                            
-                            //FAL actualizar cuenta pagadoras
-                            i=0;
-                           // if ($scope.grdinicia) {
-                                $rootScope.grdBancos.forEach(function (banco, subtotal)
-                                {
-                                   if(rowChanged.entity.cuentaPagadora == $rootScope.grdBancos[i].banco)
-                                   {
-                                        $rootScope.grdBancos[i].subtotal = Math.round($rootScope.grdBancos[i].subtotal * 100) / 100 - Math.round(rowChanged.entity.Pagar * 100) / 100;
-                                        $rootScope.grdApagar = $rootScope.grdApagar - rowChanged.entity.Pagar;
-                                        rowChanged.entity.estGrid = 'No Incluido'
-                                   }
-                                   i++;                           
-                                });
-                          //  }
-                        }
-            });
+                }
+
+          if(row.internalRow==true && row.isSelected==false){
+              var childRows   = row.treeNode.children;
+              for (var j = 0, length = childRows.length; j < length; j++) {
+                $scope.unSelectAllChildren(gridApi1,childRows[j]);
+              }
+          }
+          });
 
             gridApi1.selection.on.rowSelectionChangedBatch($scope, function (rows) {
 
@@ -835,6 +800,32 @@ $scope.gridOptions = {
         }
     } //grid options        
 };//funcion
+
+//08042016FAL recorre cada nivel y selecciona los hijos
+$scope.selectAllChildren = function(gridApi,rowEntity){
+    if(rowEntity.children.length==0){
+        gridApi.selection.selectRow(rowEntity.row.entity);
+    }else{
+        gridApi.selection.selectRow(rowEntity.row.entity);
+        var childrens = rowEntity.children;
+        for (var j = 0, length = childrens.length; j < length; j++) {
+            $scope.selectAllChildren(gridApi,childrens[j]);
+        }
+    }
+}
+
+//FAL recorre cada nivel y deselecciona los hijos
+$scope.unSelectAllChildren = function(gridApi,rowEntity){
+    if(rowEntity.children.length==0){
+        gridApi.selection.unSelectRow(rowEntity.row.entity);
+    }else{
+        gridApi.selection.unSelectRow(rowEntity.row.entity);
+        var childrens = rowEntity.children;
+        for (var j = 0, length = childrens.length; j < length; j++) {
+            $scope.unSelectAllChildren(gridApi,childrens[j]);
+        }
+    }
+}
 
 
 $scope.seleccionaTodo = function() {
