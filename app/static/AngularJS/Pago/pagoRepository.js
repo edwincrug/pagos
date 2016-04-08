@@ -119,6 +119,18 @@ registrationModule.factory('pagoRepository', function ($http) {
                 data:JSON.stringify(dataArchivo)
                
             });            
+        },//FAL
+        //LQMA
+        setSolAprobacion: function(idProc,nodo,idEmpresa,idLote)
+        {            
+            return $http({
+                url: pagoUrl,
+                method: "POST",
+                params: { id: '5|' + idProc + '|' + nodo  + '|' + idEmpresa + '|' + idLote}
+                //dataType: "json",
+                //data:JSON.stringify(dataArchivo)
+               
+            });            
         }//FAL
 
     };
