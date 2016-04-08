@@ -641,6 +641,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 //LQMA congifura e inicializa el grid
 var ConfiguraGrid = function(){
 $scope.gridOptions = {
+        enableColumnResize: true,
         enableRowSelection: true,
         enableGridMenu: true,
         enableFiltering: true,
@@ -679,9 +680,10 @@ $scope.gridOptions = {
              }
          },
          { name: 'fechaPromesaPago', displayName: 'Fecha Promesa de Pago', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '17%'},
+         { name: 'documento', displayName: '# Documento', width: '15%', enableCellEdit: false, headerTooltip: 'Documento # de factura del provedor', cellClass: 'cellToolTip' },
+         { name: 'ordenCompra', displayName: 'Orden de compra',width: '13%', enableCellEdit: false },
          { name: 'monto', displayName: 'Monto', width: '15%', cellFilter: 'currency' , enableCellEdit: false},
          { name: 'saldo', displayName: 'Saldo', width: '15%', cellFilter: 'currency' , enableCellEdit: false},
-         { name: 'documento', displayName: '# Documento', width: '15%', enableCellEdit: false, headerTooltip: 'Documento # de factura del provedor', cellClass: 'cellToolTip' },
          { name: 'tipo', width: '15%', displayName: 'Tipo', enableCellEdit: false },
          { name: 'tipodocto', width: '15%', displayName: 'Tipo Documento', enableCellEdit: false },
          { name: 'cartera', width: '15%', displayName: 'Cartera', enableCellEdit: false },
@@ -689,7 +691,6 @@ $scope.gridOptions = {
          { name: 'fechaVencimiento', displayName: 'Fecha de Vencimiento', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '17%', enableCellEdit: false},
          { name: 'fechaRecepcion', displayName: 'Fecha Recepción', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '17%', enableCellEdit: false },
          { name: 'fechaFactura', displayName: 'Fecha Factura', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '17%', enableCellEdit: false },
-         { name: 'ordenCompra', displayName: 'Orden de compra',width: '13%', enableCellEdit: false },
          { name: 'estatus', displayName: 'Estatus', width: '10%', enableCellEdit: false },
          { name: 'anticipo', displayName: 'Anticipo', width: '10%', enableCellEdit: false },
          { name: 'anticipoAplicado',displayName: 'Anticipo Aplicado', width: '15%' , enableCellEdit: false},
