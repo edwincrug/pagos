@@ -5,7 +5,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
    $scope.idUsuario = 4;
 
    //LQMA 04032016
-   $rootScope.currentEmployee = 90;//25:1;
+   $rootScope.currentEmployee = 2;//25:1;
    $rootScope.currentId = null;
    $rootScope.currentIdOp = null;
    $scope.idLote = 0;   
@@ -34,8 +34,6 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
               $scope.MuestraGridModal(true);
       });
     }
-
-
     
     $scope.init = function () {
        //LQMA   leer parametros : id , idemployee
@@ -51,6 +49,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
              $scope.traeEmpresas();
        }*/
        //LQMA 11032016       
+
        $scope.caja = 0;       
        $scope.cobrar = 0;
 
@@ -93,7 +92,39 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                          {id: 2,nombre:'Bancomer', cuenta: 594833,saldo: 120000, aTransferir: 0,total:120000,excedente:0, ingreso:1, egreso:1,totalPagar:450000,saldoIngreso:0}]; */
 
        // nombre y cuenta = cuenta, saldo = saldo (siempre vendra en 0), aTransferir = aTransferir (viene en 0), total = total (viene en 0, se calcula),   excedente = viene en 0, se calcula, totalPagar = recuperar del $scope.TotalxEmpresa.sumaSaldo,saldoIngreso = 0   
-       $scope.transferencias = [{bancoOrigen:'', bancoDestino: '', importe:0, disponibleOrigen:0,index:0}];       
+       $scope.transferencias = [{bancoOrigen:'', bancoDestino: '', importe:0, disponibleOrigen:0,index:0}];
+
+       if(getParameterByName('idOperacion') != ''){
+            $rootScope.currentIdOp = getParameterByName('idOperacion');
+
+            var idLote = getParameterByName('idLote');
+            //ConsultaLote(Lote,{{$index + 1}},1)
+            pagoRepository.getLotes($scope.idEmpresa,$rootScope.currentEmployee,0,idLote)
+            .then(function successCallback(data){
+                    //$rootScope.NuevoLote = false;
+                    $rootScope.noLotes = data;
+                    
+                    if($rootScope.noLotes.data.length > 0) //mostrar boton crear lote
+                    {   
+                        alertFactory.success('Total de lotes: ' +  $rootScope.noLotes.data.length);
+                        $rootScope.idLotePadre = $rootScope.noLotes.data[$rootScope.noLotes.data.length - 1].idLotePago;
+                        $rootScope.estatusLote = $rootScope.noLotes.data[$rootScope.noLotes.data.length - 1].estatus;
+
+                        $rootScope.ConsultaLote($rootScope.noLotes.data[$rootScope.noLotes.data.length - 1],$rootScope.noLotes.data.length,0);
+                        $rootScope.ProgPago = true;
+
+                        $('#inicioModal').modal('hide');
+                    }
+                    /*else
+                    {
+                        alertFactory.info('No existen Lotes');
+                        $rootScope.NuevoLote = true;                        
+                    } */                   
+                }, 
+                function errorCallback(response) {
+                    alertFactory.error('Error al obtener el Lote');
+                });   
+        }    
 
     };//Fin funcion Init
     
@@ -232,7 +263,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
     $scope.ObtieneLotes = function(newLote) //borraLote, 0 para borrar lotes sin relacion, 1 para conservarlos
     {        
-        pagoRepository.getLotes($scope.idEmpresa,$rootScope.currentEmployee,0)
+        pagoRepository.getLotes($scope.idEmpresa,$rootScope.currentEmployee,0,0)
                 .then(function successCallback(data) {
 
                     //$rootScope.NuevoLote = false;
@@ -1536,10 +1567,28 @@ pagoRepository.setArchivo($scope.idEmpresa,$scope.gridOptions.data,$rootScope.id
                         $('#processing-modal').modal('hide');
                       },1000);
                 });
-
   };
 
-})
+//LQMA 08042016
+  $rootScope.EnviaAprobacion = function(){
+      
+      $('#btnEnviaApro').button('loading');
+
+      pagoRepository.setSolAprobacion(1,8,$scope.idEmpresa,$rootScope.idLotePadre)
+                    .then(function successCallback(response) 
+                { 
+                    alertFactory.success('Se envio la solicitud con exito');
+                    $('#btnEnviaApro').button('reset');
+
+                }, function errorCallback(response) 
+                {                
+                    alertFactory.error('Error al enviar solicitud de aprobación');
+                    $('#btnEnviaApro').button('reset');
+                });
+
+    };//LQMA End EnviaAprobacion
+
+})//LQMA fin bloque controller
  
 registrationModule.service('stats', function () {
 

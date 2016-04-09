@@ -85,11 +85,11 @@ registrationModule.factory('pagoRepository', function ($http) {
               params: { id: '12|' + idEmpresa + '|' + idLote }
             });
         },
-        getLotes: function (idEmpresa,idEmpleado, borraLote) {
+        getLotes: function (idEmpresa,idEmpleado, borraLote, idLote) {
             return $http({
               method: 'GET',
               url: pagoUrl,
-              params: { id: '13|' + idEmpresa + '|' + idEmpleado + '|' + borraLote}
+              params: { id: '13|' + idEmpresa + '|' + idEmpleado + '|' + borraLote + '|' + idLote}
             });            
         },
         getTransferencias: function (idLote) {
