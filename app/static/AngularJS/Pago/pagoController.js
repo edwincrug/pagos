@@ -368,7 +368,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                     { 
                      $rootScope.selectAllModal();
                      //FAL evita que se alteren los datos al seleccionar todos
-                     $scope.grdinicia = true; 
+                     
                      $rootScope.showGrid = true;                    
                     }, 5000);
 
@@ -457,7 +457,8 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
         setTimeout(function(){ 
                                 $( "#btnSelectAll" ).click();//$scope.selectAll();
-                                }, 500);        
+                                }, 500);    
+        $scope.grdinicia = $scope.grdinicia + 1;    
     }
 
     $scope.llenaGrid = function () {
@@ -491,7 +492,41 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
     //LQMA 08042016
     var getCarteraCallback = function (data, status, headers, config) {
 
-            $rootScope.datosModal = data;
+            //FAL fecha no presentada y contadores
+
+            $scope.data = data;
+                $scope.carteraVencida = 0;
+                $scope.cantidadTotal = 0;
+                $scope.cantidadUpdate = 0;
+                $scope.noPagable = 0;
+                $scope.Reprogramable = 0;
+                for (var i = 0; i < $scope.data.length; i++)
+                {
+                     $scope.data[i].Pagar = $scope.data[i].saldo;
+                     $scope.data[i].fechaPago = $scope.data[i].fechaPromesaPago;
+                     $scope.data[i].estGrid = 'Inicio';
+                     
+                      if ($scope.data[i].fechaPromesaPago=="1900-01-01T00:00:00")
+                    {
+                        $scope.data[i].fechaPromesaPago = "";
+                    }
+
+
+                     if ($scope.data[i].ordenBloqueada=='True')
+                    {
+                        $scope.data[i].Pagar = $scope.data[i].saldo;
+                    }
+                     if ($scope.data[i].documentoPagable=='False')
+                    {
+                        $scope.data[i].Pagar = $scope.data[i].saldo;
+                    }
+                $scope.carteraVencida = $scope.carteraVencida + $scope.data[i].saldo
+
+                }
+                $scope.noPagable = $scope.carteraVencida -$scope.cantidadTotal;
+             //FAL inicio contadores   
+
+            $rootScope.datosModal = $scope.data;
 
             var newLote = {idLotePago:'0',idEmpresa:$scope.idEmpresa,idUsuario:$rootScope.currentEmployee,fecha:'',nombre:$rootScope.formData.nombreLoteNuevo,estatus:0};
 
@@ -597,8 +632,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                  /*if($rootScope.showGrid)
                       $rootScope.selectAllModal();*/
                     //$scope.selectAllModal();
-                 //FAL evita que se alteren los datos al seleccionar todos
-                 $scope.grdinicia = true;
+
                 }, 500);
     };     
 
@@ -613,7 +647,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
                 $scope.gridOptions.data = data;
               
-                $scope.data = data;
+                 $scope.data = data;
                 $scope.carteraVencida = 0;
                 $scope.cantidadTotal = 0;
                 $scope.cantidadUpdate = 0;
@@ -633,11 +667,11 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
                      if ($scope.data[i].ordenBloqueada=='True')
                     {
-                        $scope.data[i].Pagar = 0;
+                        $scope.data[i].Pagar = $scope.data[i].saldo;
                     }
                      if ($scope.data[i].documentoPagable=='False')
                     {
-                        $scope.data[i].Pagar = 0;
+                        $scope.data[i].Pagar = $scope.data[i].saldo;
                     }
                 $scope.carteraVencida = $scope.carteraVencida + $scope.data[i].saldo
 
@@ -654,8 +688,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                       $rootScope.selectAllModal();*/
                     //$scope.selectAllModal();
                  //FAL evita que se alteren los datos al seleccionar todos
-                 $scope.grdinicia = true;
-
+                
                  $('#inicioModal').modal('hide');
                 }, 500);
     };        
@@ -726,7 +759,7 @@ $scope.gridOptions = {
          },
          { name: 'fechaPromesaPago', displayName: 'Fecha Promesa de Pago', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '17%'},
          { name: 'documento', displayName: '# Documento', width: '15%', enableCellEdit: false, headerTooltip: 'Documento # de factura del provedor', cellClass: 'cellToolTip' },
-         { name: 'ordenCompra', displayName: 'Orden de compra',width: '13%', enableCellEdit: false },
+         { name: 'ordenCompra', displayName: 'Orden de compra',width: '13%', enableCellEdit: false, cellTemplate:'<div class="ngCellText" ng-class="col.colIndex()" ><A HREF="http://192.168.20.9:3200/?id={{row.entity.ordenCompra}}&employee={{currentEmployee}}" TARGET="_new">{{row.entity.ordenCompra}}</A></div>'},          
          { name: 'monto', displayName: 'Monto', width: '15%', cellFilter: 'currency' , enableCellEdit: false},
          { name: 'saldo', displayName: 'Saldo', width: '15%', cellFilter: 'currency' , enableCellEdit: false},
          { name: 'tipo', width: '15%', displayName: 'Tipo', enableCellEdit: false },
@@ -778,20 +811,93 @@ $scope.gridOptions = {
               for (var j = 0, length = childRows.length; j < length; j++) {
                 $scope.unSelectAllChildren(gridApi1,childRows[j]);
               }
-          }
+              }
+
+              if (row.isSelected) {
+                           $rootScope.grdNoIncluido =  Math.round($rootScope.grdNoIncluido * 100) / 100 - Math.round(row.entity.Pagar * 100) / 100;
+                          
+                          //FAL actualizar cuenta pagadoras
+                            if ($scope.grdinicia > 0){
+                            i=0;
+                            $rootScope.grdBancos.forEach(function (banco, subtotal)
+                            {
+                               if(row.entity.cuentaPagadora == $rootScope.grdBancos[i].banco)
+                                {
+                                        $rootScope.grdBancos[i].subtotal = Math.round($rootScope.grdBancos[i].subtotal * 100) / 100 + Math.round(row.entity.Pagar * 100) / 100;
+                                        $rootScope.grdApagar = $rootScope.grdApagar + row.entity.Pagar;
+                                        row.entity.estGrid = 'Inicio'
+                                   }
+                                   
+                                   i++;                           
+                                });
+                            }
+                        }
+                        else{
+                            $rootScope.grdNoIncluido = Math.round($rootScope.grdNoIncluido * 100) / 100 + Math.round(row.entity.Pagar * 100) / 100;
+                            
+                            //FAL actualizar cuenta pagadoras
+                            i=0;
+                            if ($scope.grdinicia > 0) {
+                                $rootScope.grdBancos.forEach(function (banco, subtotal)
+                                {
+                                   if(row.entity.cuentaPagadora == $rootScope.grdBancos[i].banco)
+                                   {
+                                        $rootScope.grdBancos[i].subtotal = Math.round($rootScope.grdBancos[i].subtotal * 100) / 100 - Math.round(row.entity.Pagar * 100) / 100;
+                                        $rootScope.grdApagar = $rootScope.grdApagar - row.entity.Pagar;
+                                        row.entity.estGrid = 'No Incluido'
+                                   }
+                                   i++;                           
+                                });
+                            }
+                        }
+
           });
 
-            gridApi1.selection.on.rowSelectionChangedBatch($scope, function (rows) {
+        gridApi1.selection.on.rowSelectionChangedBatch($scope, function (rows) {
 
 
                 rows.forEach(function (row,i) {
                 
                     if (row.isSelected) {
-                        $scope.cantidadTotal = Math.round($scope.cantidadTotal * 100) / 100 + Math.round(row.entity.Pagar * 100) / 100;
-                        
+                        //$scope.cantidadTotal = Math.round($scope.cantidadTotal * 100) / 100 + Math.round(row.entity.Pagar * 100) / 100;
+                        $rootScope.grdNoIncluido =  Math.round($rootScope.grdNoIncluido * 100) / 100 - Math.round(row.entity.Pagar * 100) / 100;
+                          
+                          //FAL actualizar cuenta pagadoras
+                            if ($scope.grdinicia > 0){
+                            i=0;
+                            $rootScope.grdBancos.forEach(function (banco, subtotal)
+                            {
+                               if(row.entity.cuentaPagadora == $rootScope.grdBancos[i].banco)
+                                {
+                                        $rootScope.grdBancos[i].subtotal = Math.round($rootScope.grdBancos[i].subtotal * 100) / 100 + Math.round(row.entity.Pagar * 100) / 100;
+                                        $rootScope.grdApagar = $rootScope.grdApagar + row.entity.Pagar;
+                                        row.entity.estGrid = 'Inicio'
+                                   }
+                                   
+                                   i++;                           
+                                });
+                            }
                     }                        
                     else
-                        $scope.cantidadTotal = Math.round($scope.cantidadTotal * 100) / 100 - Math.round(row.entity.Pagar * 100) / 100;
+                    {
+                        //$scope.cantidadTotal = Math.round($scope.cantidadTotal * 100) / 100 - Math.round(row.entity.Pagar * 100) / 100;
+                     $rootScope.grdNoIncluido = Math.round($rootScope.grdNoIncluido * 100) / 100 + Math.round(row.entity.Pagar * 100) / 100;
+                            
+                            //FAL actualizar cuenta pagadoras
+                            i=0;
+                            if ($scope.grdinicia > 0) {
+                                $rootScope.grdBancos.forEach(function (banco, subtotal)
+                                {
+                                   if(row.entity.cuentaPagadora == $rootScope.grdBancos[i].banco)
+                                   {
+                                        $rootScope.grdBancos[i].subtotal = Math.round($rootScope.grdBancos[i].subtotal * 100) / 100 - Math.round(row.entity.Pagar * 100) / 100;
+                                        $rootScope.grdApagar = $rootScope.grdApagar - row.entity.Pagar;
+                                        row.entity.estGrid = 'No Incluido'
+                                   }
+                                   i++;                           
+                                });
+                            }
+                    }          
                 });
                 
             });
@@ -813,12 +919,8 @@ $scope.gridOptions = {
                     }
                     if (new_date > now_date)
                     {
-                      if(rowEntity.estGrid ='No Incluido'){
-                        $rootScope.grdNoIncluido =  Math.round($rootScope.grdNoIncluido * 100) / 100 - Math.round(rowEntity.saldo * 100) / 100;
-                        }
-                        $rootScope.grdReprogramado =  Math.round($rootScope.grdReprogramado * 100) / 100 - Math.round(rowEntity.saldo * 100) / 100;
+                        $rootScope.grdReprogramado =  Math.round($rootScope.grdReprogramado * 100) / 100 + Math.round(rowEntity.Pagar * 100) / 100;
                         $rootScope.grdApagar = Math.round($rootScope.grdApagar * 100) / 100 - Math.round(rowEntity.Pagar* 100) / 100
-                        rowEntity.Pagar = oldValue;
                         rowEntity.estGrid = 'Reprogramado'
                     }
                     
@@ -831,9 +933,6 @@ $scope.gridOptions = {
                           rowEntity.Pagar = oldValue;
                       }
                       else{
-                          if(rowEntity.estGrid ='Reprogramado'){
-                            $rootScope.grdReprogramado =  Math.round($rootScope.grdReprogramado * 100) / 100 - Math.round(rowEntity.saldo * 100) / 100;
-                          }
                           $rootScope.grdNoIncluido =  Math.round($rootScope.grdNoIncluido * 100) / 100 - Math.round($scope.cantidadUpdate * 100) / 100;
                           $rootScope.grdApagar = Math.round($rootScope.grdApagar * 100) / 100 + Math.round($scope.cantidadUpdate* 100) / 100
                           rowEntity.estGrid = 'No Incluido'
@@ -887,7 +986,7 @@ $scope.selectAll = function(opcion) {
     $rootScope.grdApagar = 0;
     $rootScope.grdnoPagable = 0;
     $rootScope.grdBancos = [];
-    $scope.grdinicia = false;
+    $scope.grdinicia = 0;
     //LQMA 14032016
     //$rootScope.gridOptions.data.forEach(function (grDatosSel, i)
     $scope.gridOptions.data.forEach(function (grDatosSel, i)
@@ -933,6 +1032,7 @@ $scope.selectAll = function(opcion) {
                     });
             }
        };
+   
     });
 
         $rootScope.grdReprogramado = 0;
@@ -946,12 +1046,13 @@ $scope.selectAll = function(opcion) {
       };
       $scope.gridApi1.core.notifyDataChange(uiGridConstants.dataChange.OPTIONS);
       $scope.gridApi1.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
-
+    $scope.grdinicia = $scope.grdinicia + 1;
 };       
 
 //FAL filtros en base a variables
 $scope.Filtrar = function (value,campo) {
     //console.log(value);
+    $scope.BorraFiltros();
     $scope.gridApi1.grid.columns[campo].filters[0].term=value;
     $scope.gridApi1.core.notifyDataChange(uiGridConstants.dataChange.COLUMN);
     $scope.gridApi1.grid.refresh();
@@ -1077,6 +1178,7 @@ $rootScope.ConsultaLoteObtiene = function(Lote,index){
                                 }, 500);
             }
 
+            $scope.grdinicia = $scope.grdinicia + 1;
         //$rootScope.NuevoLote = false;
 }
 
