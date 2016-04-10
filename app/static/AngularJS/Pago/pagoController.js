@@ -104,6 +104,42 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
             pagoRepository.getLotes($scope.idEmpresa,$rootScope.currentEmployee,0,idLote)
             .then(function successCallback(data){
                     //$rootScope.NuevoLote = false;
+
+                    pagoRepository.getTotalxEmpresa($scope.idEmpresa)
+                        .then(function successCallback(response) {                           
+                
+                                $rootScope.GranTotal = 0;
+                                $rootScope.TotalxEmpresas = response.data;
+                                $scope.idEmpresa = $scope.idEmpresa;
+                                i=0;
+                                $rootScope.TotalxEmpresas.forEach(function (cuentaPagadora, sumaSaldo)
+                                    {
+                                    $rootScope.GranTotal = $rootScope.GranTotal + $rootScope.TotalxEmpresas[i].sumaSaldo; 
+                                    i++;                          
+                                    });
+                                //$scope.traeTotalxEmpresa.emp_nombre = emp_nombre;
+                                $scope.showTotales = true;
+                                $scope.showSelCartera = true;
+                                //LQMA  07032016
+                                //LQMA 14032016
+                                //$scope.ObtieneLotes(0);
+                                //$scope.LlenaIngresos();
+
+                                //$scope.llenaGrid();
+
+                               //$('#btnTotalxEmpresa').button('reset');
+                            }, function errorCallback(response) {
+                                //oculta la información y manda el total a cero y llena el input del modal
+                                $rootScope.TotalxEmpresas = [];
+                                $rootScope.GranTotal = 0;
+                                $rootScope.showGrid = false;
+                                $scope.showSelCartera = false;
+                                $scope.showTotales = false;
+                                $scope.traeTotalxEmpresa.emp_nombre = 'La empresa seleccionada no tiene información';
+                                 //$('#btnTotalxEmpresa').button('reset');
+                            }
+                        );
+
                     $rootScope.noLotes = data;
                     
                     if($rootScope.noLotes.data.length > 0) //mostrar boton crear lote
@@ -119,8 +155,8 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                         $rootScope.ConsultaLote($rootScope.noLotes.data[$rootScope.noLotes.data.length - 1],$rootScope.noLotes.data.length,0);
                         $rootScope.ProgPago = true;
 
-                        $scope.idCuenta = $scope.idEmpresa;
-                        $scope.llenaEncabezado();
+                        //$scope.idCuenta = $scope.idEmpresa;
+                        //$scope.llenaEncabezado();
 
                         /*setTimeout(function(){
                                                 $('#inicioModal').modal('hide');
