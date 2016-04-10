@@ -363,8 +363,9 @@
 				<div class="sumTexto">
 					A pagar
 				</div>
-				<div class="sumMonto montoFinal blueInfo">
-					{{grdApagar - grdnoPagable | currency}}
+				<div class="sumMonto montoFinal blueInfo" >
+					<span id= "mano"   ng-click="Filtrar('Inicio',26)">{{grdApagar -grdnoPagable | currency}}
+					</span>
 				</div>
 			</div>
 			</div> 
@@ -381,7 +382,7 @@
 						/
 					</div>
 					<div class="clsNoPagable">
-						<span class="clsDetailLabel">A Pagar</span> <span id= "mano"  class="clsDetailText blueInfo" ng-click="Filtrar('Inicio',26)">{{grdApagar -grdnoPagable | currency}}
+						<span class="clsDetailLabel">A Pagar</span> <span id= "mano"  class="clsDetailText blueInfo" ng-click="Filtrar('Inicio',26)">{{GranTotalPagable | currency}}
 						</span>
 					</div>
 					<div class="clsNoPagable separadorNoPagable">
@@ -413,7 +414,6 @@
 						<span class="clsDetailLabel">Porcentaje a pagar</span> <span class="clsDetailText blueInfo"> {{ (((grdApagar - grdnoPagable) * 100) / ( GranTotal )) | number:2 }} %</span>
 					</div>
 				</div>
-
 			</div>
 			<!--div id="chkPagable0">
 				<div class="btn-group" role="group">
