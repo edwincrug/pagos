@@ -940,9 +940,11 @@ $scope.gridOptions = {
                             {
                                if(row.entity.cuentaPagadora == $rootScope.grdBancos[i].banco)
                                 {
+                                    if(row.entity.ordenBloqueada == 'False'){
                                         $rootScope.grdBancos[i].subtotal = Math.round($rootScope.grdBancos[i].subtotal * 100) / 100 + Math.round(row.entity.Pagar * 100) / 100;
                                         $rootScope.grdApagar = $rootScope.grdApagar + row.entity.Pagar;
                                         row.entity.estGrid = 'Inicio'
+                                      }
                                    }
                                    
                                    i++;                           
@@ -961,9 +963,11 @@ $scope.gridOptions = {
                                 {
                                    if(row.entity.cuentaPagadora == $rootScope.grdBancos[i].banco)
                                    {
+                                     if(row.entity.ordenBloqueada == 'False'){
                                         $rootScope.grdBancos[i].subtotal = Math.round($rootScope.grdBancos[i].subtotal * 100) / 100 - Math.round(row.entity.Pagar * 100) / 100;
                                         $rootScope.grdApagar = $rootScope.grdApagar - row.entity.Pagar;
                                         row.entity.estGrid = 'No Incluido'
+                                       } 
                                    }
                                    i++;                           
                                 });
@@ -1722,7 +1726,9 @@ var ConfiguraGridModal = function () {
     Funciones de guardado de datos
     END
 ****************************************************************************************************************/
-
+$('input[name="options"]').click(function () {
+    $(this).tab('show');
+});
 /***********************************************************************************************************
 FAL 15032016
 funciones necesarias para generar el archivo de pagos
