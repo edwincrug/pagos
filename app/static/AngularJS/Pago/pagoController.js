@@ -265,6 +265,39 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         );
 
     };
+
+    //FAL Trae los bancos x empresa con todos sus saldos
+    $scope.traeBancosCompleta = function () {
+        //Llamada a repository para obtener data        
+        //FAL 10042016
+     
+        pagoRepository.getBancosCompleta($scope.idEmpresa)
+
+            .then(function successCallback(response) {
+                $rootScope.bancosCompletas = response.data;
+                $rootScope.GranTotalaPagar = 0;
+                $rootScope.GranTotalnoPagable = 0;
+                $rootScope.GranTotalPagable = 0;
+                i=0;
+                $rootScope.bancosCompletas.forEach(function (cuentaPagadora, sumaSaldo)
+                    {
+                    $rootScope.GranTotalaPagar = $rootScope.GranTotalaPagar + $rootScope.bancosCompletas[i].sumaSaldo; 
+                    $rootScope.GranTotalnoPagable = $rootScope.GranTotalnoPagable + $rootScope.bancosCompletas[i].sumaSaldoNoPagable; 
+                    $rootScope.GranTotalPagable = $rootScope.GranTotalPagable + $rootScope.bancosCompletas[i].sumaSaldoPagable; 
+
+                    i++;                          
+                    });
+
+                
+               
+            }, function errorCallback(response) {
+                 alertFactory.error('Error en bancos con todos sus saldos.');
+            }
+        );
+
+    };
+
+
     //FAl--Trae el total de bancos de la empresa seleccionada
     $scope.traeTotalxEmpresa = function (emp_idempresa,emp_nombre) {
       $('#btnTotalxEmpresa').button('loading');
@@ -305,7 +338,8 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                  $('#btnTotalxEmpresa').button('reset');
             }
         );
-
+    
+     $scope.traeBancosCompleta();
 
     };
 
@@ -754,6 +788,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
 //LQMA congifura e inicializa el grid
 var ConfiguraGrid = function(){
+$scope.idEmpleado = $rootScope.currentEmployee;
 $scope.gridOptions = {
         enableColumnResize: true,
         enableRowSelection: true,
@@ -795,7 +830,7 @@ $scope.gridOptions = {
          },
          { name: 'fechaPromesaPago', displayName: 'Fecha Promesa de Pago', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '17%'},
          { name: 'documento', displayName: '# Documento', width: '15%', enableCellEdit: false, headerTooltip: 'Documento # de factura del provedor', cellClass: 'cellToolTip' },
-         { name: 'ordenCompra', displayName: 'Orden de compra',width: '13%', enableCellEdit: false, cellTemplate:'<div class="ngCellText" ng-class="col.colIndex()" ><A HREF="http://192.168.20.9:3200/?id={{row.entity.ordenCompra}}&employee={{currentEmployee}}" TARGET="_new">{{row.entity.ordenCompra}}</A></div>'},          
+         { name: 'ordenCompra', displayName: 'Orden de compra',width: '13%', enableCellEdit: false, cellTemplate:'<div class="ngCellText" ng-class="col.colIndex()" ><A HREF="http://192.168.20.9:3200/?id={{row.entity.ordenCompra}}&employee=' + $scope.idEmpleado + '" TARGET="_new">{{row.entity.ordenCompra}}</A></div>'},          
          { name: 'monto', displayName: 'Monto', width: '15%', cellFilter: 'currency' , enableCellEdit: false},
          { name: 'saldo', displayName: 'Saldo', width: '15%', cellFilter: 'currency' , enableCellEdit: false},
          { name: 'tipo', width: '15%', displayName: 'Tipo', enableCellEdit: false },

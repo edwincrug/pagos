@@ -106,6 +106,16 @@ registrationModule.factory('pagoRepository', function ($http) {
               params: { id: '15|' + idLote }
             });
         },
+        
+        //FAL 10042016 TRAE LOS BANCOS MAS COMPLETA
+
+        getBancosCompleta: function (idEmpresa) {
+            return $http({
+              method: 'GET',
+              url: pagoUrl,
+              params: { id: '19|' + idEmpresa }
+            });
+        },
 
         //FAL 15032016 manda el json para generar el archivo
          setArchivo: function(id,dataArchivo,lotePadre)

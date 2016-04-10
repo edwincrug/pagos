@@ -144,16 +144,17 @@
       </div>
     </div>
     <div class="modal-body" ng-if="showTotales">
+       <!--FAL 10042016 listados de cartera vencida  -->
       <div class="mdPagarLabel">
-        Totales a Pagar por bancos
+        Total por bancos
       </div>
       <div id="mdContentSuma">
-        <div class="mdLineSuma" ng-repeat="TotalxEmpresa in TotalxEmpresas">
+        <div class="mdLineSuma" ng-repeat="bancosCompleta in bancosCompletas">
           <div class="sumTexto">
-            {{TotalxEmpresa.cuentaPagadora}}
+            {{bancosCompleta.cuentaPagadora}}
           </div>
           <div class="sumMonto">
-            {{TotalxEmpresa.sumaSaldo | currency}}
+            {{bancosCompleta.sumaSaldo | currency}}
           </div>
         </div>
         <div class="rows"> <div class="raya"></div></div>
@@ -162,10 +163,59 @@
             Total a pagar
           </div>
           <div class="sumMonto montoFinal">
-            {{GranTotal | currency}}
+            {{GranTotalaPagar | currency}}
           </div>
         </div>
-      </div>              
+      </div>  
+      <hr> 
+      <!--FAL 10042016 listados de total pagable  -->
+       <div class="mdPagarLabel">
+        Total pagable por bancos
+      </div>
+      <div id="mdContentSuma">
+        <div class="mdLineSuma" ng-repeat="bancosCompleta in bancosCompletas">
+          <div class="sumTexto">
+            {{bancosCompleta.cuentaPagadora}}
+          </div>
+          <div class="sumMonto">
+            {{bancosCompleta.sumaSaldoPagable | currency}}
+          </div>
+        </div>
+        <div class="rows"> <div class="raya"></div></div>
+        <div class="rows">
+          <div class="sumTexto">
+            Total a pagar
+          </div>
+          <div class="sumMonto montoFinal">
+            {{GranTotalPagable | currency}}
+          </div>
+        </div>
+      </div>   
+      <hr> 
+<!--FAL 10042016 listados de total no pagable  -->
+       <div class="mdPagarLabel">
+        Total no pagable por bancos
+      </div>
+      <div id="mdContentSuma">
+        <div class="mdLineSuma" ng-repeat="bancosCompleta in bancosCompletas">
+          <div class="sumTexto">
+            {{bancosCompleta.cuentaPagadora}}
+          </div>
+          <div class="sumMonto">
+            {{bancosCompleta.sumaSaldoNoPagable | currency}}
+          </div>
+        </div>
+        <div class="rows"> <div class="raya"></div></div>
+        <div class="rows">
+          <div class="sumTexto">
+            Total no pagable
+          </div>
+          <div class="sumMonto montoFinal">
+            {{GranTotalnoPagable | currency}}
+          </div>
+        </div>
+      </div>   
+
       <div ng-if="showSelCartera" ng-show="0==1">
         <div class="mdPagarLabel">
             ¿Que contenido tendrá el nuevo lote?
