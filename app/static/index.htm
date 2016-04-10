@@ -56,10 +56,17 @@
             <!-- <input type="text" class="form-control" ng-model="folioBusca" > -->
           </li>
           <li><a class="icon-logo"></a></li>
-            <li><a id="btnNuevoLote" tooltip="nuevo lote" ng-click="CrearNuevoLote()"><span id="btnMas" class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></li>
-            <li ng-repeat="Lote in noLotes.data"><a ng-click="ConsultaLote(Lote,{{$index + 1}},1)" > Lote {{$index +1}} </a></li>
+          <li ng-repeat="lote in noLotes.data" class="itemLote">
+            <div class="loteId"> {{$index +1}}</div>
+            <div class="itemNombre"> lote.nombre</div>
+            <div class="itemFecha">lote.fecha</div>
+            <div class="itemMonto">lote.totalPagar</div>
+
+            <a ng-click="ConsultaLote(lote,{{$index + 1}},1)" > ver </a>
+
+          </li>
         </ul>
-        <button type="button" class="btn btn-primary btnSearch" id="closeMenu" ><span class="glyphicon glyphicon-remove " aria-hidden="true"></span> Nuevo Lote</button>
+        <button type="button" class="btn btn-primary btnSearch" id="addMenu" tooltip="Nuevo Lote" ng-click="CrearNuevoLote()"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Nuevo Lote</button>
         <button type="button" class="btn btn-default btnSearch" id="closeMenu" ><span class="glyphicon glyphicon-remove " aria-hidden="true"></span> Cancelar</button>
 
 
@@ -218,7 +225,7 @@
 
       <div ng-if="showSelCartera" ng-show="0==1">
         <div class="mdPagarLabel">
-            ¿Que contenido tendrá el nuevo lote?
+          ¿Que contenido tendrá el nuevo lote?
         </div>
         <div id="mdRadio">
           <div class="btn-group" role="group" >            
@@ -239,15 +246,17 @@
           Seleccione los registros          
         </div>
         <div id="contenedorGrid" ng-controller="gridModalController" ng-init="inicia()">            
-            <div id="gridModal" ui-grid="gridOptionsModal" ui-grid-grouping ui-grid-edit ui-grid-selection ui-grid-cellNav class="gridStyle"></div>
+          <div id="gridModal" ui-grid="gridOptionsModal" ui-grid-grouping ui-grid-edit ui-grid-selection ui-grid-cellNav class="gridStyle"></div>
         </div>
      </div>
      <div>
       <div class="rows" ng-show="NuevoLote">
         <div class="mdPagarLabel">
-          <span>Nombre Lote:</span>
-        
+          Nombre del Lote
+        </div>
+        <div id="mdContentSuma"> 
           <input type="text" class="form-control" ng-model="formData.nombreLoteNuevo"> 
+        </div>
         </div>
       </div>
       <!-- Totales a pagar por bancos -->
@@ -256,25 +265,24 @@
      <button class="btn btn-info" data-toggle="modal" id="btnCrealote" href="#stack2" ng-click="IniciaLote()" ng-show="NuevoLote" data-loading-text="Creando lote..." autocomplete="off">Crear Lote</button>
      <button type="button" class="btn btn-primary" data-dismiss="modal" ng-show="ProgPago" ng-click="ProgramacionPagos()">Ir a Programación Pago</button>
      <!-- <button type="button" class="btn btn-primary" data-dismiss="modal" ng-show="NuevoLote">Cancelar</button> -->
+      </div>
    </div>
  </div>
-</div>
-</div>
 </div>
 <!--Fin Modal de inicio FAL-->
 
 <!--FAL 15/03/2016 Modal de generando archivo-->
 <div class="modal modal-static fade" id="processing-modal" role="dialog" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-body">
-                <div class="text-center">
-                    <img src="image/gifs/loading.gif" class="icon" />
-                    <h4>Generando Archivo<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button></h4>
-                </div>
-            </div>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="text-center">
+          <img src="image/gifs/loading.gif" class="icon" />
+          <h4>Generando Archivo<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button></h4>
         </div>
+      </div>
     </div>
+  </div>
 </div>
 
 <!--Interface de usuario-->

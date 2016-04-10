@@ -1617,7 +1617,8 @@ $scope.Guardar = function() {
         return total;
     } //get total end
     //LQMA 10032016
-    $rootScope.CrearNuevoLote = function(){      
+    $rootScope.CrearNuevoLote = function(){  
+      $('#closeMenu').click();    
       $rootScope.ProgPago = true;
 
       var lotesPendientes = $.grep($rootScope.noLotes.data, function( n, i ) {
