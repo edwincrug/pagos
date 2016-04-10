@@ -830,7 +830,7 @@ $scope.gridOptions = {
          },
          { name: 'fechaPromesaPago', displayName: 'Fecha Promesa de Pago', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '17%'},
          { name: 'documento', displayName: '# Documento', width: '15%', enableCellEdit: false, headerTooltip: 'Documento # de factura del provedor', cellClass: 'cellToolTip' },
-         { name: 'ordenCompra', displayName: 'Orden de compra',width: '13%', enableCellEdit: false, cellTemplate:'<div class="ngCellText" ng-class="col.colIndex()" ><A HREF="http://192.168.20.9:3200/?id={{row.entity.ordenCompra}}&employee=' + $scope.idEmpleado + '" TARGET="_new">{{row.entity.ordenCompra}}</A></div>'},          
+         { name: 'ordenCompra', displayName: 'Orden de compra',width: '13%', enableCellEdit: false, cellTemplate:'<div class="urlTabla" ng-class="col.colIndex()" ><A class="urlTabla" HREF="http://192.168.20.9:3200/?id={{row.entity.ordenCompra}}&employee=' + $scope.idEmpleado + '" TARGET="_new">{{row.entity.ordenCompra}}</A></div>'},          
          { name: 'monto', displayName: 'Monto', width: '15%', cellFilter: 'currency' , enableCellEdit: false},
          { name: 'saldo', displayName: 'Saldo', width: '15%', cellFilter: 'currency' , enableCellEdit: false},
          { name: 'tipo', width: '15%', displayName: 'Tipo', enableCellEdit: false },
