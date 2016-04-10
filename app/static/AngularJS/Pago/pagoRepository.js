@@ -131,6 +131,16 @@ registrationModule.factory('pagoRepository', function ($http) {
                 //data:JSON.stringify(dataArchivo)
                
             });            
+        }
+        ,
+        //LQMA
+        setAprobacion: function(idProc,nodo,idEmpresa,idLote,idUsuario)
+        {            
+            return $http({
+                url: pagoUrl,
+                method: "POST",
+                params: { id: '6|' + idProc + '|' + nodo  + '|' + idEmpresa + '|' + idLote + '|' + idUsuario}
+            });            
         }//FAL
 
     };

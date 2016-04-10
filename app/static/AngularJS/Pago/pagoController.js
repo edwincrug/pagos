@@ -94,8 +94,10 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
        // nombre y cuenta = cuenta, saldo = saldo (siempre vendra en 0), aTransferir = aTransferir (viene en 0), total = total (viene en 0, se calcula),   excedente = viene en 0, se calcula, totalPagar = recuperar del $scope.TotalxEmpresa.sumaSaldo,saldoIngreso = 0   
        $scope.transferencias = [{bancoOrigen:'', bancoDestino: '', importe:0, disponibleOrigen:0,index:0}];
 
+       $rootScope.idOperacion = 0;
+
        if(getParameterByName('idOperacion') != ''){
-            $rootScope.currentIdOp = getParameterByName('idOperacion');
+            $rootScope.idOperacion = getParameterByName('idOperacion');
 
             var idLote = getParameterByName('idLote');
             //ConsultaLote(Lote,{{$index + 1}},1)
@@ -106,14 +108,24 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                     
                     if($rootScope.noLotes.data.length > 0) //mostrar boton crear lote
                     {   
+
+                        $('#inicioModal').modal('hide');
                         alertFactory.success('Total de lotes: ' +  $rootScope.noLotes.data.length);
                         $rootScope.idLotePadre = $rootScope.noLotes.data[$rootScope.noLotes.data.length - 1].idLotePago;
                         $rootScope.estatusLote = $rootScope.noLotes.data[$rootScope.noLotes.data.length - 1].estatus;
 
+                        $rootScope.accionPagina = true;  
+
                         $rootScope.ConsultaLote($rootScope.noLotes.data[$rootScope.noLotes.data.length - 1],$rootScope.noLotes.data.length,0);
                         $rootScope.ProgPago = true;
 
-                        $('#inicioModal').modal('hide');
+                        $scope.idCuenta = $scope.idEmpresa;
+                        $scope.llenaEncabezado();
+
+                        /*setTimeout(function(){
+                                                $('#inicioModal').modal('hide');
+                                                //$rootScope.accionPagina = false; 
+                                              },1500);*/
                     }
                     /*else
                     {
@@ -597,6 +609,8 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 if($scope.gridOptions == null)
                     ConfiguraGrid();
                
+                $scope.gridOptions.data = null;  
+
                 $scope.gridOptions.data = data;
               
                 $scope.data = data;
@@ -1584,6 +1598,27 @@ pagoRepository.setArchivo($scope.idEmpresa,$scope.gridOptions.data,$rootScope.id
                 {                
                     alertFactory.error('Error al enviar solicitud de aprobación');
                     $('#btnEnviaApro').button('reset');
+                });
+
+    };//LQMA End EnviaAprobacion
+
+
+    //LQMA 09042016
+  $rootScope.AprobarLote = function(){
+      
+      $('#btnAprobar').button('loading');
+
+      pagoRepository.setAprobacion(1,8,$scope.idEmpresa,$rootScope.idLotePadre,$rootScope.currentEmployee)
+                    .then(function successCallback(response) 
+                { 
+                    alertFactory.success('Se aprobo el lote con exito');
+                    $('#btnAprobar').button('reset');
+                    $('#btnAprobar').prop('disabled', true);
+
+                }, function errorCallback(response) 
+                {                
+                    alertFactory.error('Error al aprobar');
+                    $('#btnAprobar').button('reset');
                 });
 
     };//LQMA End EnviaAprobacion
