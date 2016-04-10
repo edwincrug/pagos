@@ -1778,16 +1778,27 @@ pagoRepository.setArchivo($scope.idEmpresa,$scope.gridOptions.data,$rootScope.id
 
 
     //LQMA 09042016
-  $rootScope.AprobarLote = function(){
+    $rootScope.AprobarLote = function(valor){
       
       $('#btnAprobar').button('loading');
 
-      pagoRepository.setAprobacion(1,8,$scope.idEmpresa,$rootScope.idLotePadre,$rootScope.currentEmployee)
+      pagoRepository.setAprobacion(1,valor,$scope.idEmpresa,$rootScope.idLotePadre,$rootScope.currentEmployee)
                     .then(function successCallback(response) 
                 { 
-                    alertFactory.success('Se aprobo el lote con exito');
-                    $('#btnAprobar').button('reset');
+                    if(valor == 3)
+                    {
+                      alertFactory.success('Se aprobo el lote con exito');
+                      $('#btnAprobar').button('reset');
+                    }
+                    else //rechazado
+                    {
+                      alertFactory.success('Se rechazo el lote con exito');
+                      $('#btnRechazar').button('reset'); 
+                    }
+
+                    
                     $('#btnAprobar').prop('disabled', true);
+                    $('#btnRechazar').prop('disabled', true);
 
                 }, function errorCallback(response) 
                 {                
