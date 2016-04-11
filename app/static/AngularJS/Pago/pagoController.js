@@ -574,19 +574,24 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 {
                      $scope.data[i].Pagar = $scope.data[i].saldo;
                      $scope.data[i].fechaPago = $scope.data[i].fechaPromesaPago;
-                     $scope.data[i].estGrid = 'Inicio';
+                    
                      
-                      if ($scope.data[i].fechaPromesaPago=="1900-01-01T00:00:00")
+                if ($scope.data[i].fechaPromesaPago=="1900-01-01T00:00:00")
                     {
                         $scope.data[i].fechaPromesaPago = "";
                     }
 
+                if ($scope.data[i].ordenBloqueada=="False")
+                    {
+                        $scope.data[i].estGrid = 'Pagable';
+                    }    
 
-                     if ($scope.data[i].ordenBloqueada=='True')
+                if ($scope.data[i].ordenBloqueada=='True')
                     {
                         $scope.data[i].Pagar = $scope.data[i].saldo;
+
                     }
-                     if ($scope.data[i].documentoPagable=='False')
+                if ($scope.data[i].documentoPagable=='False')
                     {
                         $scope.data[i].Pagar = $scope.data[i].saldo;
                     }
@@ -664,13 +669,17 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 {
                      $scope.data[i].Pagar = $scope.data[i].saldo;
                      $scope.data[i].fechaPago = $scope.data[i].fechaPromesaPago;
-                     $scope.data[i].estGrid = 'Inicio';
+                     
                      
                       if ($scope.data[i].fechaPromesaPago=="1900-01-01T00:00:00")
                     {
                         $scope.data[i].fechaPromesaPago = "";
                     }
 
+                      if ($scope.data[i].ordenBloqueada=="False")
+                    {
+                        $scope.data[i].estGrid = 'Pagable';
+                    }
 
                      if ($scope.data[i].ordenBloqueada=='True')
                     {
@@ -727,13 +736,17 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 {
                      $scope.data[i].Pagar = $scope.data[i].saldo;
                      $scope.data[i].fechaPago = $scope.data[i].fechaPromesaPago;
-                     $scope.data[i].estGrid = 'Inicio';
+                     
                      
                       if ($scope.data[i].fechaPromesaPago=="1900-01-01T00:00:00")
                     {
                         $scope.data[i].fechaPromesaPago = "";
                     }
 
+                    if ($scope.data[i].ordenBloqueada=="False")
+                    {
+                        $scope.data[i].estGrid = 'Pagable';
+                    }
 
                      if ($scope.data[i].ordenBloqueada=='True')
                     {
@@ -896,7 +909,7 @@ $scope.gridOptions = {
                                 {
                                         $rootScope.grdBancos[i].subtotal = Math.round($rootScope.grdBancos[i].subtotal * 100) / 100 + Math.round(row.entity.Pagar * 100) / 100;
                                         $rootScope.grdApagar = $rootScope.grdApagar + row.entity.Pagar;
-                                        row.entity.estGrid = 'Inicio'
+                                        row.entity.estGrid = 'Pagar'
                                    }
                                    
                                    i++;                           
@@ -915,7 +928,7 @@ $scope.gridOptions = {
                                    {
                                         $rootScope.grdBancos[i].subtotal = Math.round($rootScope.grdBancos[i].subtotal * 100) / 100 - Math.round(row.entity.Pagar * 100) / 100;
                                         $rootScope.grdApagar = $rootScope.grdApagar - row.entity.Pagar;
-                                        row.entity.estGrid = 'No Incluido'
+                                        row.entity.estGrid = 'Pagable'
                                    }
                                    i++;                           
                                 });
@@ -943,7 +956,7 @@ $scope.gridOptions = {
                                     if(row.entity.ordenBloqueada == 'False'){
                                         $rootScope.grdBancos[i].subtotal = Math.round($rootScope.grdBancos[i].subtotal * 100) / 100 + Math.round(row.entity.Pagar * 100) / 100;
                                         $rootScope.grdApagar = $rootScope.grdApagar + row.entity.Pagar;
-                                        row.entity.estGrid = 'Inicio'
+                                        row.entity.estGrid = 'Pagar'
                                       }
                                    }
                                    
@@ -966,7 +979,7 @@ $scope.gridOptions = {
                                      if(row.entity.ordenBloqueada == 'False'){
                                         $rootScope.grdBancos[i].subtotal = Math.round($rootScope.grdBancos[i].subtotal * 100) / 100 - Math.round(row.entity.Pagar * 100) / 100;
                                         $rootScope.grdApagar = $rootScope.grdApagar - row.entity.Pagar;
-                                        row.entity.estGrid = 'No Incluido'
+                                        row.entity.estGrid = 'Pagable'
                                        } 
                                    }
                                    i++;                           
@@ -1010,7 +1023,7 @@ $scope.gridOptions = {
                       else{
                           $rootScope.grdNoIncluido =  Math.round($rootScope.grdNoIncluido * 100) / 100 - Math.round($scope.cantidadUpdate * 100) / 100;
                           $rootScope.grdApagar = Math.round($rootScope.grdApagar * 100) / 100 + Math.round($scope.cantidadUpdate* 100) / 100
-                          rowEntity.estGrid = 'No Incluido'
+                          rowEntity.estGrid = 'Pagable'
                           rowEntity.fechaPromesaPago = old_date;
                       }
                 }
