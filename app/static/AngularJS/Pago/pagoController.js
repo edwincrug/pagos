@@ -1817,7 +1817,7 @@ pagoRepository.setArchivo($scope.idEmpresa,$scope.gridOptions.data,$rootScope.id
                       $('#btnRechazar').button('reset'); 
                     }
 
-                    
+                    setTimeout(function(){window.close();},2500);
                     $('#btnAprobar').prop('disabled', true);
                     $('#btnRechazar').prop('disabled', true);
 
