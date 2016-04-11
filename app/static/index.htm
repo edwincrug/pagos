@@ -57,9 +57,9 @@
           <li><a class="icon-logo"></a></li>
           <li ng-repeat="lote in noLotes.data" class="itemLote">
             <div class="loteId"> {{$index +1}}</div>
-            <div class="itemNombre"> lote.nombre</div>
-            <div class="itemFecha">lote.fecha</div>
-            <div class="itemMonto">lote.totalPagar</div>
+            <div class="itemNombre"> {{ lote.nombre }}</div>
+            <div class="itemFecha">{{ lote.fecha }}</div>
+            <div class="itemMonto">{{ lote.totalPagar }}</div>
             <a ng-click="ConsultaLote(lote,{{$index + 1}},1)" > ver </a>
           </li>
         </ul>
