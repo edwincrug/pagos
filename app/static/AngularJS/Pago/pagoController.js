@@ -13,6 +13,9 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
    $scope.radioModel = '';
 
+   $scope.radioTotales = 1;
+   $scope.fechaHoy = new Date();
+
    var errorCallBack = function (data, status, headers, config) {
         alertFactory.error('Ocurrio un problema');
     };

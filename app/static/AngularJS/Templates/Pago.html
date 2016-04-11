@@ -5,42 +5,24 @@
 	<section id="global">
 		<div id="tituloEmpresa">
 			<h1 id="title">{{ scencabezado.empNombre }}</h1>
+			<div id="nombreLote">
+				Lote: {{nombreLote}}
+			</div>
 		</div>
 		<div id="mdContentSuma2">
-			<!-- <div class="mdLineSuma" ng-repeat="TotalxEmpresa in TotalxEmpresas">
-				<div class="sumTexto">
-					{{TotalxEmpresa.cuentaPagadora}}
-				</div>
-				<div class="sumMonto blue">
-					{{TotalxEmpresa.sumaSaldo | currency}}
-				</div>
-			</div>
-			<div class="rows"> <div class="raya rayaLightBlue"></div></div>
-			<div class="rows">
-				<div class="sumTexto">
-					A pagar
-				</div>
-				<div class="sumMonto montoFinal blue">
-					{{GranTotal | currency}}
-				</div>
-			</div> -->
 
-			 <div class="btn-group" data-toggle="btns">
-          <label class="btn btn-primary ">
-            <input type="radio" name="options" id="option1" href="#divtotalpagos" data-toggle="tab"> Cartera vencida
-          </label>
-          <label class="btn btn-primary">
-            <input type="radio" name="options" id="option2" href="#divpagablepagos" data-toggle="tab"> Total pagable
-          </label>
-          <label class="btn btn-primary">
-            <input type="radio" name="options" id="option3" href="#divnopagablepagos" data-toggle="tab"> Total no pagable
-          </label>
-      </div>
-      <div class="tab-content">
-          <div id ="divtotalpagos" class="tab-pane active">
-          <div class="mdPagarLabel">
-            Total por bancos
+		<div id="lblPagosText">
+			Cartera vencida al <span id="lblPagosblack"> {{ fechaHoy | date:'dd/MM/yyyy' }}</span>
+		</div>
+       <div class="btn-group" data-toggle="btns" id="botoneraPagos2" >
+       
+          <div class="btn-group">
+          <label class="btn btn-primary" ng-model="radioTotales" uib-btn-radio="1" >Todo</label>
+          <label class="btn btn-primary" ng-model="radioTotales" uib-btn-radio="2">Pagable</label>
+          <label class="btn btn-primary" ng-model="radioTotales" uib-btn-radio="3"="uncheckable">No Pagable</label>
           </div>
+      </div>
+          <div id ="divtotalpagos" ng-hide="radioTotales != 1" >
           <div id="mdContentSuma">
             <div class="mdLineSuma" ng-repeat="bancosCompleta in bancosCompletas">
               <div class="sumTexto">
@@ -53,7 +35,7 @@
             <div class="rows"> <div class="raya"></div></div>
             <div class="rows">
               <div class="sumTexto">
-                Total a pagar
+                Total cartera
               </div>
               <div class="sumMonto montoFinal">
                 {{GranTotalaPagar | currency}}
@@ -63,10 +45,7 @@
           <hr> 
         </div>
       <!--FAL 10042016 listados de total pagable  -->
-          <div id ="divpagablepagos" class="tab-pane">
-           <div class="mdPagarLabel">
-            Total pagable por bancos
-          </div>
+          <div id ="divpagablepagos" ng-hide="radioTotales != 2">
           <div id="mdContentSuma">
             <div class="mdLineSuma" ng-repeat="bancosCompleta in bancosCompletas">
               <div class="sumTexto">
@@ -79,7 +58,7 @@
             <div class="rows"> <div class="raya"></div></div>
             <div class="rows">
               <div class="sumTexto">
-                Total a pagar
+                Total pagable
               </div>
               <div class="sumMonto montoFinal">
                 {{GranTotalPagable | currency}}
@@ -89,10 +68,7 @@
           <hr> 
         </div>
 <!--FAL 10042016 listados de total no pagable  -->
-     <div id ="divnopagablepagos" class="tab-pane">
-           <div class="mdPagarLabel">
-            Total no pagable por bancos
-          </div>
+     <div id ="divnopagablepagos" ng-hide="radioTotales != 3">
           <div id="mdContentSuma">
             <div class="mdLineSuma" ng-repeat="bancosCompleta in bancosCompletas">
               <div class="sumTexto">
@@ -113,30 +89,12 @@
             </div>
           </div>   
     </div>
-
-  </div>
 			
-		</div>  -->
-
- 
-
-
-<!-- 		<div id="chkPagable2">
-				<span id="txtCartera">	Totales </span><input type="checkbox" class="switch-checkbox" checked>
-		</div> -->
+		</div> 
 	</section>
-<!-- 	<section>
-		<div class="row">
-			<button type="button" ng-repeat="Lote in noLotes.data" ng-click="ConsultaLote(Lote,{{$index + 1}})" class="btn btn-primary"><span>Lote {{$index +1}}</span>
-			</button>
-			<button type="button" class="btn btn-info" >
-				<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-			</button>
-		</div>
-	</section> -->
 	<section id="flujoEfectivo">
 		<div class="tituloBloque1">
-			<span class="colText lightBlue" >Flujo de Efectivo  --------- Nombre Lote:   {{nombreLote}}</span>
+			<span class="colText lightBlue" > 1.- Flujo de Efectivo  </span>
 		</div>
 		<div id="resumenColapsado" ng-hide="!colapsado">
 			<div id="colCobranza">
@@ -346,7 +304,7 @@
 	
 	<section id="filtros">
 		<div class="tituloBloque2">
-			Cartera a pagar
+			<span class="colText " >2.- Cartera a pagar </span>
 		</div>
 		<div id="filtrosContenedor">
 			<div id="mdContentSuma3">

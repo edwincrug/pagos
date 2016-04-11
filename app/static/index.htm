@@ -53,7 +53,6 @@
         <ul>
           <li>
             <div class="labely" href="#"></div>
-            <!-- <input type="text" class="form-control" ng-model="folioBusca" > -->
           </li>
           <li><a class="icon-logo"></a></li>
           <li ng-repeat="lote in noLotes.data" class="itemLote">
@@ -61,15 +60,11 @@
             <div class="itemNombre"> lote.nombre</div>
             <div class="itemFecha">lote.fecha</div>
             <div class="itemMonto">lote.totalPagar</div>
-
             <a ng-click="ConsultaLote(lote,{{$index + 1}},1)" > ver </a>
-
           </li>
         </ul>
         <button type="button" class="btn btn-primary btnSearch" id="addMenu" tooltip="Nuevo Lote" ng-click="CrearNuevoLote()"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Nuevo Lote</button>
         <button type="button" class="btn btn-default btnSearch" id="closeMenu" ><span class="glyphicon glyphicon-remove " aria-hidden="true"></span> Cancelar</button>
-
-
       </nav>
       <div id="st-trigger-effects" class="column">
         <nav class="navbar navbar-default navHeader"> <!-- Inicia NAV bar -->
@@ -87,7 +82,6 @@
               </button> 
               <a class="navbar-brand" href="#"><span class="blanco">Programación de pagos</span></a>
             </div>
-
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" ng-controller="empleadoController" ng-init="init()">
               <ul class="nav navbar-nav">
@@ -105,23 +99,14 @@
                 </li>
               </ul>
             </div><!-- /.navbar-collapse -->
-
           </div><!-- /.container-fluid -->
         </nav>
-
         <div id="maestroContenedor">
-          <!-- <ul class="cbp-vimenu">
-          <li><a class="icon-logo"></a></li>
-            <li><a id="btnNuevoLote" tooltip="nuevo lote" ng-click="CrearNuevoLote()"><span id="btnMas" class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></li>
-            <li ng-repeat="Lote in noLotes.data"><a ng-click="ConsultaLote(Lote,{{$index + 1}},1)" > Lote {{$index +1}} </a></li>
-          </ul> -->
           <div class="main">
             <div ng-view></div>
           </div>
         </div>
-
       </div>
-
     </div><!-- /st-pusher -->
   </div><!-- /st-container -->
 
@@ -150,25 +135,18 @@
         </div>
       </div>
     </div>
-    <div class="modal-body" ng-if="showTotales">
+    <div class="modal-body" ng-if="showTotales" ng-controller="pagoController">
 
        <!--FAL 10042016 listados de cartera vencida  -->
-       <div class="btn-group" data-toggle="btns">
-          <label class="btn btn-primary ">
-            <input type="radio" name="options" id="option1" href="#divtotal" data-toggle="tab"> Cartera vencida
-          </label>
-          <label class="btn btn-primary">
-            <input type="radio" name="options" id="option2" href="#divpagable" data-toggle="tab"> Total pagable
-          </label>
-          <label class="btn btn-primary">
-            <input type="radio" name="options" id="option3" href="#divnopagable" data-toggle="tab"> Total no pagable
-          </label>
-      </div>
-      <div class="tab-content">
-          <div id ="divtotal" class="tab-pane active">
-          <div class="mdPagarLabel">
-            Total por bancos
+       <div class="btn-group" data-toggle="btns" id="botoneraPagos1" >
+          <div class="btn-group">
+          <label class="btn btn-primary" ng-model="radioTotales" uib-btn-radio="1" >Todo</label>
+          <label class="btn btn-primary" ng-model="radioTotales" uib-btn-radio="2">Pagable</label>
+          <label class="btn btn-primary" ng-model="radioTotales" uib-btn-radio="3"="uncheckable">No Pagable</label>
           </div>
+      </div>
+  
+          <div id ="divtotal" class="divTotales1" ng-hide="radioTotales != 1">
           <div id="mdContentSuma">
             <div class="mdLineSuma" ng-repeat="bancosCompleta in bancosCompletas">
               <div class="sumTexto">
@@ -181,7 +159,7 @@
             <div class="rows"> <div class="raya"></div></div>
             <div class="rows">
               <div class="sumTexto">
-                Total a pagar
+                Total cartera
               </div>
               <div class="sumMonto montoFinal">
                 {{GranTotalaPagar | currency}}
@@ -191,10 +169,7 @@
           <hr> 
         </div>
       <!--FAL 10042016 listados de total pagable  -->
-          <div id ="divpagable" class="tab-pane">
-           <div class="mdPagarLabel">
-            Total pagable por bancos
-          </div>
+          <div id ="divpagable" class="divTotales1" ng-hide="radioTotales != 2">
           <div id="mdContentSuma">
             <div class="mdLineSuma" ng-repeat="bancosCompleta in bancosCompletas">
               <div class="sumTexto">
@@ -207,7 +182,7 @@
             <div class="rows"> <div class="raya"></div></div>
             <div class="rows">
               <div class="sumTexto">
-                Total a pagar
+                Total pagable
               </div>
               <div class="sumMonto montoFinal">
                 {{GranTotalPagable | currency}}
@@ -217,10 +192,7 @@
           <hr> 
         </div>
 <!--FAL 10042016 listados de total no pagable  -->
-     <div id ="divnopagable" class="tab-pane">
-           <div class="mdPagarLabel">
-            Total no pagable por bancos
-          </div>
+     <div id ="divnopagable" class="divTotales1" ng-hide="radioTotales != 3">
           <div id="mdContentSuma">
             <div class="mdLineSuma" ng-repeat="bancosCompleta in bancosCompletas">
               <div class="sumTexto">
@@ -242,9 +214,7 @@
           </div>   
     </div>
 
-  </div>
-
-      <div ng-if="showSelCartera" ng-show="0==1">
+      <div ng-if="showSelCartera"  ng-show="0==1">
         <div class="mdPagarLabel">
           ¿Que contenido tendrá el nuevo lote?
         </div>
