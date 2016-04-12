@@ -144,12 +144,12 @@ registrationModule.factory('pagoRepository', function ($http) {
         }
         ,
         //LQMA
-        setAprobacion: function(idProc,nodo,idEmpresa,idLote,idUsuario)
+        setAprobacion: function(idProc,nodo,idEmpresa,idLote,idUsuario,idAprobador,idAprobacion,idNotify,Observacion)
         {            
             return $http({
                 url: pagoUrl,
                 method: "POST",
-                params: { id: '6|' + idProc + '|' + nodo  + '|' + idEmpresa + '|' + idLote + '|' + idUsuario}
+                params: { id: '6|' + idProc + '|' + nodo  + '|' + idEmpresa + '|' + idLote + '|' + idUsuario + '|' + idAprobador + '|' + Observacion + '|' + idAprobacion+ '|' + idNotify}
             });            
         }//FAL
 
