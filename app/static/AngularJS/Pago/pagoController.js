@@ -102,6 +102,10 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
             $rootScope.idOperacion = getParameterByName('idOperacion');
 
             var idLote = getParameterByName('idLote');
+
+            $rootScope.idAprobador = getParameterByName('idAprobador');
+            $rootScope.idAprobacion = getParameterByName('idAprobacion');
+            $rootScope.idNotify = getParameterByName('idNotify');
             //ConsultaLote(Lote,{{$index + 1}},1)
             pagoRepository.getLotes($scope.idEmpresa,$rootScope.currentEmployee,0,idLote)
             .then(function successCallback(data){
@@ -1804,7 +1808,7 @@ pagoRepository.setArchivo($scope.idEmpresa,$scope.gridOptions.data,$rootScope.id
       
       $('#btnAprobar').button('loading');
 
-      pagoRepository.setAprobacion(1,valor,$scope.idEmpresa,$rootScope.idLotePadre,$rootScope.currentEmployee)
+      pagoRepository.setAprobacion(1,valor,$scope.idEmpresa,$rootScope.idLotePadre,$rootScope.currentEmployee,$rootScope.idAprobador,$rootScope.idAprobacion,$rootScope.idNotify,$rootScope.formData.Observacion)
                     .then(function successCallback(response) 
                 { 
                     if(valor == 3)
