@@ -260,7 +260,7 @@
 									<th>Saldo</th>
 									<th>A transferir</th> 								
 									<th>Total</th>
-									<th>Excedente</th>
+									<th>Diferencia</th>
 								</tr> 
 							</thead> 
 							<tbody> 
@@ -279,7 +279,7 @@
 										{{egreso.total | currency}}
 									</td> 
 									<td>
-										{{egreso.excedente | currency}}
+										<span ng-class="{'rojo': egreso.excedente < 0}">{{egreso.excedente | currency}}</span>
 									</td> 
 								</tr>							
 							</tbody>
@@ -288,7 +288,7 @@
 								<td>{{getTotal('saldo') | currency}}</td>
 								<td>{{getTotal('aTransferir') | currency}}</td>
 								<td>{{getTotal('egresosTotal') | currency}}</td>
-								<td>{{getTotal('excedente') | currency}}</td>
+								<td><span ng-class="{'rojo': getTotal('excedente') < 0}">{{getTotal('excedente') | currency}}</span></td>
 							</tfoot>
 						</table>
 					</div>

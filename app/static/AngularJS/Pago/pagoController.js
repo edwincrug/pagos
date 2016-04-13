@@ -1568,7 +1568,7 @@ $scope.Guardar = function() {
                 var suma = (sss == 1)?parseInt(egreso.saldoIngreso):parseInt(egreso.saldo);
                 egreso.total = parseInt(egreso.aTransferir) + suma;
                 //egreso.excedente = egreso.totalPagar - egreso.total;
-                egreso.excedente = parseInt(egreso.totalPagar) - parseInt(egreso.total);
+                egreso.excedente = parseInt(egreso.total) - parseInt(egreso.totalPagar);
         });
     };
 
