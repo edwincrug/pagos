@@ -168,6 +168,11 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                                                 $('#inicioModal').modal('hide');
                                                 //$rootScope.accionPagina = false; 
                                               },1500);*/
+
+                        setTimeout(function(){ 
+                          $( "#btnSelectAll" ).click();//$scope.selectAll();
+                          $scope.llenaEncabezado();
+                        }, 3000);    
                     }
                     /*else
                     {
@@ -1342,6 +1347,7 @@ $scope.Guardar = function(opcion,valor) {
           if(rows.length == 0){
               alertFactory.warning('Debe seleccionar al menos un documento para guardar un lote.');    
               $('#btnGuardando').button('reset');  
+              $('#btnAprobar').button('reset');
           }
           else{
               //$('#btnguardando').button('loading');  
