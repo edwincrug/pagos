@@ -1284,7 +1284,7 @@ $rootScope.ConsultaLoteObtiene = function(Lote,index){
 
 
 //LQMA funcion para guardar datos del grid (se implementara para guardar Ingresos bancos, otros , Transferencias)
-$scope.Guardar = function() {
+$scope.Guardar = function(opcion,valor) {
 
     $('#btnGuardando').button('loading');
 
@@ -1298,7 +1298,7 @@ $scope.Guardar = function() {
             saldo =parseInt(saldo) + parseInt(ingreso.saldo);  
         });
 
-    setTimeout(function(){guardaValida(negativos,saldo);},500);
+    setTimeout(function(){guardaValida(negativos,saldo,opcion,valor);},500);
     
   };//fin de funcion guardar
 
@@ -1324,7 +1324,7 @@ $scope.Guardar = function() {
                          },500);
   };//fin de funcion cancelar  
 
-  var guardaValida=function(negativos,saldo){
+  var guardaValida=function(negativos,saldo,opcion,valor){
     if(negativos > 0){
         alertFactory.warning('Existen disponibles en valores negativos. Verifique las transferencias.');
         $('#btnGuardando').button('reset');
@@ -1395,6 +1395,45 @@ $scope.Guardar = function() {
                                   });
 
                                   $('#btnGuardando').button('reset');
+
+                                  if(opcion == 2){ //aprobacion
+
+                                     pagoRepository.setAprobacion(1,valor,$scope.idEmpresa,$rootScope.idLotePadre,$rootScope.currentEmployee,$rootScope.idAprobador,$rootScope.idAprobacion,$rootScope.idNotify,$rootScope.formData.Observacion)
+                                              .then(function successCallback(response) 
+                                          { 
+                                              if(valor == 3)
+                                              {
+                                                alertFactory.success('Se aprobo el lote con exito');
+                                                $('#btnAprobar').button('reset');
+                                              }
+                                              else //rechazado
+                                              {
+                                                alertFactory.success('Se rechazo el lote con exito');
+                                                $('#btnRechazar').button('reset'); 
+                                              }
+
+                                              $rootScope.idOperacion = 0;
+
+                                              setTimeout(function(){window.close();},3500);
+                                              $('#btnAprobar').prop('disabled', true);
+                                              $('#btnRechazar').prop('disabled', true);
+
+                                          }, function errorCallback(response) 
+                                          {                
+                                              if(valor == 3)
+                                              {
+                                                alertFactory.success('Error al aprobar');
+                                                $('#btnAprobar').button('reset');
+                                              }
+                                              else //rechazado
+                                              {
+                                                alertFactory.success('Error al rechazar');
+                                                $('#btnRechazar').button('reset'); 
+                                              }
+                                              //$('#btnAprobar').button('reset');
+                                          }); 
+
+                                  }
 
                                   //$rootScope.noLotes.data[$rootScope.noLotes.data.length - 1].idLotePago = $rootScope.idLotePadre;
                                   //$rootScope.noLotes.data[$rootScope.noLotes.data.length - 1].estatus = 1;
@@ -1825,29 +1864,7 @@ pagoRepository.setArchivo($scope.idEmpresa,$scope.gridOptions.data,$rootScope.id
       
       $('#btnAprobar').button('loading');
 
-      pagoRepository.setAprobacion(1,valor,$scope.idEmpresa,$rootScope.idLotePadre,$rootScope.currentEmployee,$rootScope.idAprobador,$rootScope.idAprobacion,$rootScope.idNotify,$rootScope.formData.Observacion)
-                    .then(function successCallback(response) 
-                { 
-                    if(valor == 3)
-                    {
-                      alertFactory.success('Se aprobo el lote con exito');
-                      $('#btnAprobar').button('reset');
-                    }
-                    else //rechazado
-                    {
-                      alertFactory.success('Se rechazo el lote con exito');
-                      $('#btnRechazar').button('reset'); 
-                    }
-
-                    setTimeout(function(){window.close();},2500);
-                    $('#btnAprobar').prop('disabled', true);
-                    $('#btnRechazar').prop('disabled', true);
-
-                }, function errorCallback(response) 
-                {                
-                    alertFactory.error('Error al aprobar');
-                    $('#btnAprobar').button('reset');
-                });
+      $scope.Guardar(2,valor);
 
     };//LQMA End EnviaAprobacion
 
