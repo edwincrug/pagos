@@ -7,15 +7,15 @@
          controller: 'pagoController'
      });
 
-	/*$routeProvider.when('/', {
+	$routeProvider.when('/agrupador', {
         templateUrl: '/AngularJS/Templates/Agrupador.html',
         controller: 'agrupadorController'
     });
 
-    $routeProvider.when('/agrupar', {
+    $routeProvider.when('/cuentas', {
         templateUrl: '/AngularJS/Templates/CuentasProveedor.html',
         controller: 'CuentasProveedorController'
-    });*/
+    });
     $locationProvider.html5Mode(true);
 });
 

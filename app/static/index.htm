@@ -104,6 +104,7 @@
         <div id="maestroContenedor">
           <div class="main">
             <div ng-view></div>
+            <input type="hidden" id="lgnUser" value="[[ user.idUsuario ]]">
           </div>
         </div>
       </div>
@@ -127,7 +128,7 @@
               <button id="btnTotalxEmpresa" type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  data-loading-text="Obteniendo cartera..." autocomplete="off">Seleccione <span class="caret"></span></button>
               <ul class="dropdown-menu dropdown-menu-right">
                 <li ng-repeat="empresa in empresas">
-                  <a href="#" ng-click="traeTotalxEmpresa(empresa.emp_idempresa, empresa.emp_nombre)">{{empresa.emp_nombre}}</a>
+                  <a href="#" ng-click="traeTotalxEmpresa(empresa.emp_idempresa, empresa.emp_nombre,empresa.emp_nombrecto)">{{empresa.emp_nombre}}</a>
                 </li>
               </ul>
             </div><!-- /btn-group -->
@@ -246,7 +247,7 @@
           Nombre del Lote
         </div>
         <div id="mdContentSuma"> 
-          <input type="text" class="form-control" ng-model="formData.nombreLoteNuevo"> 
+          <input type="text" class="form-control" ng-model="formData.nombreLoteNuevo" readonly> 
         </div>
         </div>
       </div>
@@ -275,6 +276,9 @@
     </div>
   </div>
 </div>
+
+<!-- Usuario autenticado -->
+ <input type="hidden" id="lgnUser" value="[[ user.idUsuario ]]">
 
 <!--Interface de usuario-->
 <script src="js/toastr.min.js"></script>
