@@ -52,6 +52,27 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
        }*/
        //LQMA 11032016       
 
+       //LQMA 15042016
+       //Obtengo el usuario logueado
+        /*if(!($('#lgnUser').val().indexOf('[') > -1)){
+            localStorageService.set('lgnUser', $('#lgnUser').val());
+        }
+        else{
+            if(($('#lgnUser').val().indexOf('[') > -1) && !localStorageService.get('lgnUser')){
+                if(getParameterByName('employee') != ''){
+                    $rootScope.currentEmployee = getParameterByName('employee');
+                }
+                else{
+                   alert('Inicie sesión desde panel de aplicaciones.');
+                    window.close(); 
+                }                
+            }
+        }
+        if($rootScope.currentEmployee == null)
+            $rootScope.currentEmployee = localStorageService.get('lgnUser');*/
+        //---------------------------------------------------------------------------------------  
+
+
        $scope.caja = 0;       
        $scope.cobrar = 0;       
 
@@ -403,7 +424,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                         $rootScope.NuevoLote = true;
 
                         var date = new Date();
-                        $rootScope.formData.nombreLoteNuevo = ("0" + (date.getMonth() + 1)).slice(-2) + ("0" + date.getDate()).slice(-2) + date.getFullYear() + $rootScope.emp_nombrecto + '01'; 
+                        $rootScope.formData.nombreLoteNuevo = ("0" + (date.getMonth() + 1)).slice(-2) + ("0" + date.getDate()).slice(-2) + date.getFullYear() + '-' + $rootScope.emp_nombrecto + '-01'; 
                     }                    
 
 
@@ -1801,7 +1822,7 @@ $scope.Guardar = function(opcion,valor) {
                     $rootScope.noLotes = data;
                     var date = new Date(); 
                     
-                    $rootScope.formData.nombreLoteNuevo = ("0" + (date.getMonth() + 1)).slice(-2) + ("0" + date.getDate()).slice(-2) + date.getFullYear() + $rootScope.emp_nombrecto + ('0' + $rootScope.noLotes.data.length).slice(-2);//data.length + 1;
+                    $rootScope.formData.nombreLoteNuevo = ("0" + (date.getMonth() + 1)).slice(-2) + ("0" + date.getDate()).slice(-2) + date.getFullYear() + '-' + $rootScope.emp_nombrecto + '-' + ('0' + $rootScope.noLotes.data.length).slice(-2);//data.length + 1;
                     $('#inicioModal').modal('show');
                 }, 
                 function errorCallback(response) {
