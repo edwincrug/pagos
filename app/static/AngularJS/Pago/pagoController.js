@@ -302,7 +302,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         pagoRepository.getEmpresas($scope.idUsuario)
             .then(function successCallback(response) {
                 $scope.empresas = response.data;
-                 //$('#inicioModal').modal('show');
+                 $('#inicioModal').modal('show');
                  $scope.showTotales = false;
                
             }, function errorCallback(response) {
