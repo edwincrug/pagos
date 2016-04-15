@@ -192,21 +192,40 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
     //Obtiene ID de empleado
     //LQMA 
     var GetEmpleado = function(){
-        if(getParameterByName('employee') != ''){
-            $rootScope.currentEmployee = getParameterByName('employee');
+      if(!($('#lgnUser').val().indexOf('[') > -1)){
+            localStorageService.set('lgnUser', $('#lgnUser').val());
         }
-
-        if ($rootScope.currentEmployee == null){
-            var idEmpleado = 1; //prompt("Ingrese un número de empleado", 1);
-            $rootScope.currentEmployee = idEmpleado;
-        }
-        
-        if ($rootScope.currentEmployee != null)
-                GetId();
         else{
-            ConfiguraGrid();
-            setTimeout(function(){Prepagos();},500);
+            if(($('#lgnUser').val().indexOf('[') > -1) && !localStorageService.get('lgnUser')){
+                if(getParameterByName('employee') != ''){
+                    $rootScope.currentEmployee = getParameterByName('employee');
+                    return;
+                }
+                else{
+                   alert('Inicie sesión desde panel de aplicaciones.');
+                    window.close(); 
+                }
+                
+            }
         }
+        //Obtengo el empleado logueado
+        $rootScope.currentEmployee = localStorageService.get('lgnUser');
+
+        // if(getParameterByName('employee') != ''){
+        //     $rootScope.currentEmployee = getParameterByName('employee');
+        // }
+
+        // if ($rootScope.currentEmployee == null){
+        //     var idEmpleado = 1; //prompt("Ingrese un número de empleado", 1);
+        //     $rootScope.currentEmployee = idEmpleado;
+        // }
+        
+        // if ($rootScope.currentEmployee != null)
+        //         GetId();
+        // else{
+        //     ConfiguraGrid();
+        //     setTimeout(function(){Prepagos();},500);
+        // }
     };
 
     //LQMA obtiene el ID de padre para consultar pagos por aprobar
@@ -262,7 +281,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         pagoRepository.getEmpresas($scope.idUsuario)
             .then(function successCallback(response) {
                 $scope.empresas = response.data;
-                 $('#inicioModal').modal('show');
+                 //$('#inicioModal').modal('show');
                  $scope.showTotales = false;
                
             }, function errorCallback(response) {
