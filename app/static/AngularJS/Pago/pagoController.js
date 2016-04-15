@@ -163,15 +163,10 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
                         //$scope.idCuenta = $scope.idEmpresa;
                         //$scope.llenaEncabezado();
-
-                        /*setTimeout(function(){
-                                                $('#inicioModal').modal('hide');
-                                                //$rootScope.accionPagina = false; 
-                                              },1500);*/
+                        $scope.traeBancosCompleta();                          
 
                         setTimeout(function(){ 
-                          $( "#btnSelectAll" ).click();//$scope.selectAll();
-                          $scope.llenaEncabezado();
+                          $( "#btnSelectAll" ).click();//$scope.selectAll();                          
                         }, 3000);    
                     }
                     /*else
