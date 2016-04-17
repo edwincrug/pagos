@@ -316,7 +316,8 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
     $scope.traeBancosCompleta = function () {
         //Llamada a repository para obtener data        
         //FAL 10042016
-     
+        $rootScope.grdBancos = [];
+        $rootScope.grdBancosoriginal = [];
         pagoRepository.getBancosCompleta($scope.idEmpresa)
 
             .then(function successCallback(response) {
@@ -327,13 +328,17 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 i=0;
                 $rootScope.bancosCompletas.forEach(function (cuentaPagadora, sumaSaldo)
                     {
+                       $rootScope.grdBancos.push({
+                        banco: $rootScope.bancosCompletas[i].cuentaPagadora,
+                        subtotal: $rootScope.bancosCompletas[i].sumaSaldoPagable
+                    });
                     $rootScope.GranTotalaPagar = $rootScope.GranTotalaPagar + $rootScope.bancosCompletas[i].sumaSaldo; 
                     $rootScope.GranTotalnoPagable = $rootScope.GranTotalnoPagable + $rootScope.bancosCompletas[i].sumaSaldoNoPagable; 
                     $rootScope.GranTotalPagable = $rootScope.GranTotalPagable + $rootScope.bancosCompletas[i].sumaSaldoPagable; 
 
                     i++;                          
                     });
-
+                $rootScope.grdBancosoriginal = $rootScope.grdBancos;
                 
                
             }, function errorCallback(response) {
@@ -631,8 +636,6 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 {
                      $scope.data[i].Pagar = $scope.data[i].saldo;
                      $scope.data[i].fechaPago = $scope.data[i].fechaPromesaPago;
-                    
-                     
                 if ($scope.data[i].fechaPromesaPago=="1900-01-01T00:00:00")
                     {
                         $scope.data[i].fechaPromesaPago = "";
@@ -640,12 +643,13 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
                 if ($scope.data[i].seleccionable=="False")
                     {
-                        $scope.data[i].estGrid = 'Pagable';
+                        $scope.data[i].estGrid = 'Pago';
                     }    
 
                 if ($scope.data[i].seleccionable=='True')
                     {
                         $scope.data[i].Pagar = $scope.data[i].saldo;
+                        $scope.data[i].estGrid = 'No pagar';
 
                     }
                 if ($scope.data[i].documentoPagable=='False')
@@ -735,12 +739,13 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
                       if ($scope.data[i].seleccionable=="False")
                     {
-                        $scope.data[i].estGrid = 'Pagable';
+                        $scope.data[i].estGrid = 'Pago';
                     }
 
                      if ($scope.data[i].seleccionable=='True')
                     {
                         $scope.data[i].Pagar = $scope.data[i].saldo;
+                        $scope.data[i].estGrid = 'No pagar';
                     }
                      if ($scope.data[i].documentoPagable=='False')
                     {
@@ -779,11 +784,9 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 if($scope.gridOptions == null)
                     ConfiguraGrid();
                
-                $scope.gridOptions.data = null;  
-
-                $scope.gridOptions.data = data;
-              
-                 $scope.data = data;
+                $scope.gridOptions.data = null;
+                $scope.gridOptions.data = data;              
+                $scope.data = data;
                 $scope.carteraVencida = 0;
                 $scope.cantidadTotal = 0;
                 $scope.cantidadUpdate = 0;
@@ -802,12 +805,13 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
                     if ($scope.data[i].seleccionable=="False")
                     {
-                        $scope.data[i].estGrid = 'Pagable';
+                        $scope.data[i].estGrid = 'Pago';
                     }
 
                      if ($scope.data[i].seleccionable=='True')
                     {
                         $scope.data[i].Pagar = $scope.data[i].saldo;
+                        $scope.data[i].estGrid = 'No pagar';
                     }
                      if ($scope.data[i].documentoPagable=='False')
                     {
@@ -872,7 +876,7 @@ $scope.gridOptions = {
         height:900,
         cellEditableCondition: function($scope) {
             // put your enable-edit code here, using values from $scope.row.entity and/or $scope.col.colDef as you desire
-            return $scope.row.entity.ordenBloqueada; // in this example, we'll only allow active rows to be edited
+            return $scope.row.entity.seleccionable; // in this example, we'll only allow active rows to be edited
         },
 
         columnDefs: [
@@ -916,12 +920,14 @@ $scope.gridOptions = {
          { name: 'ordenBloqueada', displayName: 'Bloqueada', width: '20%', visible:false},
          { name: 'cuentaPagadora', width: '15%', displayName: 'Banco'},
          { name: 'fechaPago', displayName: 'fechaPago', width: '20%', visible:false},
-         { name: 'estGrid', width: '15%', displayName: 'Estatus Grid'}
+         { name: 'estGrid', width: '15%', displayName: 'Estatus Grid'},
+         { name: 'seleccionable', displayName: 'seleccionable', width: '20%'},
          // { name: 'diasCobro', width: '5%' },
          // { name: 'aprobado', width: '5%' },
          // { name: 'contReprog', width: '5%' }
         ],
         rowTemplate:'<div ng-class="{\'ordenBloqueada\':(row.entity.ordenBloqueada==\'True\' && ((row.entity.idEstatus < 1 || row.entity.idEstatus > 5) && row.entity.idEstatus != 20) && !row.isSelected)' + 
+                                    ',\'noSeleccionable\': (row.entity.seleccionable==\'True\')'+
                                     ',\'bloqueadaSelec\': (row.isSelected && row.entity.ordenBloqueada==\'True\') || (row.isSelected && ((row.entity.idEstatus >= 1 && row.entity.idEstatus <= 5) || row.entity.idEstatus == 20)),'+
                                     '\'selectNormal\': (row.isSelected && row.entity.ordenBloqueada==\'False\' && ((row.entity.idEstatus < 1 || row.entity.idEstatus > 5) && row.entity.idEstatus != 20))'+
                                     ',\'docIncompletos\': (!row.isSelected && ((row.entity.idEstatus >= 1 && row.entity.idEstatus <= 5) || row.entity.idEstatus == 20) && row.entity.ordenBloqueada==\'False\')'+
@@ -951,7 +957,7 @@ $scope.gridOptions = {
               }
 
          //FAL14042016 Marcado de grupos y proveedores 
-          if (row.internalRow == undefined && row.isSelected == true && row.entity.ordenBloqueada == "False")
+          if (row.internalRow == undefined && row.isSelected == true && row.entity.seleccionable == "False")
           {
               var childRows   = row.treeNode.parentRow.treeNode.children;
               var ctdSeleccionados = 0;
@@ -1022,7 +1028,7 @@ $scope.gridOptions = {
                         {
                                 $rootScope.grdBancos[i].subtotal = Math.round($rootScope.grdBancos[i].subtotal * 100) / 100 + Math.round(grdPagarxdocumento * 100) / 100;
                                 $rootScope.grdApagar = $rootScope.grdApagar + row.entity.Pagar;
-                                row.entity.estGrid = 'Pagar'
+                                row.entity.estGrid = 'Pago'
                            }
                            
                            i++;                           
@@ -1043,7 +1049,7 @@ $scope.gridOptions = {
                            {
                                 $rootScope.grdBancos[i].subtotal = Math.round($rootScope.grdBancos[i].subtotal * 100) / 100 - Math.round(grdPagarxdocumento * 100) / 100;
                                 $rootScope.grdApagar = $rootScope.grdApagar - row.entity.Pagar;
-                                row.entity.estGrid = 'Pagable'
+                                row.entity.estGrid = 'Permitido'
                            }
                            i++;                           
                         });
@@ -1054,7 +1060,12 @@ $scope.gridOptions = {
         gridApi1.selection.on.rowSelectionChangedBatch($scope, function (rows) {
 
                 //FAL 13042016 cambio de seleccion de padres
-
+              if($scope.etqFiltros == 'No Pagables')
+              {
+               alertFactory.warning('No se pueden seleccionar'); 
+              }
+              else
+              {
                 rows.forEach(function (row,i) {
                 
 
@@ -1069,10 +1080,10 @@ $scope.gridOptions = {
                             {
                                if(row.entity.cuentaPagadora == $rootScope.grdBancos[i].banco)
                                 {
-                                    if(row.entity.ordenBloqueada == 'False'){
+                                    if(row.entity.seleccionable == 'False'){
                                         $rootScope.grdBancos[i].subtotal = Math.round($rootScope.grdBancos[i].subtotal * 100) / 100 + Math.round(row.entity.Pagar * 100) / 100;
                                         $rootScope.grdApagar = $rootScope.grdApagar + row.entity.Pagar;
-                                        row.entity.estGrid = 'Pagar'
+                                        row.entity.estGrid = 'Pago'
                                       }
                                    }
                                    i++;                           
@@ -1096,10 +1107,10 @@ $scope.gridOptions = {
                                 {
                                    if(row.entity.cuentaPagadora == $rootScope.grdBancos[i].banco)
                                    {
-                                     if(row.entity.ordenBloqueada == 'False'){
+                                     if(row.entity.seleccionable == 'False'){
                                         $rootScope.grdBancos[i].subtotal = Math.round($rootScope.grdBancos[i].subtotal * 100) / 100 - Math.round(row.entity.Pagar * 100) / 100;
                                         $rootScope.grdApagar = $rootScope.grdApagar - row.entity.Pagar;
-                                        row.entity.estGrid = 'Pagable'
+                                        row.entity.estGrid = 'Permitido'
                                        } 
                                    }
                                    i++;                           
@@ -1110,46 +1121,72 @@ $scope.gridOptions = {
                      row.treeNode.parentRow.treeNode.parentRow.treeNode.row.isSelected = false;       
                     }          
                 });
-                
+                };
             });
 
             gridApi1.edit.on.afterCellEdit($scope, function (rowEntity, colDef, newValue, oldValue) 
             {
                //FAL trabaja con las variables dependiendo si se edita o cambia la fecha
-                old_date = new Date(rowEntity.fechaPago); 
-                oldValue = rowEntity.saldo;               
-                if (colDef.name == 'fechaPromesaPago') {
-                    dtHoy = Date.now();
-                    now_date = new Date(dtHoy);
-                    new_date = new Date(newValue);
-                    var today = new Date(); var dd = today.getDate(); var mm = today.getMonth()+1; var yyyy = today.getFullYear();
-                    if (new_date < now_date)
-                    {
-                        alertFactory.warning('La fecha promesa de pago no puede ser menor a ' + dd + '/' + mm + '/' + yyyy +' !!!');
-                        rowEntity.fechaPromesaPago = old_date;
+
+               if (rowEntity.estGrid == 'Pago' || rowEntity.estGrid == 'Pago Reprogramado' )
+               { 
+                        old_date = new Date(rowEntity.fechaPago); 
+                        oldValue = rowEntity.saldo;               
+                        if (colDef.name == 'fechaPromesaPago') {
+                            dtHoy = Date.now();
+                            now_date = new Date(dtHoy);
+                            new_date = new Date(newValue);
+                            var today = new Date(); var dd = today.getDate(); var mm = today.getMonth()+1; var yyyy = today.getFullYear();
+                            if (new_date <= now_date)
+                            {
+                                alertFactory.warning('La fecha promesa de pago no puede ser menor a ' + dd + '/' + mm + '/' + yyyy +' !!!');
+                                rowEntity.fechaPromesaPago = old_date;
+                                rowEntity.estGrid = 'Pago';
+                            }
+                            else
+                            {
+                                $rootScope.grdApagar = Math.round($rootScope.grdApagar * 100) / 100 - Math.round(rowEntity.Pagar* 100) / 100;
+                                rowEntity.Pagar = oldValue;
+                                $rootScope.grdApagar = Math.round($rootScope.grdApagar * 100) / 100 + Math.round(rowEntity.Pagar* 100) / 100; 
+                                $rootScope.grdReprogramado =  Math.round($rootScope.grdReprogramado * 100) / 100 + Math.round(rowEntity.Pagar * 100) / 100;
+                                $rootScope.grdApagar = Math.round($rootScope.grdApagar * 100) / 100 - Math.round(rowEntity.Pagar* 100) / 100;
+                                rowEntity.estGrid = 'Pago Reprogramado';
+
+                                
+
+                            }
+                            
+                        } 
+                        if (colDef.name == 'Pagar') {
+                            $scope.cantidadUpdate = newValue - oldValue;
+                            if ((newValue > oldValue) || (newValue <= 0))
+                              {
+                                  alertFactory.warning('El pago el pago es inválido !!!');
+                                  rowEntity.Pagar = oldValue;
+                              }
+                              else{
+                                  if (rowEntity.estGrid == 'Pago Reprogramado')
+                                  {
+                                    $rootScope.grdReprogramado =  Math.round($rootScope.grdReprogramado * 100) / 100 - Math.round(rowEntity.Pagar * 100) / 100;
+                                  }
+                                  $rootScope.grdNoIncluido =  Math.round($rootScope.grdNoIncluido * 100) / 100 - Math.round($scope.cantidadUpdate * 100) / 100;
+                                  $rootScope.grdApagar = Math.round($rootScope.grdApagar * 100) / 100 + Math.round($scope.cantidadUpdate* 100) / 100;
+                                  rowEntity.estGrid = 'Pago';
+                                  rowEntity.fechaPromesaPago = old_date;
+                              }
+                        }
+              }
+              else
+              {
+                   alertFactory.warning('Solo se pueden modificar datos de los documentos seleccionados');
+                    if (colDef.name == 'Pagar') {
+                      rowEntity.Pagar = oldValue;
                     }
-                    if (new_date > now_date)
-                    {
-                        $rootScope.grdReprogramado =  Math.round($rootScope.grdReprogramado * 100) / 100 + Math.round(rowEntity.Pagar * 100) / 100;
-                        $rootScope.grdApagar = Math.round($rootScope.grdApagar * 100) / 100 - Math.round(rowEntity.Pagar* 100) / 100
-                        rowEntity.estGrid = 'Reprogramado'
+                    if (colDef.name == 'fechaPromesaPago') {
+                      rowEntity.fechaPromesaPago = oldValue;
                     }
-                    
-                } 
-                if (colDef.name == 'Pagar') {
-                    $scope.cantidadUpdate = newValue - oldValue;
-                    if (newValue > oldValue)
-                      {
-                          alertFactory.warning('El pago no puede ser mayor a ' + oldValue + '  !!!');
-                          rowEntity.Pagar = oldValue;
-                      }
-                      else{
-                          $rootScope.grdNoIncluido =  Math.round($rootScope.grdNoIncluido * 100) / 100 - Math.round($scope.cantidadUpdate * 100) / 100;
-                          $rootScope.grdApagar = Math.round($rootScope.grdApagar * 100) / 100 + Math.round($scope.cantidadUpdate* 100) / 100
-                          rowEntity.estGrid = 'Pagable'
-                          rowEntity.fechaPromesaPago = old_date;
-                      }
-                }
+
+              }          
               });               
                     
           $scope.gridApi1.selection.selectAllRows(true);  
@@ -1199,7 +1236,7 @@ $scope.selectAll = function(opcion) {
     //FAL se analizan los registros para selccionarlos y se obtienen los totales relacionados al grid
     $rootScope.grdApagar = 0;
     $rootScope.grdnoPagable = 0;
-    $rootScope.grdBancos = [];
+    $scope.etqFiltros = "Todos";
     $scope.grdinicia = 0;
     //LQMA 14032016
     //$rootScope.gridOptions.data.forEach(function (grDatosSel, i)
@@ -1216,38 +1253,7 @@ $scope.selectAll = function(opcion) {
         if(opcion == 0)
           $scope.gridApi1.selection.selectRow($scope.gridOptions.data[i]);
        };
-       if (i == 0)
-       {
-
-        if(grDatosSel.cuentaPagadora != 'SCP')
-            $rootScope.grdBancos.push({
-                        banco: grDatosSel.cuentaPagadora,
-                        subtotal: grDatosSel.saldo
-                    });
-       }
-       else
-       {    
-            var add = true;
-            var j = 0;
-            for (var j = 0; j < $rootScope.grdBancos.length; j++)
-            {
-                if ($rootScope.grdBancos[j].banco == grDatosSel.cuentaPagadora)
-                {   
-                    add = false
-                    $rootScope.grdBancos[j].subtotal = $rootScope.grdBancos[j].subtotal + grDatosSel.saldo
-                }
-            }
-            if (add)
-            {
-                if(grDatosSel.cuentaPagadora != 'Sin CuentaPagadora')
-                    $rootScope.grdBancos.push({
-                        banco: grDatosSel.cuentaPagadora,
-                        subtotal: grDatosSel.saldo
-                    });
-            }
-       };
-   
-    });
+      });
 
         $rootScope.grdReprogramado = 0;
         $rootScope.grdNoIncluido = 0;
@@ -1264,22 +1270,37 @@ $scope.selectAll = function(opcion) {
 };       
 
 //FAL filtros en base a variables
-$scope.Filtrar = function (value,campo) {
+$scope.Filtrar = function (value,campo,texto) {
     //console.log(value);
-    $scope.BorraFiltros();
+    $('#btnFiltros').button('loading');
+    $scope.etqFiltros = texto;
+    $scope.BorraFiltrosParciales();
     $scope.gridApi1.grid.columns[campo].filters[0].term=value;
     $scope.gridApi1.core.notifyDataChange(uiGridConstants.dataChange.COLUMN);
     $scope.gridApi1.grid.refresh();
+    $('#btnFiltros').button('reset');
     }
 
-//Quita filtros
-$scope.BorraFiltros = function () {
+$scope.BorraFiltrosParciales = function () {
     $scope.gridApi1.grid.columns.forEach(function(col,i)
     {
       $scope.gridApi1.grid.columns[i].filters[0].term='';
     }); 
     $scope.gridApi1.core.notifyDataChange(uiGridConstants.dataChange.COLUMN);
     $scope.gridApi1.grid.refresh();
+    }
+
+//Quita filtros
+$scope.BorraFiltros = function () {
+  $('#btnFiltros').button('loading');
+   $scope.etqFiltros = "Todos";
+    $scope.gridApi1.grid.columns.forEach(function(col,i)
+    {
+      $scope.gridApi1.grid.columns[i].filters[0].term='';
+    }); 
+    $scope.gridApi1.core.notifyDataChange(uiGridConstants.dataChange.COLUMN);
+    $scope.gridApi1.grid.refresh();
+    $('#btnFiltros').button('reset');
     }
 
 var isNumeric = function(obj){
