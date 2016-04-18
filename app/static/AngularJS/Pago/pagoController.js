@@ -429,7 +429,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                         $rootScope.NuevoLote = true;
 
                         var date = new Date();
-                        $rootScope.formData.nombreLoteNuevo = ("0" + (date.getMonth() + 1)).slice(-2) + ("0" + date.getDate()).slice(-2) + date.getFullYear() + '-' + $rootScope.emp_nombrecto + '-01'; 
+                        $rootScope.formData.nombreLoteNuevo = ("0" + (date.getMonth() + 1)).slice(-2) + ("0" + date.getDate()).slice(-2) + date.getFullYear() + '-' + $rootScope.emp_nombrecto +  ('0' + ($rootScope.noLotes.data.length + 1)).slice(-2);//'-01'; 
                     }                    
 
 
@@ -1502,7 +1502,7 @@ $scope.Guardar = function(opcion,valor) {
                                    elemento.pad_polConsecutivo = row.polConsecutivo;
                                    elemento.pad_polMovimiento = row.polMovimiento;
                                    elemento.pad_fechaPromesaPago = (row.fechaPromesaPago == ''?'01/01/1999':row.fechaPromesaPago);
-                                   elemento.pad_saldo = row.saldo;//row.Pagar;
+                                   elemento.pad_saldo = row.Pagar;//row.saldo;//
 
                                       //if (row.isSelected)
                                    elemento.tab_revision = 1;
@@ -1843,7 +1843,7 @@ $scope.Guardar = function(opcion,valor) {
                     $rootScope.noLotes = data;
                     var date = new Date(); 
                     
-                    $rootScope.formData.nombreLoteNuevo = ("0" + (date.getMonth() + 1)).slice(-2) + ("0" + date.getDate()).slice(-2) + date.getFullYear() + '-' + $rootScope.emp_nombrecto + '-' + ('0' + $rootScope.noLotes.data.length).slice(-2);//data.length + 1;
+                    $rootScope.formData.nombreLoteNuevo = ("0" + (date.getMonth() + 1)).slice(-2) + ("0" + date.getDate()).slice(-2) + date.getFullYear() + '-' + $rootScope.emp_nombrecto + '-' + ('0' + ($rootScope.noLotes.data.length + 1)).slice(-2);//data.length + 1;
                     $('#inicioModal').modal('show');
                 }, 
                 function errorCallback(response) {
@@ -1985,6 +1985,7 @@ pagoRepository.setArchivo($scope.idEmpresa,$scope.gridOptions.data,$rootScope.id
                 { 
                     alertFactory.success('Se envio la solicitud con exito');
                     $('#btnEnviaApro').button('reset');
+                    $rootScope.idOperacion = 1;
 
                 }, function errorCallback(response) 
                 {                
