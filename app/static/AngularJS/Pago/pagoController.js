@@ -16,7 +16,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
    $scope.fechaHoy = new Date();
 
    //FAL20042016
-   $scope.blTotales = true;
+   $rootScope.blTotales = true;
    $rootScope.grdBancos = [];
 
    var errorCallBack = function (data, status, headers, config) {
@@ -53,40 +53,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
     $scope.init = function () {
       
-       //LQMA   leer parametros : id , idemployee
-       
-       /*if($scope.currentEmployee == 0)
-       {
-            $('#inicioModal').modal('hide');
-            //GetEmpleado();
-       }
-       else
-       {
-             //GetEmpleado();
-             $scope.traeEmpresas();
-       }*/
-       //LQMA 11032016       
-
-       //LQMA 15042016
-       //Obtengo el usuario logueado
-        /*if(!($('#lgnUser').val().indexOf('[') > -1)){
-            localStorageService.set('lgnUser', $('#lgnUser').val());
-        }
-        else{
-            if(($('#lgnUser').val().indexOf('[') > -1) && !localStorageService.get('lgnUser')){
-                if(getParameterByName('employee') != ''){
-                    $rootScope.currentEmployee = getParameterByName('employee');
-                }
-                else{
-                   alert('Inicie sesión desde panel de aplicaciones.');
-                    window.close(); 
-                }                
-            }
-        }
-        if($rootScope.currentEmployee == null)
-            $rootScope.currentEmployee = localStorageService.get('lgnUser');*/
-        //---------------------------------------------------------------------------------------  
-
+     
 
        $scope.caja = 0;       
        $scope.cobrar = 0;       
@@ -96,9 +63,6 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
        //GetEmpleado();
        ConfiguraGrid();
        $rootScope.accionPagina = false; //iniciarl el grid modal en llenagrid
-       //ConfiguraGridModal();
-
-       //getId();       
 
        //Inicializamos el switch
        $.fn.bootstrapSwitch.defaults.offColor = 'info';
@@ -108,28 +72,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
        $scope.showSelCartera = true;
        $scope.llenaEncabezado();
        /***********************************************************/ 
-       //configuragridOptionsModal();
-       //*******************************
-       //                   id=no esta, nombre y cuenta = cuenta, saldo = saldo, disponible = disponible,
-       /*$scope.ingresos = [{id: 1, nombre:'Santander', cuenta: 94039,saldo: 40000, disponible: 40000, ingreso:1, egreso:0},         
-                          {id: 2,nombre:'Bancomer', cuenta: 594833,saldo: 79000, disponible: 79000,ingreso:0, egreso:1},
-                          {id: 3,nombre:'Banamex', cuenta: 100298,saldo: 685000, disponible: 685000, ingreso:0, egreso:1}];*/
 
-        // SEL_CUENTAS_INGRESOS_SP
-        /*$scope.ingresos = [{nombre:'Santander', cuenta: 94039,saldo: 40000, disponible: 40000},
-                          {nombre:'Bancomer', cuenta: 594833,saldo: 79000, disponible: 79000},
-                          {nombre:'Banamex', cuenta: 100298,saldo: 685000, disponible: 685000}];
-
-        $scope.egresos = [{nombre:'HSBC', cuenta: 228139,saldo: 90000, aTransferir: 0, total:90000,excedente:0, ingreso:0, egreso:1,totalPagar:200000,saldoIngreso:0},
-                         {nombre:'Bancomer', cuenta: 594833,saldo: 120000, aTransferir: 0,total:120000,excedente:0, ingreso:1, egreso:1,totalPagar:450000,saldoIngreso:0}];*/
-        //LQMA 14032016
-        //$scope.LlenaIngresos();
-
-        // SEL_CUENTAS_EGRESOS_SP
-       /*$scope.egresos = [{id: 1,nombre:'HSBC', cuenta: 228139,saldo: 90000, aTransferir: 0, total:90000,excedente:0, ingreso:0, egreso:1,totalPagar:200000,saldoIngreso:0},
-                         {id: 2,nombre:'Bancomer', cuenta: 594833,saldo: 120000, aTransferir: 0,total:120000,excedente:0, ingreso:1, egreso:1,totalPagar:450000,saldoIngreso:0}]; */
-
-       // nombre y cuenta = cuenta, saldo = saldo (siempre vendra en 0), aTransferir = aTransferir (viene en 0), total = total (viene en 0, se calcula),   excedente = viene en 0, se calcula, totalPagar = recuperar del $scope.TotalxEmpresa.sumaSaldo,saldoIngreso = 0   
        $scope.transferencias = [{bancoOrigen:'', bancoDestino: '', importe:0, disponibleOrigen:0,index:0}];
 
        $rootScope.idOperacion = 0;
@@ -734,87 +677,23 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                     $rootScope.grdApagar = $rootScope.grdApagar + banco.sumaSaldoPagable;
                 });
 
-
+               $rootScope.blTotales = true;
 
     };
 
 
 
-    var llenaGridSuccessCallback = function (data, status, headers, config) {
-                
-                if($rootScope.accionPagina)
-                        if(!$rootScope.NuevoLote)
-                        {
-                            if($scope.gridOptions == null)
-                                 ConfiguraGrid();
-                            $scope.gridOptions.data = data;
-                        }
-                        else
-                            $rootScope.NuevoLote = false;
-                //else
-                    //$rootScope.setDataGridModal(data);//$rootScope.gridOptionsModal.data = data;
-
-                $scope.data = data;
-                $scope.carteraVencida = 0;
-                $scope.cantidadTotal = 0;
-                $scope.cantidadUpdate = 0;
-                $scope.noPagable = 0;
-                $scope.Reprogramable = 0;
-                for (var i = 0; i < $scope.data.length; i++)
-                {
-                     $scope.data[i].Pagar = $scope.data[i].saldo;
-                     $scope.data[i].fechaPago = $scope.data[i].fechaPromesaPago;
-                     
-                     
-                      if ($scope.data[i].fechaPromesaPago=="1900-01-01T00:00:00")
-                    {
-                        $scope.data[i].fechaPromesaPago = "";
-                    }
-
-                      if ($scope.data[i].seleccionable=="False")
-                    {
-                        $scope.data[i].estGrid = 'Pago';
-                    }
-
-                     if ($scope.data[i].seleccionable=='True')
-                    {
-                        $scope.data[i].Pagar = $scope.data[i].saldo;
-                        $scope.data[i].estGrid = 'No pagar';
-                    }
-                     if ($scope.data[i].documentoPagable=='False')
-                    {
-                        $scope.data[i].Pagar = $scope.data[i].saldo;
-                    }
-                $scope.carteraVencida = $scope.carteraVencida + $scope.data[i].saldo
-
-                }
-                $scope.noPagable = $scope.carteraVencida -$scope.cantidadTotal;
-                
-                //$scope.gridOptions.data = data;
-                //$scope.selectAll();
-                if($rootScope.accionPagina)
-                {
-                    $scope.gridOptions.data = data;
-                    //alert('accion pagina: ' + $scope.gridOptions.data);
-                }
-                else    
-                    $rootScope.setDataGridModal($scope.data); //XXXX$scope.gridOptionsModal.data = $scope.data;
- 
-                setTimeout(function()
-                { 
-                 //LQMA 15032016   
-                 //$scope.selectAll();
-                 /*if($rootScope.showGrid)
-                      $rootScope.selectAllModal();*/
-                    //$scope.selectAllModal();
-
-                }, 500);
-    };     
-
-
+    
  //LQMA ADD 08042016
  var llenaLoteConsultaSuccessCallback = function (data, status, headers, config) {
                 
+ $rootScope.grdBancos.forEach(function (banco, l)
+                        {
+                                $rootScope.grdBancos[l].subtotal = 0;
+                                $rootScope.grdApagar = 0;
+                        });
+                
+
                 if($scope.gridOptions == null)
                     ConfiguraGrid();
                
@@ -840,6 +719,15 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                     if ($scope.data[i].seleccionable=="False")
                     {
                         $scope.data[i].estGrid = 'Pago';
+
+                        $rootScope.grdBancos.forEach(function (banco, k)
+                            {
+                               if($scope.data[i].cuentaPagadora == $rootScope.grdBancos[k].banco)
+                                {
+                                        $rootScope.grdBancos[k].subtotal = Math.round($rootScope.grdBancos[k].subtotal * 100) / 100 + Math.round($scope.data[i].Pagar * 100) / 100;
+                                        $rootScope.grdApagar = $rootScope.grdApagar + Math.round($scope.data[i].Pagar * 100) / 100;
+                                }
+                            });
                     }
 
                      if ($scope.data[i].seleccionable=='True')
@@ -851,24 +739,14 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                     {
                         $scope.data[i].Pagar = $scope.data[i].saldo;
                     }
-                $scope.carteraVencida = $scope.carteraVencida + $scope.data[i].saldo
+                $scope.carteraVencida = $scope.carteraVencida + $scope.data[i].saldo;
 
                 }
                 $scope.noPagable = $scope.carteraVencida -$scope.cantidadTotal;
                 
                 $scope.gridOptions.data = data;
                 
-                setTimeout(function()
-                { 
-                 //LQMA 15032016   
-                 //$scope.selectAll();
-                 /*if($rootScope.showGrid)
-                      $rootScope.selectAllModal();*/
-                    //$scope.selectAllModal();
-                 //FAL evita que se alteren los datos al seleccionar todos
-                
-                 $('#inicioModal').modal('hide');
-                }, 500);
+                $rootScope.blTotales = false;
     };        
 
  var setGroupValues = function (columns, rows) {
@@ -1242,8 +1120,8 @@ $scope.selectAll = function(opcion) {
 
       $scope.gridApi1.core.notifyDataChange(uiGridConstants.dataChange.OPTIONS);
       $scope.gridApi1.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
-      
-      
+      //$scope.gridApi1.selection.selectAllRows(true);
+
       $scope.grdinicia = $scope.grdinicia + 1;
 };       
 
@@ -1481,7 +1359,7 @@ $scope.Guardar = function(opcion,valor) {
                                    elemento.pad_polMes = row.polMes;
                                    elemento.pad_polConsecutivo = row.polConsecutivo;
                                    elemento.pad_polMovimiento = row.polMovimiento;
-                                   elemento.pad_fechaPromesaPago = (row.fechaPromesaPago == ''?'01/01/1999':row.fechaPromesaPago);
+                                   elemento.pad_fechaPromesaPago = (row.fechaPromesaPago == ''?'1999-01-01T00:00:00':row.fechaPromesaPago);
                                    elemento.pad_saldo = row.Pagar;//row.saldo;//
 
                                       //if (row.isSelected)

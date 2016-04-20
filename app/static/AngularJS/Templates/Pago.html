@@ -407,9 +407,9 @@
 	<section id="container">
 		<button type="button" id="btnSelectAll" ng-hide="1 > 0" class="btn btn-success" ng-disabled="!gridApi1.grid.options.multiSelect" ng-click="seleccionaTodo()"></button>
 		<button type="button" id="btnSelect" ng-hide="1 > 0" class="btn btn-success" ng-disabled="!gridApi1.grid.options.multiSelect" ng-click="selecciona()"></button>
-		<div class=" blueInfo" >
-					<label class="btn btn-primary" ng-model="etqFiltros">{{etqFiltros}}</label>
-					<button id="btnFiltros" type="button" class="btn btn-info" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  data-loading-text="Calculando..." autocomplete="off">OK <span class="caret"></span></button>
+		<div class=" blueInfo" ng-show="blTotales">
+			<label class="tituloBloque2" ng-model="etqFiltros">{{etqFiltros}} {{msgFiltros}}</label>
+					
 		</div>
 		
 		<div id="contenedor" ng-init="iniciaGrid()">
