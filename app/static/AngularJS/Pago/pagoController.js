@@ -15,6 +15,10 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
    $scope.radioTotales = 1;
    $scope.fechaHoy = new Date();
 
+   //FAL20042016
+   $scope.blTotales = true;
+   $rootScope.grdBancos = [];
+
    var errorCallBack = function (data, status, headers, config) {
         alertFactory.error('Ocurrio un problema');
     };
@@ -632,8 +636,8 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
     };  //Propiedades    
 
 
-    //LQMA 08042016
-    var getCarteraCallback = function (data, status, headers, config) {
+    //FAL20042016
+     var getCarteraCallback = function (data, status, headers, config) {
 
             //FAL fecha no presentada y contadores
 
@@ -643,6 +647,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 $scope.cantidadUpdate = 0;
                 $scope.noPagable = 0;
                 $scope.Reprogramable = 0;
+                var j = 0;
                 for (var i = 0; i < $scope.data.length; i++)
                 {
                      $scope.data[i].Pagar = $scope.data[i].saldo;
@@ -655,6 +660,8 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 if ($scope.data[i].seleccionable=="False")
                     {
                         $scope.data[i].estGrid = 'Pago';
+
+                       
                     }    
 
                 if ($scope.data[i].seleccionable=='True')
@@ -709,12 +716,28 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
             //LQMA 15032016
             $rootScope.accionPagina = true;       
 
+            $rootScope.grdApagar = 0;
             /* LQMA 08042016
             setTimeout(function(){ 
                                     $( "#btnSelectAll" ).click();//$scope.selectAll();
                                     }, 500);*/
 
+            //FAL 19042016 llena totales de bancos desde la consulta de lulu.
+               $rootScope.grdBancos = [];
+               $rootScope.grdApagar = 0;
+               $rootScope.bancosCompletas.forEach(function (banco, k)
+                {
+                   $rootScope.grdBancos.push({
+                                      banco: banco.cuentaPagadora,
+                                      subtotal: banco.sumaSaldoPagable
+                                    });
+                    $rootScope.grdApagar = $rootScope.grdApagar + banco.sumaSaldoPagable;
+                });
+
+
+
     };
+
 
 
     var llenaGridSuccessCallback = function (data, status, headers, config) {
@@ -895,8 +918,7 @@ $scope.gridOptions = {
            name: 'nombreAgrupador', grouping: { groupPriority: 0 }, sort: { priority: 0, direction: 'asc' }, width: '15%',displayName: 'Grupo', enableCellEdit: false
          },
          {
-           name: 'proveedor', grouping: { groupPriority: 1 }, sort: { priority: 1, direction: 'asc' }, width: '15%',name: 'proveedor'
-           , width: '20%'
+           name: 'proveedor', grouping: { groupPriority: 1 }, sort: { priority: 1, direction: 'asc' }, width: '35%',name: 'proveedor'
            ,cellTemplate: '<div><div ng-if="!col.grouping || col.grouping.groupPriority === undefined || col.grouping.groupPriority === null || ( row.groupHeader && col.grouping.groupPriority === row.treeLevel )" class="ui-grid-cell-contents" title="TOOLTIP">{{COL_FIELD CUSTOM_FILTERS}}</div></div>'
          },
          {
@@ -933,12 +955,13 @@ $scope.gridOptions = {
          { name: 'fechaPago', displayName: 'fechaPago', width: '20%', visible:false},
          { name: 'estGrid', width: '15%', displayName: 'Estatus Grid'},
          { name: 'seleccionable', displayName: 'seleccionable', width: '20%'},
+         { name: 'cuentaDestino', displayName: 'Cuenta Destino', width: '20%'}
          // { name: 'diasCobro', width: '5%' },
          // { name: 'aprobado', width: '5%' },
          // { name: 'contReprog', width: '5%' }
         ],
         rowTemplate:'<div ng-class="{\'ordenBloqueada\':(row.entity.ordenBloqueada==\'True\' && ((row.entity.idEstatus < 1 || row.entity.idEstatus > 5) && row.entity.idEstatus != 20) && !row.isSelected)' + 
-                                    ',\'noSeleccionable\': (row.entity.seleccionable==\'True\')'+
+                                    ',\'noSeleccionable\': (row.entity.seleccionable==\'True\' && row.entity.cuentaDestino==\'SIN CUENTA DESTINO\')'+
                                     ',\'bloqueadaSelec\': (row.isSelected && row.entity.ordenBloqueada==\'True\') || (row.isSelected && ((row.entity.idEstatus >= 1 && row.entity.idEstatus <= 5) || row.entity.idEstatus == 20)),'+
                                     '\'selectNormal\': (row.isSelected && row.entity.ordenBloqueada==\'False\' && ((row.entity.idEstatus < 1 || row.entity.idEstatus > 5) && row.entity.idEstatus != 20))'+
                                     ',\'docIncompletos\': (!row.isSelected && ((row.entity.idEstatus >= 1 && row.entity.idEstatus <= 5) || row.entity.idEstatus == 20) && row.entity.ordenBloqueada==\'False\')'+
@@ -950,8 +973,10 @@ $scope.gridOptions = {
             // marcando los padres.
 
         //FAL14042016 Marcado de grupos y proveedores
-        gridApi1.selection.on.rowSelectionChanged($scope, function (row) {
-                
+        gridApi1.selection.on.rowSelectionChanged($scope, function (row,rows) {
+
+
+            
            if(row.internalRow==true && row.isSelected==true){
                 var childRows = row.treeNode.children;
                 for (var j = 0, length = childRows.length; j < length; j++) {
@@ -959,7 +984,7 @@ $scope.gridOptions = {
                 }
                 }
 
-          if(row.internalRow==true && row.isSelected==false){
+           if(row.internalRow==true && row.isSelected==false){
               var childRows   = row.treeNode.children;
 
               for (var j = 0, length = childRows.length; j < length; j++) {
@@ -967,56 +992,7 @@ $scope.gridOptions = {
               }
               }
 
-         //FAL14042016 Marcado de grupos y proveedores 
-          if (row.internalRow == undefined && row.isSelected == true && row.entity.seleccionable == "False")
-          {
-              var childRows   = row.treeNode.parentRow.treeNode.children;
-              var ctdSeleccionados = 0;
-
-              for (var j = 0, length = childRows.length; j < length; j++) {
-
-                  
-                  if (childRows[j].row.isSelected == true){
-                     ctdSeleccionados = ctdSeleccionados + 1;
-                    }
-
-                    
-                if (ctdSeleccionados == childRows.length)
-                {
-                  row.treeNode.parentRow.treeNode.row.isSelected = true;
-                  var nietosRows = row.treeNode.parentRow.treeNode.parentRow.treeNode.children;
-                  var ctdnietosSeleccionados = 0;
-                  for (var t = 0, length = nietosRows.length; t < length; t++) {
-                  if (nietosRows[t].row.isSelected == true){
-                     ctdnietosSeleccionados = ctdnietosSeleccionados + 1;
-                  }
-                    if (ctdnietosSeleccionados == nietosRows.length)
-                      { 
-                        row.treeNode.parentRow.treeNode.parentRow.treeNode.row.isSelected = true;
-                      }
-                 }
-                }
-              }
-          }    
-
-          if (row.internalRow == undefined && row.isSelected == false)
-          {
-            var childRows   = row.treeNode.parentRow.treeNode.children;
-              var ctdSeleccionados = 0;
-              for (var j = 0, length = childRows.length; j < length; j++) {
- 
-                if (childRows[j].row.isSelected == true){
-                     ctdSeleccionados = ctdSeleccionados + 1;
-                }
-
-                if (ctdSeleccionados > 0)
-                {
-                  row.treeNode.parentRow.treeNode.row.isSelected = false;
-                  row.treeNode.parentRow.treeNode.parentRow.treeNode.row.isSelected = false;
-                }
-              }
-          }    
-          //FAL funcion de marcado.
+         
       
                 if (row.entity.Pagar == null)
                 {
@@ -1029,7 +1005,7 @@ $scope.gridOptions = {
                 if (row.isSelected) {
 
                    $rootScope.grdNoIncluido =  Math.round($rootScope.grdNoIncluido * 100) / 100 - Math.round(grdPagarxdocumento * 100) / 100;
-                  
+                   if($rootScope.grdNoIncluido < 0){$rootScope.grdNoIncluido = 0;} 
                   //FAL actualizar cuenta pagadoras
                     if ($scope.grdinicia > 0){
                     i=0;
@@ -1045,8 +1021,6 @@ $scope.gridOptions = {
                            i++;                           
                         });
                     }
-
-
                 }
                 else{
                     $rootScope.grdNoIncluido = Math.round($rootScope.grdNoIncluido * 100) / 100 + Math.round(grdPagarxdocumento * 100) / 100;
@@ -1066,73 +1040,68 @@ $scope.gridOptions = {
                         });
                     }
                }
+              
           });
 
         gridApi1.selection.on.rowSelectionChangedBatch($scope, function (rows) {
 
                 //FAL 13042016 cambio de seleccion de padres
-              if($scope.etqFiltros == 'No Pagables')
-              {
-               alertFactory.warning('No se pueden seleccionar'); 
-              }
-              else
-              {
+                var i = 0;
+                var numcuentas = $rootScope.grdBancos.length;
+                
+                $rootScope.grdNoIncluido = 0;
+                if ($scope.grdinicia > 0) {
+                $rootScope.grdBancos.forEach(function (banco, l)
+                        {
+
+                                $rootScope.grdBancos[l].subtotal = 0;
+                                $rootScope.grdApagar = 0;
+                        });
+                }
+               if ($scope.grdinicia > 0) {
                 rows.forEach(function (row,i) {
                 
 
                     if (row.isSelected) {
-                        //$scope.cantidadTotal = Math.round($scope.cantidadTotal * 100) / 100 + Math.round(row.entity.Pagar * 100) / 100;
-                        $rootScope.grdNoIncluido =  Math.round($rootScope.grdNoIncluido * 100) / 100 - Math.round(row.entity.Pagar * 100) / 100;
+
+                        if (row.entity.seleccionable == 'False') {
+                        
+                          row.entity.estGrid = 'Pago';
                           
-                          //FAL actualizar cuenta pagadoras
-                            if ($scope.grdinicia > 0){
-                            i=0;
-                            $rootScope.grdBancos.forEach(function (banco, subtotal)
-                            {
-                               if(row.entity.cuentaPagadora == $rootScope.grdBancos[i].banco)
-                                {
-                                    if(row.entity.seleccionable == 'False'){
-                                        $rootScope.grdBancos[i].subtotal = Math.round($rootScope.grdBancos[i].subtotal * 100) / 100 + Math.round(row.entity.Pagar * 100) / 100;
-                                        $rootScope.grdApagar = $rootScope.grdApagar + row.entity.Pagar;
-                                        row.entity.estGrid = 'Pago'
-                                      }
-                                   }
-                                   i++;                           
-                                });
+                          $rootScope.grdNoIncluido = 0;
+                          
+
+                          for (var i = 0; i < numcuentas; i++)
+                          {
+                              if(row.entity.cuentaPagadora == $rootScope.grdBancos[i].banco)
+                           {
+                                $rootScope.grdBancos[i].subtotal = Math.round($rootScope.grdBancos[i].subtotal * 100) / 100 + Math.round(row.entity.Pagar * 100) / 100;
+                                $rootScope.grdApagar = $rootScope.grdApagar + row.entity.Pagar;
+                                i = numcuentas;
                             }
 
-                            row.treeNode.parentRow.treeNode.row.isSelected = true;
-                            row.treeNode.parentRow.treeNode.parentRow.treeNode.row.isSelected = true;
+                          }; 
 
+                           $rootScope.grdNoIncluido = 0;
+                          }
                     }                        
                     else
                     {
+                    if (row.entity.seleccionable == 'False') 
+                    {
+                          row.entity.estGrid = 'Permitido';
+                          $rootScope.grdNoIncluido = $rootScope.grdApagarOriginal; 
+                          row.treeNode.parentRow.treeNode.row.isSelected = false;
+                          row.treeNode.parentRow.treeNode.parentRow.treeNode.row.isSelected = false; 
+                          $rootScope.grdApagar = 0;   
 
-                       //$scope.cantidadTotal = Math.round($scope.cantidadTotal * 100) / 100 - Math.round(row.entity.Pagar * 100) / 100;
-                      $rootScope.grdNoIncluido = Math.round($rootScope.grdNoIncluido * 100) / 100 + Math.round(row.entity.Pagar * 100) / 100;
-                            
-                            //FAL actualizar cuenta pagadoras
-                            i=0;
-                            if ($scope.grdinicia > 0) {
-                                $rootScope.grdBancos.forEach(function (banco, subtotal)
-                                {
-                                   if(row.entity.cuentaPagadora == $rootScope.grdBancos[i].banco)
-                                   {
-                                     if(row.entity.seleccionable == 'False'){
-                                        $rootScope.grdBancos[i].subtotal = Math.round($rootScope.grdBancos[i].subtotal * 100) / 100 - Math.round(row.entity.Pagar * 100) / 100;
-                                        $rootScope.grdApagar = $rootScope.grdApagar - row.entity.Pagar;
-                                        row.entity.estGrid = 'Permitido'
-                                       } 
-                                   }
-                                   i++;                           
-                                });
-                            }
-
-                     row.treeNode.parentRow.treeNode.row.isSelected = false;
-                     row.treeNode.parentRow.treeNode.parentRow.treeNode.row.isSelected = false;       
+                         
+                      }      
                     }          
                 });
-                };
+
+
+              }
             });
 
             gridApi1.edit.on.afterCellEdit($scope, function (rowEntity, colDef, newValue, oldValue) 
@@ -1162,9 +1131,6 @@ $scope.gridOptions = {
                                 $rootScope.grdReprogramado =  Math.round($rootScope.grdReprogramado * 100) / 100 + Math.round(rowEntity.Pagar * 100) / 100;
                                 $rootScope.grdApagar = Math.round($rootScope.grdApagar * 100) / 100 - Math.round(rowEntity.Pagar* 100) / 100;
                                 rowEntity.estGrid = 'Pago Reprogramado';
-
-                                
-
                             }
                             
                         } 
@@ -1200,14 +1166,12 @@ $scope.gridOptions = {
               }          
               });               
                     
-          $scope.gridApi1.selection.selectAllRows(true);  
+          //$scope.gridApi1.selection.selectAllRows(true);  
 
 
         }
     } //grid options        
 };//funcion
-
-
 //08042016FAL recorre cada nivel y selecciona los hijos
 $scope.selectAllChildren = function(gridApi,rowEntity){
     if(rowEntity.children.length==0){
@@ -1245,7 +1209,7 @@ $scope.selecciona = function() {
 
 $scope.selectAll = function(opcion) {
     //FAL se analizan los registros para selccionarlos y se obtienen los totales relacionados al grid
-    $rootScope.grdApagar = 0;
+    $rootScope.grdApagarOriginal = 0;
     $rootScope.grdnoPagable = 0;
     $scope.etqFiltros = "Todos";
     $scope.grdinicia = 0;
@@ -1256,11 +1220,10 @@ $scope.selectAll = function(opcion) {
        if(grDatosSel.seleccionable == 'True')
        {
         $rootScope.grdnoPagable = Math.round($rootScope.grdnoPagable * 100) / 100 + Math.round(grDatosSel.saldo * 100) / 100;
-        $rootScope.grdApagar = Math.round($rootScope.grdApagar * 100) / 100 + Math.round(grDatosSel.saldo * 100) / 100;
        }
        else
        {
-        $rootScope.grdApagar = Math.round($rootScope.grdApagar * 100) / 100 + Math.round(grDatosSel.saldo * 100) / 100;
+        
         if(opcion == 0)
           $scope.gridApi1.selection.selectRow($scope.gridOptions.data[i]);
        };
@@ -1268,6 +1231,7 @@ $scope.selectAll = function(opcion) {
 
         $rootScope.grdReprogramado = 0;
         $rootScope.grdNoIncluido = 0;
+        $rootScope.grdApagarOriginal = $rootScope.grdApagar;
         $scope.gridOptions.isRowSelectable = function(row){
         if(row.entity.seleccionable == 'True'){
           return false;
@@ -1275,10 +1239,15 @@ $scope.selectAll = function(opcion) {
           return true;
         }
       };
+
       $scope.gridApi1.core.notifyDataChange(uiGridConstants.dataChange.OPTIONS);
       $scope.gridApi1.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
-    $scope.grdinicia = $scope.grdinicia + 1;
+      
+      
+      $scope.grdinicia = $scope.grdinicia + 1;
 };       
+
+
 
 //FAL filtros en base a variables
 $scope.Filtrar = function (value,campo,texto) {

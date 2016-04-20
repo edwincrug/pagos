@@ -336,7 +336,7 @@
 					A pagar
 				</div>
 				<div class="sumMonto montoFinal blueInfo" >
-					<span id= "mano"   ng-click="Filtrar('pago',26,'A pagar')">{{grdApagar -grdnoPagable | currency}}
+					<span id= "mano"   ng-click="Filtrar('pago',26,'A pagar')">{{grdApagar | currency}}
 					</span>
 				</div>
 			</div>
@@ -346,7 +346,7 @@
 					<span id="clsMainLabel">Incluido</span><span id="clsPagarText" class="blueInfo"> {{cantidadTotal | currency}} </span>
 				</div> -->
 				<!--FAL variables en base al grid-->				
-				<div id="clsComplemento">
+				<div id="clsComplemento" ng-show="blTotales">
 					<div class="clsNoPagable">
 						<span class="clsDetailLabel">Todos</span> <span id= "mano" class="clsDetailText blueInfo" ng-click="BorraFiltros()">{{GranTotal | currency}}</span>
 					</div>
@@ -383,7 +383,7 @@
 					</div>
 					
 					<div class="clsNoPagable">
-						<span class="clsDetailLabel">Porcentaje a pagar</span> <span class="clsDetailText blueInfo"> {{ (((grdApagar - grdnoPagable) * 100) / ( GranTotal )) | number:2 }} %</span>
+						<span class="clsDetailLabel">Porcentaje a pagar</span> <span class="clsDetailText blueInfo"> {{ (((grdApagar) * 100) / ( GranTotal )) | number:2 }} %</span>
 					</div>
 				</div>
 			</div>
