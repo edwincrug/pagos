@@ -1391,12 +1391,12 @@ $scope.Guardar = function(opcion,valor) {
                                           {                
                                               if(valor == 3)
                                               {
-                                                alertFactory.success('Error al aprobar');
+                                                alertFactory.error('Error al aprobar');
                                                 $('#btnAprobar').button('reset');
                                               }
                                               else //rechazado
                                               {
-                                                alertFactory.success('Error al rechazar');
+                                                alertFactory.error('Error al rechazar');
                                                 $('#btnRechazar').button('reset'); 
                                               }
                                               //$('#btnAprobar').button('reset');
