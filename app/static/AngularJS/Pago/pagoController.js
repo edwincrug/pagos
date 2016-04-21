@@ -1334,7 +1334,7 @@ $scope.Guardar = function(opcion,valor) {
                                    elemento.pad_polMes = row.polMes;
                                    elemento.pad_polConsecutivo = row.polConsecutivo;
                                    elemento.pad_polMovimiento = row.polMovimiento;
-                                   elemento.pad_fechaPromesaPago = (row.fechaPromesaPago == ''?'1999-01-01T00:00:00':row.fechaPromesaPago);
+                                   elemento.pad_fechaPromesaPago = (row.fechaPromesaPago == ''?'1900-01-01T00:00:00':row.fechaPromesaPago);
                                    elemento.pad_saldo = row.Pagar;//row.saldo;//
 
                                       //if (row.isSelected)
