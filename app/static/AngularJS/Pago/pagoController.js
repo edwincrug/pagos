@@ -18,7 +18,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
    //FAL20042016
    $rootScope.blTotales = true;
    $rootScope.grdBancos = [];
-
+   $rootScope.msgFiltros = '';
    var errorCallBack = function (data, status, headers, config) {
         alertFactory.error('Ocurrio un problema');
     };
@@ -629,41 +629,15 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
             $scope.ObtieneLotes(newLote);
                                    
-            /*setTimeout(function(){ 
-                                  if($rootScope.showGrid) {
-                                        //$rootScope.gridOptions = null;
-                                        //ConfiguraGrid();
-                                        $rootScope.modalSeleccionados = $rootScope.mySelections;
-                                        $rootScope.gridOptions.data = $rootScope.modalSeleccionados;
-                                        $scope.selectAll();
-                                    }
-                                    else{
-                                        //$rootScope.gridOptions = null;
-                                        //ConfiguraGrid();
-                                        $rootScope.gridOptions.data = $rootScope.gridOptionsModal.data;                                    
-                                        $scope.selectAll();
-                                    }
-                                }, 500);*/
-
-            //setTimeout(function(){$rootScope.showGrid = false;},1000);
-                
-            //$scope.selectAll();
-            //LQMA 15032016
-            //$rootScope.NuevoLote = false;
-            //$rootScope.NuevoLote = true;
+            
             $scope.LlenaIngresos();
-            //$rootScope.NuevoLote = false;
-
-            //$('#inicioModal').modal('hide');
+           
             $rootScope.estatusLote = 0;
             //LQMA 15032016
             $rootScope.accionPagina = true;       
 
             $rootScope.grdApagar = 0;
-            /* LQMA 08042016
-            setTimeout(function(){ 
-                                    $( "#btnSelectAll" ).click();//$scope.selectAll();
-                                    }, 500);*/
+      
 
             //FAL 19042016 llena totales de bancos desde la consulta de lulu.
                $rootScope.grdBancos = [];
@@ -1130,13 +1104,14 @@ $scope.selectAll = function(opcion) {
 //FAL filtros en base a variables
 $scope.Filtrar = function (value,campo,texto) {
     //console.log(value);
-    $('#btnFiltros').button('loading');
+    $rootScope.msgFiltros = 'Calculando....';
     $scope.etqFiltros = texto;
     $scope.BorraFiltrosParciales();
     $scope.gridApi1.grid.columns[campo].filters[0].term=value;
     $scope.gridApi1.core.notifyDataChange(uiGridConstants.dataChange.COLUMN);
     $scope.gridApi1.grid.refresh();
-    $('#btnFiltros').button('reset');
+    $rootScope.msgFiltros = '';
+    
     }
 
 $scope.BorraFiltrosParciales = function () {
@@ -1150,7 +1125,7 @@ $scope.BorraFiltrosParciales = function () {
 
 //Quita filtros
 $scope.BorraFiltros = function () {
-  $('#btnFiltros').button('loading');
+   $rootScope.msgFiltros = 'Calculando....';
    $scope.etqFiltros = "Todos";
     $scope.gridApi1.grid.columns.forEach(function(col,i)
     {
@@ -1158,7 +1133,7 @@ $scope.BorraFiltros = function () {
     }); 
     $scope.gridApi1.core.notifyDataChange(uiGridConstants.dataChange.COLUMN);
     $scope.gridApi1.grid.refresh();
-    $('#btnFiltros').button('reset');
+     $rootScope.msgFiltros = '';
     }
 
 var isNumeric = function(obj){

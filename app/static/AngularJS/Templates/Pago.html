@@ -341,12 +341,12 @@
 				</div>
 			</div>
 			</div> 
-			<div class="row panelTotales">
+			<div class="row panelTotales" ng-if="blTotales">
 <!-- 				<div id="clsPagar">
 					<span id="clsMainLabel">Incluido</span><span id="clsPagarText" class="blueInfo"> {{cantidadTotal | currency}} </span>
 				</div> -->
 				<!--FAL variables en base al grid-->				
-				<div id="clsComplemento" ng-show="blTotales">
+				<div id="clsComplemento" >
 					<div class="clsNoPagable">
 						<span class="clsDetailLabel">Todos</span> <span id= "mano" class="clsDetailText blueInfo" ng-click="BorraFiltros()">{{GranTotal | currency}}</span>
 					</div>
@@ -407,7 +407,7 @@
 	<section id="container">
 		<button type="button" id="btnSelectAll" ng-hide="1 > 0" class="btn btn-success" ng-disabled="!gridApi1.grid.options.multiSelect" ng-click="seleccionaTodo()"></button>
 		<button type="button" id="btnSelect" ng-hide="1 > 0" class="btn btn-success" ng-disabled="!gridApi1.grid.options.multiSelect" ng-click="selecciona()"></button>
-		<div class=" blueInfo" ng-show="blTotales">
+		<div class=" blueInfo" ng-if="blTotales">
 			<label class="tituloBloque2" ng-model="etqFiltros">{{etqFiltros}} {{msgFiltros}}</label>
 					
 		</div>
