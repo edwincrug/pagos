@@ -1410,6 +1410,7 @@ $scope.Guardar = function(opcion,valor) {
                               }, function errorCallback(response) {                
                                   alertFactory.error('Error al guardar Datos');
                                   $('#btnGuardando').button('reset');
+                                  $('#btnAprobar').button('reset');
                               }
                           );   
                       $('#btnguardando').button('reset');       
