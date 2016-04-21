@@ -652,7 +652,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 });
 
                $rootScope.blTotales = true;
-
+              $rootScope.idOperacion = 0;
     };
 
 
