@@ -60,7 +60,6 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
        /***********************************************************/
        //LQMA 14032016
-       //GetEmpleado();
        ConfiguraGrid();
        $rootScope.accionPagina = false; //iniciarl el grid modal en llenagrid
 
@@ -85,10 +84,8 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
             $rootScope.idAprobador = getParameterByName('idAprobador');
             $rootScope.idAprobacion = getParameterByName('idAprobacion');
             $rootScope.idNotify = getParameterByName('idNotify');
-            //ConsultaLote(Lote,{{$index + 1}},1)
             pagoRepository.getLotes($scope.idEmpresa,$rootScope.currentEmployee,0,idLote)
             .then(function successCallback(data){
-                    //$rootScope.NuevoLote = false;
 
                     pagoRepository.getTotalxEmpresa($scope.idEmpresa)
                         .then(function successCallback(response) {                           
@@ -102,17 +99,11 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                                     $rootScope.GranTotal = $rootScope.GranTotal + $rootScope.TotalxEmpresas[i].sumaSaldo; 
                                     i++;                          
                                     });
-                                //$scope.traeTotalxEmpresa.emp_nombre = emp_nombre;
                                 $scope.showTotales = true;
                                 $scope.showSelCartera = true;
                                 //LQMA  07032016
                                 //LQMA 14032016
-                                //$scope.ObtieneLotes(0);
-                                //$scope.LlenaIngresos();
 
-                                //$scope.llenaGrid();
-
-                               //$('#btnTotalxEmpresa').button('reset');
                             }, function errorCallback(response) {
                                 //oculta la información y manda el total a cero y llena el input del modal
                                 $rootScope.TotalxEmpresas = [];
@@ -121,7 +112,6 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                                 $scope.showSelCartera = false;
                                 $scope.showTotales = false;
                                 $scope.traeTotalxEmpresa.emp_nombre = 'La empresa seleccionada no tiene información';
-                                 //$('#btnTotalxEmpresa').button('reset');
                             }
                         );
 
@@ -139,20 +129,13 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
 
                         $rootScope.ConsultaLote($rootScope.noLotes.data[$rootScope.noLotes.data.length - 1],$rootScope.noLotes.data.length,0);
                         $rootScope.ProgPago = true;
-
-                        //$scope.idCuenta = $scope.idEmpresa;
-                        //$scope.llenaEncabezado();
                         $scope.traeBancosCompleta();                          
 
                         setTimeout(function(){ 
                           $( "#btnSelectAll" ).click();//$scope.selectAll();                          
                         }, 3000);    
                     }
-                    /*else
-                    {
-                        alertFactory.info('No existen Lotes');
-                        $rootScope.NuevoLote = true;                        
-                    } */                   
+                
                 }, 
                 function errorCallback(response) {
                     alertFactory.error('Error al obtener el Lote');
@@ -160,12 +143,6 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         }    
 
     };//Fin funcion Init
-    
-    /*//LQMA 14032016
-    var Prepagos = function(){
-        $scope.llenaGrid();
-        $scope.llenaEncabezado();
-    };*/
 
     /////////////////////////////////////////////
     //Obtiene ID de empleado
@@ -190,21 +167,6 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         //Obtengo el empleado logueado
         $rootScope.currentEmployee = localStorageService.get('lgnUser');
 
-        // if(getParameterByName('employee') != ''){
-        //     $rootScope.currentEmployee = getParameterByName('employee');
-        // }
-
-        // if ($rootScope.currentEmployee == null){
-        //     var idEmpleado = 1; //prompt("Ingrese un número de empleado", 1);
-        //     $rootScope.currentEmployee = idEmpleado;
-        // }
-        
-        // if ($rootScope.currentEmployee != null)
-        //         GetId();
-        // else{
-        //     ConfiguraGrid();
-        //     setTimeout(function(){Prepagos();},500);
-        // }
     };
 
     //LQMA obtiene el ID de padre para consultar pagos por aprobar
@@ -285,11 +247,11 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 $rootScope.GranTotalPagable = 0;
                 i=0;
                 $rootScope.bancosCompletas.forEach(function (cuentaPagadora, sumaSaldo)
-                    {
-                       $rootScope.grdBancos.push({
-                        banco: $rootScope.bancosCompletas[i].cuentaPagadora,
-                        subtotal: $rootScope.bancosCompletas[i].sumaSaldoPagable
-                    });
+                     {
+                    //    $rootScope.grdBancos.push({
+                    //     banco: $rootScope.bancosCompletas[i].cuentaPagadora,
+                    //     subtotal: $rootScope.bancosCompletas[i].sumaSaldoPagable
+                    // });
                     $rootScope.GranTotalaPagar = $rootScope.GranTotalaPagar + $rootScope.bancosCompletas[i].sumaSaldo; 
                     $rootScope.GranTotalnoPagable = $rootScope.GranTotalnoPagable + $rootScope.bancosCompletas[i].sumaSaldoNoPagable; 
                     $rootScope.GranTotalPagable = $rootScope.GranTotalPagable + $rootScope.bancosCompletas[i].sumaSaldoPagable; 
@@ -335,9 +297,6 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 //LQMA  07032016
                 //LQMA 14032016
                 $scope.ObtieneLotes(0);
-                //$scope.LlenaIngresos();
-
-                //$scope.llenaGrid();
 
                $('#btnTotalxEmpresa').button('reset');
             }, function errorCallback(response) {
@@ -361,13 +320,11 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         pagoRepository.getLotes($scope.idEmpresa,$rootScope.currentEmployee,0,0)
                 .then(function successCallback(data) {
 
-                    //$rootScope.NuevoLote = false;
                     $rootScope.noLotes = data;
                     if(newLote!=0)
                     {
                         $rootScope.noLotes.data.push(newLote);
                         $rootScope.estatusLote = 0;
-                        //$rootScope.NuevoLote = true;
                     }
 
                     if($rootScope.noLotes.data.length > 0) //mostrar boton crear lote
@@ -379,7 +336,6 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                         $rootScope.ConsultaLote($rootScope.noLotes.data[$rootScope.noLotes.data.length - 1],$rootScope.noLotes.data.length,0);
                         $rootScope.ProgPago = true;
 
-                        //$rootScope.formData.nombreLoteNuevo = ("0" + (date.getMonth() + 1)).slice(-2) + ("0" + date.getDate()).slice(-2) + date.getFullYear() + 'ZMO' + ('0' + $rootScope.noLotes.data.length).slice(-2);
                     }
                     else
                     {
@@ -661,13 +617,14 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
  //LQMA ADD 08042016
  var llenaLoteConsultaSuccessCallback = function (data, status, headers, config) {
                 
- $rootScope.grdBancos.forEach(function (banco, l)
-                        {
-                                $rootScope.grdBancos[l].subtotal = 0;
-                                $rootScope.grdApagar = 0;
-                        });
+ // $rootScope.grdBancos.forEach(function (banco, l)
+ //                        {
+ //                                $rootScope.grdBancos[l].subtotal = 0;
+ //                                $rootScope.grdApagar = 0;
+ //                        });
                 
-
+                $rootScope.grdBancos = [];
+                $rootScope.grdApagar = 0;
                 if($scope.gridOptions == null)
                     ConfiguraGrid();
                
@@ -679,6 +636,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 $scope.cantidadUpdate = 0;
                 $scope.noPagable = 0;
                 $scope.Reprogramable = 0;
+                var cuentaEncontrada = true;
                 for (var i = 0; i < $scope.data.length; i++)
                 {
                      $scope.data[i].Pagar = $scope.data[i].saldo;
@@ -694,14 +652,40 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                     {
                         $scope.data[i].estGrid = 'Pago';
 
-                        $rootScope.grdBancos.forEach(function (banco, k)
+                        if (i == 0)
+                        {
+                          $rootScope.grdBancos.push({
+                                      banco: $scope.data[i].cuentaPagadora,
+                                      subtotal: $scope.data[i].Pagar
+                                    });
+
+                          $rootScope.grdApagar = $rootScope.grdApagar + $scope.data[i].Pagar;
+                        }
+                        else
+                        {
+                          cuentaEncontrada = false;
+
+                          $rootScope.grdBancos.forEach(function (banco, k)
                             {
                                if($scope.data[i].cuentaPagadora == $rootScope.grdBancos[k].banco)
                                 {
                                         $rootScope.grdBancos[k].subtotal = Math.round($rootScope.grdBancos[k].subtotal * 100) / 100 + Math.round($scope.data[i].Pagar * 100) / 100;
                                         $rootScope.grdApagar = $rootScope.grdApagar + Math.round($scope.data[i].Pagar * 100) / 100;
+                                        cuentaEncontrada = true;
                                 }
                             });
+
+                           if(!cuentaEncontrada)
+                                {
+                                     $rootScope.grdBancos.push({
+                                      banco: $scope.data[i].cuentaPagadora,
+                                      subtotal: $scope.data[i].Pagar
+                                    });
+                                      $rootScope.grdApagar = $rootScope.grdApagar + $scope.data[i].Pagar;
+                                }
+
+                        }  
+                        
                     }
 
                      if ($scope.data[i].seleccionable=='True')
