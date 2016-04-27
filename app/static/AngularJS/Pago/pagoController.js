@@ -248,10 +248,6 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 i=0;
                 $rootScope.bancosCompletas.forEach(function (cuentaPagadora, sumaSaldo)
                      {
-                    //    $rootScope.grdBancos.push({
-                    //     banco: $rootScope.bancosCompletas[i].cuentaPagadora,
-                    //     subtotal: $rootScope.bancosCompletas[i].sumaSaldoPagable
-                    // });
                     $rootScope.GranTotalaPagar = $rootScope.GranTotalaPagar + $rootScope.bancosCompletas[i].sumaSaldo; 
                     $rootScope.GranTotalnoPagable = $rootScope.GranTotalnoPagable + $rootScope.bancosCompletas[i].sumaSaldoNoPagable; 
                     $rootScope.GranTotalPagable = $rootScope.GranTotalPagable + $rootScope.bancosCompletas[i].sumaSaldoPagable; 
@@ -294,8 +290,6 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 $scope.traeTotalxEmpresa.emp_nombre = emp_nombre;
                 $scope.showTotales = true;
                 $scope.showSelCartera = true;
-                //LQMA  07032016
-                //LQMA 14032016
                 $scope.ObtieneLotes(0);
 
                $('#btnTotalxEmpresa').button('reset');
@@ -418,8 +412,6 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                      $rootScope.showGrid = true;                    
                     }, 5000);
 
-        //$('#btnSeleccionarCartera').button('loading');
-        //$('#btnSeleccionarCartera').button('reset');
         /************************************************************************************************************************/  
     };
 
@@ -432,30 +424,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
     $('#btnTodalaCartera').button('reset');    
     };
 
-//FAL se analizan los registros para selccionarlos y se obtienen los totales relacionados al grid
-/*
-    $scope.selectAllModal = function() {    
-
-    $rootScope.gridOptionsModal.data.forEach(function (grDatosSel, i)
-    {
-       if(grDatosSel.ordenBloqueada == 'False')
-       {
-              $scope.gridApi.selection.selectRow($rootScope.gridOptionsModal.data[i]);
-       };
-    });
-
-    $rootScope.gridOptionsModal.isRowSelectable = function(row){
-        if(row.entity.ordenBloqueada == 'True'){
-          return false;
-        } else {
-          return true;
-        }
-      };
-      $scope.gridApi.core.notifyDataChange(uiGridConstants.dataChange.OPTIONS);
-      $scope.gridApi.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
-    };*/
-
-    //LQMA 07032016
+//LQMA 07032016
     $scope.IniciaLote = function(){   
 
        $rootScope.crearLote = true; 
@@ -470,27 +439,15 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         {    
 
             //Configura GRID ECG 
-            //$rootScope.gridOptions = null;
             $scope.gridOptions = null;
             ConfiguraGrid();
 
              //LQMA 10032016
             $rootScope.NuevoLote = true;
-            //var newLote = {idLotePago:'0',idEmpresa:$scope.idEmpresa,idUsuario:$rootScope.currentEmployee,fecha:'',nombre:$rootScope.formData.nombreLoteNuevo,estatus:0};
-            
-            /* LQMA comentado 08042016
-            if($rootScope.showGrid)
-              $rootScope.datosModal = $rootScope.getSelectedRowsModal();
-            else
-              $rootScope.datosModal = $rootScope.getDataGridModal();  
-            */
-
              //LQMA add 08042016 
              pagoRepository.getDatos($scope.idEmpresa)
                 .success(getCarteraCallback)
                 .error(errorCallBack);
-                
-            //$scope.llenaEncabezado();//}  
 
         }    
     }; //FIN inicia Lote
@@ -502,7 +459,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
         $rootScope.accionPagina = true;
 
         setTimeout(function(){ 
-                                $( "#btnSelectAll" ).click();//$scope.selectAll();
+                                $( "#btnSelectAll" ).click();
                                 }, 500);    
         $scope.grdinicia = $scope.grdinicia + 1;    
     }
@@ -510,12 +467,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
     $scope.llenaGrid = function () {
 
             //LQMA 16032016
-            //$rootScope.gridOptionsModal = null;
-            //ConfiguraGridModal();
-
         if(!$rootScope.showGrid){ //LQMA  si esta oculto, consultamos toda la cartera
-            //if ($rootScope.currentId != null){
-                //pagoRepository.getDatosAprob($rootScope.currentId)                
                 pagoRepository.getDatos($scope.idEmpresa)
                 .success(llenaGridSuccessCallback)
                 .error(errorCallBack);
@@ -525,13 +477,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 pagoRepository.getDatos($scope.idEmpresa)
                 .success(llenaGridSuccessCallback)
                 .error(errorCallBack);
-        /*}// esta oculto
-        else{
-            //ConfiguraGrid();
-
-            $rootScope.gridOptions.data = $rootScope.modalSeleccionados;
-
-        }*/
+  
     };  //Propiedades    
 
 
@@ -602,6 +548,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 {
                    $rootScope.grdBancos.push({
                                       banco: banco.cuentaPagadora,
+                                      subtotalLote:0,
                                       subtotal: banco.sumaSaldoPagable
                                     });
                     $rootScope.grdApagar = $rootScope.grdApagar + banco.sumaSaldoPagable;
@@ -617,17 +564,11 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
  //LQMA ADD 08042016
  var llenaLoteConsultaSuccessCallback = function (data, status, headers, config) {
                 
- // $rootScope.grdBancos.forEach(function (banco, l)
- //                        {
- //                                $rootScope.grdBancos[l].subtotal = 0;
- //                                $rootScope.grdApagar = 0;
- //                        });
-                
+               
                 $rootScope.grdBancos = [];
                 $rootScope.grdApagar = 0;
                 if($scope.gridOptions == null)
-                    ConfiguraGrid();
-               
+                ConfiguraGrid();
                 $scope.gridOptions.data = null;
                 $scope.gridOptions.data = data;              
                 $scope.data = data;
@@ -782,9 +723,6 @@ $scope.gridOptions = {
          { name: 'anticipo', displayName: 'Anticipo', width: '10%', enableCellEdit: false },
          { name: 'anticipoAplicado',displayName: 'Anticipo Aplicado', width: '15%' , enableCellEdit: false},
          { name: 'cuenta', width: '15%', displayName: '# Cuenta'},
-         // { name: 'idProveedor', width: '5%' },
-         //{ name: 'annio', width: '5%' },
-         // { name: 'proveedorBloqueado', width: '5%' },
          { name: 'documentoPagable', width: '15%', displayName: 'Estatus del Documento',visible:false},
          { name: 'ordenBloqueada', displayName: 'Bloqueada', width: '20%', visible:false},
          { name: 'cuentaPagadora', width: '15%', displayName: 'Banco'},
@@ -792,9 +730,6 @@ $scope.gridOptions = {
          { name: 'estGrid', width: '15%', displayName: 'Estatus Grid'},
          { name: 'seleccionable', displayName: 'seleccionable', width: '20%'},
          { name: 'cuentaDestino', displayName: 'Cuenta Destino', width: '20%'}
-         // { name: 'diasCobro', width: '5%' },
-         // { name: 'aprobado', width: '5%' },
-         // { name: 'contReprog', width: '5%' }
         ],
         rowTemplate:'<div ng-class="{\'ordenBloqueada\':(row.entity.ordenBloqueada==\'True\' && ((row.entity.idEstatus < 1 || row.entity.idEstatus > 5) && row.entity.idEstatus != 20) && !row.isSelected)' + 
                                     ',\'noSeleccionable\': (row.entity.seleccionable==\'True\' && row.entity.cuentaDestino==\'SIN CUENTA DESTINO\')'+
@@ -810,7 +745,6 @@ $scope.gridOptions = {
 
         //FAL14042016 Marcado de grupos y proveedores
         gridApi1.selection.on.rowSelectionChanged($scope, function (row,rows) {
-
 
             
            if(row.internalRow==true && row.isSelected==true){
@@ -935,8 +869,6 @@ $scope.gridOptions = {
                       }      
                     }          
                 });
-
-
               }
             });
 
@@ -1144,8 +1076,6 @@ var isNumeric = function(obj){
 
 $rootScope.ConsultaLote = function(Lote,index,mensaje) {
 
-    //if($rootScope.estatusLote == 0 && $rootScope.NuevoLote == false){
-        //alertFactory.confirm('Al cambiar de lote se perderan los cambios no guardados. Desea continuar?');
       if(mensaje == 1){  
         if(confirm('¿Al cambiar de lote se perderan los cambios no guardados. Desea continuar??')){
                $rootScope.ConsultaLoteObtiene(Lote,index); 
@@ -1170,8 +1100,7 @@ $rootScope.ConsultaLoteObtiene = function(Lote,index){
             if($rootScope.accionPagina){ //LQMA 15032016: true: indica que se esta trabajando sobre la pagina para consultar data, false: consulta desde el modal
 
                     $scope.LlenaIngresos(); 
-                    //$scope.LlenaEgresos();
-
+                    
                     pagoRepository.getOtrosIngresos($scope.idLote)
                     .then(function successCallback(response) 
                     {  
@@ -1231,7 +1160,7 @@ $rootScope.ConsultaLoteObtiene = function(Lote,index){
             }
 
             $scope.grdinicia = $scope.grdinicia + 1;
-        //$rootScope.NuevoLote = false;
+
 }
 
 
@@ -1257,20 +1186,16 @@ $scope.Guardar = function(opcion,valor) {
   $scope.Cancelar = function() {
 
     //LQMA 16032016
-    //$scope.traeEmpresas();
     $scope.gridOptions.data = [];
 
     $rootScope.noLotes = null;    
     $scope.ObtieneLotes(0);
-    //$scope.traeEmpresas();
 
     setTimeout(function(){         
                             if($rootScope.noLotes.data.length == 0)
                             {
                                 $rootScope.NuevoLote = true;
                                 $rootScope.estatusLote = 0;
-                                //$scope.traeEmpresas();
-                                //$('#inicioModal').modal('show');
                                 $rootScope.CrearNuevoLote();
                             }
                          },500);
@@ -1287,8 +1212,6 @@ $scope.Guardar = function(opcion,valor) {
             $('#btnGuardando').button('reset');  
           }
         else{
-        //alertFactory.success('Se guardaron los datos.');
-        //pagoRepository.getPagosPadre($rootScope.currentEmployee)
           var rows = $scope.gridApi1.selection.getSelectedRows();
 
           if(rows.length == 0){
@@ -1297,15 +1220,13 @@ $scope.Guardar = function(opcion,valor) {
               $('#btnAprobar').button('reset');
           }
           else{
-              //$('#btnguardando').button('loading');  
+
                 pagoRepository.getPagosPadre($scope.idEmpresa,$rootScope.currentEmployee,$rootScope.formData.nombreLoteNuevo,$rootScope.idLotePadre)
                   .then(function successCallback(response) 
                   {   
                       $rootScope.idLotePadre = response.data;
 
-                      var array = [];
-                      //var rows =  $scope.gridApi1.grid.rows;  LQMA 08042016
-                      //var rows = $scope.gridApi1.selection.getSelectedRows();                      
+                      var array = [];                   
                       var count = 0;
 
                       rows.forEach(function (row,i) {
@@ -1320,13 +1241,9 @@ $scope.Guardar = function(opcion,valor) {
                                    elemento.pad_polMovimiento = row.polMovimiento;
                                    elemento.pad_fechaPromesaPago = (row.fechaPromesaPago == ''?'1900-01-01T00:00:00':row.fechaPromesaPago);
                                    elemento.pad_saldo = row.Pagar;//row.saldo;//
-
-                                      //if (row.isSelected)
                                    elemento.tab_revision = 1;
-                                      //else
-                                          //elemento.tab_revision = 0;
 
-                                      array.push(elemento);
+                                   array.push(elemento);
                                   });    
 
                        var jsIngresos = angular.toJson($rootScope.ingresos); //delete $scope.ingresos['$$hashKey'];
@@ -1383,13 +1300,9 @@ $scope.Guardar = function(opcion,valor) {
                                                 alertFactory.error('Error al rechazar');
                                                 $('#btnRechazar').button('reset'); 
                                               }
-                                              //$('#btnAprobar').button('reset');
                                           }); 
 
                                   }
-
-                                  //$rootScope.noLotes.data[$rootScope.noLotes.data.length - 1].idLotePago = $rootScope.idLotePadre;
-                                  //$rootScope.noLotes.data[$rootScope.noLotes.data.length - 1].estatus = 1;
 
                               }, function errorCallback(response) {                
                                   alertFactory.error('Error al guardar Datos');
@@ -1469,7 +1382,6 @@ $scope.Guardar = function(opcion,valor) {
                 if(transferencia.bancoOrigen == ingreso.cuenta)
                 {
                     total = parseInt(total) + parseInt(transferencia.importe);
-                    //transferencia.disponibleOrigen = ingreso.disponible;
                 }
             });
 
@@ -1487,15 +1399,11 @@ $scope.Guardar = function(opcion,valor) {
 
         if(parseInt(ingreso.disponible) < 0)
             alertFactory.warning('El saldo disponible de esta cuenta es menor a 0. Verifique las transferencias.');
-        //setTimeout(function(){recalculaIngresos()},100);    
-
-        $scope.calculaTotalOperaciones();
+         $scope.calculaTotalOperaciones();
     };
     
     $scope.calculaTransferencia = function(transferencia)
     {
-        //$scope.ingresos = [{id: 1, nombre:'Santander', cuenta: 94039,saldo: 40000, disponible: 25000, ingreso:1, egreso:0}]
-        //$scope.transferencias = [{bancoOrigen:'', bancoDestino: '', importe:0}]    
         var total = 0;
         
         angular.forEach($scope.transferencias, function(transferencia1, key){
@@ -1531,6 +1439,7 @@ $scope.Guardar = function(opcion,valor) {
 
         $scope.calculaTotalOperaciones();
         recalculaIngresos();
+
     };
 
     var recalculaIngresos = function()
@@ -1544,13 +1453,25 @@ $scope.Guardar = function(opcion,valor) {
 
             angular.forEach($rootScope.TotalxEmpresas, function(empresa, key){
                     angular.forEach($rootScope.egresos, function(egreso, key){
+                      //FAL integra estos calculos al arreglo de bancos para presentar en tiempo real como se va acabando el dinero.
+
                             if(empresa.cuentaPagadora == egreso.cuenta) 
                                 empresa.saldoLote = egreso.total;
                     });
                 });
 
-        });        
+        }); 
+
+        angular.forEach($rootScope.egresos, function(egreso,key1){
+          angular.forEach($rootScope.grdBancos,function(grdBanco,key2){
+            if(egreso.cuenta == grdBanco.banco)
+              grdBanco.subtotalLote = egreso.total;
+          });              
+        });   
+
     }
+
+  
 
     $scope.calculaTotalOperaciones = function()
     {        
@@ -1583,6 +1504,13 @@ $scope.Guardar = function(opcion,valor) {
             recalculaIngresos();
         }
     };
+
+    $scope.getDiferencia = function(reg){
+        
+        var diferencia = reg.subtotalLote - reg.subtotal;
+        return  diferencia;
+
+    }
 
 
     $scope.getTotal = function(opcion){
@@ -1670,87 +1598,9 @@ $scope.Guardar = function(opcion,valor) {
                     $('#inicioModal').modal('show');
                 });
             //LQMA 16032016
-            //$scope.llenaGrid();
 
-            //setTimeout(function(){$rootScope.selectAllModal();},500);
         }
     }
-
- 
-
-//FAL funciones de catga para el modal.
-/*
-var ConfiguraGridModal = function () {
-    //$rootScope.showGrid = true;
-    $rootScope.gridOptionsModal = {
-        enableRowSelection: true,
-        enableGridMenu: true,
-        enableFiltering: true,
-        enableGroupHeaderSelection: true,
-        treeRowHeaderAlwaysVisible: true,
-        showColumnFooter: true,
-        showGridFooter: true,
-        height: 900,
-        cellEditableCondition: function ($scope) {
-            return $scope.row.entity.ordenBloqueada; 
-        },
-       columnDefs: [
-         {
-             name: 'nombreAgrupador', grouping: { groupPriority: 0 }, sort: { priority: 0, direction: 'asc' }, width: '15%', displayName: 'Grupo', enableCellEdit: false
-
-         },
-         {
-             name: 'proveedor', grouping: { groupPriority: 1 }, sort: { priority: 1, direction: 'asc' }, name: 'proveedor', enableCellEdit: false
-           , width: '35%'
-           , cellTemplate: '<div><div ng-if="!col.grouping || col.grouping.groupPriority === undefined || col.grouping.groupPriority === null || ( row.groupHeader && col.grouping.groupPriority === row.treeLevel )" class="ui-grid-cell-contents" title="TOOLTIP">{{COL_FIELD CUSTOM_FILTERS}}</div></div>'
-         },
-         {
-             field: 'Pagar', displayName: 'Pagar (total)', width: '30%', cellFilter: 'currency', aggregationType: uiGridConstants.aggregationTypes.sum,
-             treeAggregationType: uiGridGroupingConstants.aggregation.SUM, enableCellEdit: ($rootScope.currentIdOp == 1) ? false : true,
-             editableCellTemplate: '<div><form name="inputForm"><input type="number" ng-class="\'colt\' + col.uid" ui-grid-editor ng-model="MODEL_COL_FIELD"></form></div>',
-             customTreeAggregationFinalizerFn: function (aggregation) {
-                 aggregation.rendered = aggregation.value;
-             }
-         },
-         { name: 'fechaPromesaPago', displayName: 'Fecha Promesa de Pago', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '17%' },
-         { name: 'ordenBloqueada', displayName: 'Bloqueada', width: '20%' },
-         { name: 'estGrid', width: '15%', displayName: 'Estatus Grid' },
-         {
-             field: 'saldoPorcentaje', displayName: 'Porcentaje %', width: '10%', cellFilter: 'number: 6', aggregationType: uiGridConstants.aggregationTypes.sum,
-             treeAggregationType: uiGridGroupingConstants.aggregation.SUM, enableCellEdit: false,
-             customTreeAggregationFinalizerFn: function (aggregation) {
-                 aggregation.rendered = aggregation.value;
-             }
-         }
-        ],
-        rowTemplate: '<div ng-class="{\'ordenBloqueada\':(row.entity.ordenBloqueada==\'True\' && ((row.entity.idEstatus < 1 || row.entity.idEstatus > 5) && row.entity.idEstatus != 20) && !row.isSelected)' +
-                                    ',\'bloqueadaSelec\': (row.isSelected && row.entity.ordenBloqueada==\'True\') || (row.isSelected && ((row.entity.idEstatus >= 1 && row.entity.idEstatus <= 5) || row.entity.idEstatus == 20)),' +
-                                    '\'selectNormal\': (row.isSelected && row.entity.ordenBloqueada==\'False\' && ((row.entity.idEstatus < 1 || row.entity.idEstatus > 5) && row.entity.idEstatus != 20))' +
-                                    ',\'docIncompletos\': (!row.isSelected && ((row.entity.idEstatus >= 1 && row.entity.idEstatus <= 5) || row.entity.idEstatus == 20) && row.entity.ordenBloqueada==\'False\')' +
-                                    ',\'bloqDocIncom\': (!row.isSelected && ((row.entity.idEstatus >= 1 && row.entity.idEstatus <= 5) || row.entity.idEstatus == 20) && row.entity.ordenBloqueada==\'True\')}"> <div ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader == \'True\'}" ui-grid-cell></div></div>',
-        onRegisterApi: function (gridApi) {
-            $scope.gridApi = gridApi;
-            $scope.cantidadTotal = $scope.cantidadTotal;
-            $scope.gridApi.selection.on.rowSelectionChanged($scope, function (rowChanged) {
-                if (typeof (rowChanged.treeLevel) !== 'undefined' && rowChanged.treeLevel > -1) {
-                    children = $scope.gridApi.treeBase.getRowChildren(rowChanged);
-                    children.forEach(function (child) {
-                        if (rowChanged.isSelected) {
-                            $scope.gridApi.selection.selectRow(child.entity);
-                        } else {
-                            $scope.gridApi.selection.unSelectRow(child.entity);
-                        }
-                    });
-                }
-            });
-            gridApi.selection.on.rowSelectionChanged($scope, function (rows) {
-                $rootScope.mySelections = gridApi.selection.getSelectedRows();
-            });
-            $scope.gridApi.selection.selectAllRows(true);
-        }
-    }
-};//funcion*/
-
 
 /***************************************************************************************************************
     Funciones de guardado de datos

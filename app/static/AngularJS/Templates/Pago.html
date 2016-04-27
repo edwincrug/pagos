@@ -150,7 +150,7 @@
 								<tr>
 									<th>Cuenta</th> 
 									<th>Saldo</th> 
-									<th>Disponible</th>
+									<th>Excedente/Faltante</th>
 								</tr> 
 							</thead> 
 							<tbody> 
@@ -323,11 +323,12 @@
 		<div id="filtrosContenedor">
 			<div id="mdContentSuma3">
 			<div class="mdLineSuma" ng-repeat="grdBanco in grdBancos">
+
 				<div class="sumTexto">
 					{{grdBanco.banco}}
 				</div>
 				<div class="sumMonto blueInfo">
-					{{grdBanco.subtotal | currency}}
+					<span><span ng-class="{'rojo': getDiferencia(grdBanco) < 0, 'negro' : getDiferencia(grdBanco) >= 0 }">{{getDiferencia(grdBanco) | currency}}</span><span  class="negro">/</span>{{grdBanco.subtotal | currency}}</span>
 				</div>
 			</div>
 			<div class="rows"> <div class="raya rayaBlueInfo"></div></div>
