@@ -1,394 +1,418 @@
 <link href="../../css/pago.css" rel="stylesheet" />
 <SCRIPT language=Javascript>
-      <!--
-      
-      function isNumberKey(evt)
-      {
-      	//var e = evt || window.event;
-         var charCode = (evt.which) ? evt.which : evt.keyCode
-         if (charCode > 31 && (charCode < 48 || charCode > 57))
-            return false;
+<!--
 
-         return true;
-      }
-      //-->
-   </SCRIPT>
+function isNumberKey(evt) {
+    //var e = evt || window.event;
+    var charCode = (evt.which) ? evt.which : evt.keyCode
+    if (charCode > 31 && (charCode < 48 || charCode > 57))
+        return false;
 
+    return true;
+}
+//-->
+</SCRIPT>
 <div cg-busy="myPromise" ng-init="init()" id="contentManager" resize>
-
-	<section id="global">
-		<div id="tituloEmpresa">
-			<h1 id="title">{{ scencabezado.empNombre }}</h1>
-			<div id="nombreLote">
-				Lote: {{nombreLote}}
-			</div>
-		</div>
-		<div id="mdContentSuma2">
-
-		<div id="lblPagosText">
-			Cartera vencida al <span id="lblPagosblack"> {{ fechaHoy | date:'dd/MM/yyyy' }}</span>
-		</div>
-       <div class="btn-group" data-toggle="btns" id="botoneraPagos2" >
-       
-          <div class="btn-group">
-          <label class="btn btn-primary" ng-model="radioTotales" uib-btn-radio="1" >Todo</label>
-          <label class="btn btn-primary" ng-model="radioTotales" uib-btn-radio="2">Pagable</label>
-          <label class="btn btn-primary" ng-model="radioTotales" uib-btn-radio="3"="uncheckable">No Pagable</label>
-          </div>
-      </div>
-          <div id ="divtotalpagos" ng-hide="radioTotales != 1" >
-          <div id="mdContentSuma">
-            <div class="mdLineSuma" ng-repeat="bancosCompleta in bancosCompletas">
-              <div class="sumTexto">
-                {{bancosCompleta.cuentaPagadora}}
-              </div>
-              <div class="sumMonto">
-                {{bancosCompleta.sumaSaldo | currency}}
-              </div>
+    <section id="global">
+        <div id="tituloEmpresa">
+            <h1 id="title">{{ scencabezado.empNombre }}</h1>
+            <div id="nombreLote">
+                Lote: {{nombreLote}}
             </div>
-            <div class="rows"> <div class="raya"></div></div>
-            <div class="rows">
-              <div class="sumTexto">
-                Total cartera
-              </div>
-              <div class="sumMonto montoFinal">
-                {{GranTotalaPagar | currency}}
-              </div>
-            </div>
-          </div>  
-          <hr> 
         </div>
-      <!--FAL 10042016 listados de total pagable  -->
-          <div id ="divpagablepagos" ng-hide="radioTotales != 2">
-          <div id="mdContentSuma">
-            <div class="mdLineSuma" ng-repeat="bancosCompleta in bancosCompletas">
-              <div class="sumTexto">
-                {{bancosCompleta.cuentaPagadora}}
-              </div>
-              <div class="sumMonto">
-                {{bancosCompleta.sumaSaldoPagable | currency}}
-              </div>
+        <div id="mdContentSuma2">
+            <div id="lblPagosText">
+                Cartera vencida al <span id="lblPagosblack"> {{ fechaHoy | date:'dd/MM/yyyy' }}</span>
             </div>
-            <div class="rows"> <div class="raya"></div></div>
-            <div class="rows">
-              <div class="sumTexto">
-                Total pagable
-              </div>
-              <div class="sumMonto montoFinal">
-                {{GranTotalPagable | currency}}
-              </div>
+            <div class="btn-group" data-toggle="btns" id="botoneraPagos2">
+                <div class="btn-group">
+                    <label class="btn btn-primary" ng-model="radioTotales" uib-btn-radio="1">Todo</label>
+                    <label class="btn btn-primary" ng-model="radioTotales" uib-btn-radio="2">Pagable</label>
+                    <label class="btn btn-primary" ng-model="radioTotales" uib-btn-radio="3"="uncheckable">No Pagable</label>
+                </div>
             </div>
-          </div>   
-          <hr> 
+            <div id="divtotalpagos" ng-hide="radioTotales != 1">
+                <div id="mdContentSuma">
+                    <div class="mdLineSuma" ng-repeat="bancosCompleta in bancosCompletas">
+                        <div class="sumTexto">
+                            {{bancosCompleta.cuentaPagadora}}
+                        </div>
+                        <div class="sumMonto">
+                            {{bancosCompleta.sumaSaldo | currency}}
+                        </div>
+                    </div>
+                    <div class="rows">
+                        <div class="raya"></div>
+                    </div>
+                    <div class="rows">
+                        <div class="sumTexto">
+                            Total cartera
+                        </div>
+                        <div class="sumMonto montoFinal">
+                            {{GranTotalaPagar | currency}}
+                        </div>
+                    </div>
+                </div>
+                <hr>
+            </div>
+            <!--FAL 10042016 listados de total pagable  -->
+            <div id="divpagablepagos" ng-hide="radioTotales != 2">
+                <div id="mdContentSuma">
+                    <div class="mdLineSuma" ng-repeat="bancosCompleta in bancosCompletas">
+                        <div class="sumTexto">
+                            {{bancosCompleta.cuentaPagadora}}
+                        </div>
+                        <div class="sumMonto">
+                            {{bancosCompleta.sumaSaldoPagable | currency}}
+                        </div>
+                    </div>
+                    <div class="rows">
+                        <div class="raya"></div>
+                    </div>
+                    <div class="rows">
+                        <div class="sumTexto">
+                            Total pagable
+                        </div>
+                        <div class="sumMonto montoFinal">
+                            {{GranTotalPagable | currency}}
+                        </div>
+                    </div>
+                </div>
+                <hr>
+            </div>
+            <!--FAL 10042016 listados de total no pagable  -->
+            <div id="divnopagablepagos" ng-hide="radioTotales != 3">
+                <div id="mdContentSuma">
+                    <div class="mdLineSuma" ng-repeat="bancosCompleta in bancosCompletas">
+                        <div class="sumTexto">
+                            {{bancosCompleta.cuentaPagadora}}
+                        </div>
+                        <div class="sumMonto">
+                            {{bancosCompleta.sumaSaldoNoPagable | currency}}
+                        </div>
+                    </div>
+                    <div class="rows">
+                        <div class="raya"></div>
+                    </div>
+                    <div class="rows">
+                        <div class="sumTexto">
+                            Total no pagable
+                        </div>
+                        <div class="sumMonto montoFinal">
+                            {{GranTotalnoPagable | currency}}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-<!--FAL 10042016 listados de total no pagable  -->
-     <div id ="divnopagablepagos" ng-hide="radioTotales != 3">
-          <div id="mdContentSuma">
-            <div class="mdLineSuma" ng-repeat="bancosCompleta in bancosCompletas">
-              <div class="sumTexto">
-                {{bancosCompleta.cuentaPagadora}}
-              </div>
-              <div class="sumMonto">
-                {{bancosCompleta.sumaSaldoNoPagable | currency}}
-              </div>
+    </section>
+    <section id="flujoEfectivo">
+        <div class="tituloBloque1">
+            <span class="colText lightBlue"> 1.- Flujo de Efectivo  </span>
+        </div>
+        <div id="resumenColapsado" ng-hide="!colapsado">
+            <div id="colCobranza">
+                <div class="colLabel">Cobranza Esperada</div><span class="colText lightBlue"> {{cobrar | currency}} </span>
             </div>
-            <div class="rows"> <div class="raya"></div></div>
-            <div class="rows">
-              <div class="sumTexto">
-                Total no pagable
-              </div>
-              <div class="sumMonto montoFinal">
-                {{GranTotalnoPagable | currency}}
-              </div>
+            <div id="colCaja">
+                <div class="colLabel">Caja</div><span class="colText lightBlue"> {{caja | currency}} </span>
             </div>
-          </div>   
-    </div>
-			
-		</div> 
-	</section>
-	<section id="flujoEfectivo">
-		<div class="tituloBloque1">
-			<span class="colText lightBlue" > 1.- Flujo de Efectivo  </span>
-		</div>
-		<div id="resumenColapsado" ng-hide="!colapsado">
-			<div id="colCobranza">
-				<div class="colLabel">Cobranza Esperada</div><span class="colText lightBlue" > {{cobrar | currency}} </span> 
-			</div>
-			<div id="colCaja">
-				<div class="colLabel">Caja</div><span class="colText lightBlue" > {{caja | currency}} </span> 
-			</div>
-			<div id="mdContentSuma2">
-			<div class="mdLineSuma" ng-repeat="TotalxEmpresa in TotalxEmpresas">
-				<div class="sumTexto">
-					{{TotalxEmpresa.cuentaPagadora}}
-				</div>
-				<div class="sumMonto lightBlue">
-					{{TotalxEmpresa.saldoLote | currency}}
-				</div>
-			</div>
-			<div class="rows"> <div class="raya rayaLightBlue"></div></div>
-			<div class="rows">
-				<div class="sumTexto">
-					Flujo
-				</div>
-				<div class="sumMonto montoFinal lightBlue">
-					{{FlujoEfectivo | currency}}
-				</div>
-			</div>
-			</div> 
-		</div>
-		<div class="collapse in" id="collapsePanel">	
-			<div id="contenedorTablas">
-				<div class="rowTablas">
-					<div id="tblBancos">
-						<div class="titleBloque">
-							Ingresos Bancos <div class="paso"> Paso <div class="pasoNumero"> 1</div> </div>
-						</div>
-						<br>
-						<table class="table table-condensed" id="tablaING"> 
-							<thead> 
-								<tr>
-									<th>Cuenta</th> 
-									<th>Saldo</th> 
-									<th>Excedente/Faltante</th>
-								</tr> 
-							</thead> 
-							<tbody> 
-								<tr ng-repeat="ingreso in ingresos" >
-									<td>{{ingreso.cuenta}}</td>				
-									<td><input type="text" ng-model="ingreso.saldo" ng-blur="calculaSaldoIngresos(ingreso)" class="form-control txtIngresos valores" ng-keypress="presskey($event)" onkeypress="return isNumberKey(event)"></td> 
-									<td ng-class="{'danger':ingreso.disponible == '0', 'warning':ingreso.disponible < (ingreso.saldo / 2),'info': ingreso.disponible > (ingreso.disponible / 2)}">{{ingreso.disponible | currency}}</td> 
-								</tr>
-							</tbody>
-							<tfoot>
-								<td></td>
-								<td>{{getTotal('ingresoSaldo') | currency}}</td>
-								<td>{{getTotal('ingresoDisponible') | currency}}</td>
-							</tfoot>
-						</table>
-					</div>
-					<div id="tblOtros">
-						<div class="titleBloque">
-							Ingresos Otros <div class="paso"> Paso <div class="pasoNumero"> 2</div> </div>
-						</div>
-						<br>
-						<table class="table table-condensed"> 
-							<thead> 
-								<tr> 				
-									<th>Concepto</th> 								
-									<th>Total</th>
-								</tr> 
-							</thead> 
-							<tbody> 
-								<tr>				
-									<td>
-										Caja:
-									</td>								
-									<td><input type="text" id="txtCaja" ng-model="caja" onkeypress="return event.charCode >= 48 && event.charCode <= 57" class="form-control txtIngresos"></td> 
-								</tr>
-								<tr>				
-									<td>
-										Cobranza esperada:
-									</td>								
-									<td><input type="text" id="txtCobranza" onkeypress="return event.charCode >= 48 && event.charCode <= 57" ng-model="cobrar" class="form-control txtIngresos"></td> 
-								</tr>
-							</tbody>
-							<tfoot>							
-								<td></td>							
-								<td>{{getTotal('otrosIngresos') | currency}}</td>
-							</tfoot>
-						</table>
-					</div>
-					<div id="tblTransfer">
-						<div class="titleBloque">
-							Transferencias Bancarias <div class="paso"> Paso <div class="pasoNumero"> 3</div> </div>
-						</div>
-						<button type="button" class="btn btn-success" id="btnAdd" ng-click="addTransferencia()" > 
-							<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-						</button>
-						<table class="table table-condensed" id="tablaTR"> 
-							<thead> 
-								<tr> 				
-									<th>Banco Origen</th>
-									<th>Banco Destino</th>
-									<th>Importe</th>
-									<th></th>
-								</tr> 
-							</thead> 
-							<tbody id="tbodyTrans1"> 
-								<tr class="clonedInput" ng-repeat="transferencia in transferencias">				
-									<td>									
-										<div class="input-group">
-											<input type="text" class="form-control" readonly="true" ng-model='transferencia.bancoOrigen' aria-label="...">
-											<div class="input-group-btn">
-												<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <span class="caret"></span></button>
-												<ul class="dropdown-menu dropdown-menu-right">
-													<li ng-repeat="ingreso in ingresos">
-														<a href="#" ng-click="selBancoIngreso(ingreso, transferencia)">{{ingreso.cuenta}}</a>
-													</li>
-												</ul>
-											</div><!-- /btn-group -->
-										</div><!-- /input-group -->	
-									</td> 											
-									<td>
-										<div class="input-group">
-											<input type="text" class="form-control" readonly="true" ng-model='transferencia.bancoDestino' aria-label="...">
-											<div class="input-group-btn">
-												<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <span class="caret"></span></button>
-												<ul class="dropdown-menu dropdown-menu-right">
-													<li ng-repeat="egreso in egresos">
-														<a href="#" class="egresosCombo" ng-click='selBancoEgreso(egreso,transferencia)'>
+            <div id="mdContentSuma2">
+                <div class="mdLineSuma" ng-repeat="TotalxEmpresa in TotalxEmpresas">
+                    <div class="sumTexto">
+                        {{TotalxEmpresa.cuentaPagadora}}
+                    </div>
+                    <div class="sumMonto lightBlue">
+                        {{TotalxEmpresa.saldoLote | currency}}
+                    </div>
+                </div>
+                <div class="rows">
+                    <div class="raya rayaLightBlue"></div>
+                </div>
+                <div class="rows">
+                    <div class="sumTexto">
+                        Flujo
+                    </div>
+                    <div class="sumMonto montoFinal lightBlue">
+                        {{FlujoEfectivo | currency}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="collapse in" id="collapsePanel">
+            <div id="contenedorTablas">
+                <div class="rowTablas">
+                    <div id="tblBancos">
+                        <div class="titleBloque">
+                            Ingresos Bancos
+                            <div class="paso"> Paso
+                                <div class="pasoNumero"> 1</div>
+                            </div>
+                        </div>
+                        <br>
+                        <table class="table table-condensed" id="tablaING">
+                            <thead>
+                                <tr>
+                                    <th>Cuenta</th>
+                                    <th>Saldo</th>
+                                    <th>Excedente/Faltante</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="ingreso in ingresos">
+                                    <td>{{ingreso.cuenta}}</td>
+                                    <td>
+                                        <input type="text" ng-model="ingreso.saldo" ng-blur="calculaSaldoIngresos(ingreso)" class="form-control txtIngresos valores" ng-keypress="presskey($event)" onkeypress="return isNumberKey(event)">
+                                    </td>
+                                    <td ng-class="{'danger':ingreso.disponible == '0', 'warning':ingreso.disponible < (ingreso.saldo / 2),'info': ingreso.disponible > (ingreso.disponible / 2)}">{{ingreso.disponible | currency}}</td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <td></td>
+                                <td>{{getTotal('ingresoSaldo') | currency}}</td>
+                                <td>{{getTotal('ingresoDisponible') | currency}}</td>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div id="tblOtros">
+                        <div class="titleBloque">
+                            Ingresos Otros
+                            <div class="paso"> Paso
+                                <div class="pasoNumero"> 2</div>
+                            </div>
+                        </div>
+                        <br>
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>Concepto</th>
+                                    <th>Total Disponible</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        Caja:
+                                    </td>
+                                    <td>
+                                        <input type="text" id="txtCaja" ng-model="caja" onkeypress="return event.charCode >= 48 && event.charCode <= 57" class="form-control txtIngresos">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Cobranza esperada:
+                                    </td>
+                                    <td>
+                                        <input type="text" id="txtCobranza" onkeypress="return event.charCode >= 48 && event.charCode <= 57" ng-model="cobrar" class="form-control txtIngresos">
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <td></td>
+                                <td>{{getTotal('otrosIngresos') | currency}}</td>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div id="tblTransfer">
+                        <div class="titleBloque">
+                            Transferencias Bancarias
+                            <div class="paso"> Paso
+                                <div class="pasoNumero"> 3</div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-success" id="btnAdd" ng-click="addTransferencia()">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        </button>
+                        <table class="table table-condensed" id="tablaTR">
+                            <thead>
+                                <tr>
+                                    <th>Banco Origen</th>
+                                    <th>Banco Destino</th>
+                                    <th>Importe</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodyTrans1">
+                                <tr class="clonedInput" ng-repeat="transferencia in transferencias">
+                                    <td>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" readonly="true" ng-model='transferencia.bancoOrigen' aria-label="...">
+                                            <div class="input-group-btn">
+                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <span class="caret"></span></button>
+                                                <ul class="dropdown-menu dropdown-menu-right">
+                                                    <li ng-repeat="ingreso in ingresos">
+                                                        <a href="#" ng-click="selBancoIngreso(ingreso, transferencia)">{{ingreso.cuenta}}</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <!-- /btn-group -->
+                                        </div>
+                                        <!-- /input-group -->
+                                    </td>
+                                    <td>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" readonly="true" ng-model='transferencia.bancoDestino' aria-label="...">
+                                            <div class="input-group-btn">
+                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <span class="caret"></span></button>
+                                                <ul class="dropdown-menu dropdown-menu-right">
+                                                    <li ng-repeat="egreso in egresos">
+                                                        <a href="#" class="egresosCombo" ng-click='selBancoEgreso(egreso,transferencia)'>
 															{{egreso.cuenta}}
 														</a>
-													</li>
-												</ul>
-											</div><!-- /btn-group -->
-										</div><!-- /input-group -->	
-									</td> 								
-									<td><input type="text" onkeypress="return event.charCode >= 48 && event.charCode <= 57" ng-blur="calculaTransferencia(transferencia)" ng-keypress="presskey($event)" ng-model="transferencia.importe" class="form-control txtIngresos"></td> 
-									<td> 
-										<button type="button" class="btn btn-danger" id="btnDel" ng-click="delTransferencia(transferencia)">
-											<span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
-										</button>
-									</td>
-								</tr>
-							</tbody>
-							<tfoot>							
-								<td></td>
-								<td></td>
-								<td>{{getTotal('transferencias') | currency}}</td>
-							</tfoot>
-						</table>
-					</div>
-				</div>
-				<div class="rowTablas">
-					<br/>
-					<div id="tblTotales">
-						<div class="titleBloque">
-							Total Operaciones <div class="paso"> Resultados <div class="pasoNumero"> 4</div> </div>
-						</div>
-						<table class="table table-condensed"> 
-							<thead> 
-								<tr> 				
-									<th>Banco-Cta</th> 								
-									<th>Saldo</th>
-									<th>A transferir</th> 								
-									<th>Total</th>
-									<th>Diferencia</th>
-								</tr> 
-							</thead> 
-							<tbody> 
-								<tr ng-repeat="egreso in egresos">
-									<td>
-										{{egreso.cuenta}}
-									</td>								
-									<td>
-										<input type="text" ng-model="egreso.saldo" ng-blur="calculaTotalOperaciones()" ng-hide="egreso.ingreso != 0" class="form-control txtIngresos" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
-										<label ng-hide="egreso.ingreso == 0">{{egreso.saldoIngreso | currency}}</label>
-									</td> 
-									<td>
-										{{egreso.aTransferir | currency}}
-									</td> 
-									<td>
-										{{egreso.total | currency}}
-									</td> 
-									<td>
-										<span ng-class="{'rojo': egreso.excedente < 0}">{{egreso.excedente | currency}}</span>
-									</td> 
-								</tr>							
-							</tbody>
-							<tfoot>							
-								<td></td>
-								<td>{{getTotal('saldo') | currency}}</td>
-								<td>{{getTotal('aTransferir') | currency}}</td>
-								<td>{{getTotal('egresosTotal') | currency}}</td>
-								<td><span ng-class="{'rojo': getTotal('excedente') < 0}">{{getTotal('excedente') | currency}}</span></td>
-							</tfoot>
-						</table>
-					</div>
-				</div>
-			</div>
-
-		</div>	
-		<div id="colapsar" >
-			<a class="glyphicon glyphicon-resize-small linkManual" aria-hidden="true" data-toggle="collapse" data-target="#collapsePanel" aria-expanded="false" aria-controls="collapsePanel" ng-click="Resize()" ng-hide="colapsado" tooltip="Contraer"></a>
-			<a class="glyphicon glyphicon-resize-full linkManual" aria-hidden="true" data-toggle="collapse" data-target="#collapsePanel" aria-expanded="false" aria-controls="collapsePanel" ng-click="Resize()" ng-hide="!colapsado" tooltip="Expandir"></a>
-		</div>
-	</section>
-	
-	<section id="filtros">
-		<div class="tituloBloque2">
-			<span class="colText " >2.- Cartera a pagar </span>
-		</div>
-		<div id="filtrosContenedor">
-			<div id="mdContentSuma3">
-			<div class="mdLineSuma" ng-repeat="grdBanco in grdBancos">
-
-				<div class="sumTexto">
-					{{grdBanco.banco}}
-				</div>
-				<div class="sumMonto blueInfo">
-					<span><span ng-class="{'rojo': getDiferencia(grdBanco) < 0, 'negro' : getDiferencia(grdBanco) >= 0 }">{{getDiferencia(grdBanco) | currency}}</span><span  class="negro">/</span>{{grdBanco.subtotal | currency}}</span>
-				</div>
-			</div>
-			<div class="rows"> <div class="raya rayaBlueInfo"></div></div>
-			<div class="rows">
-				<div class="sumTexto">
-					A pagar
-				</div>
-				<div class="sumMonto montoFinal blueInfo" >
-					<span id= "mano"   ng-click="Filtrar('pago',26,'A pagar')">{{grdApagar | currency}}
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <!-- /btn-group -->
+                                        </div>
+                                        <!-- /input-group -->
+                                    </td>
+                                    <td>
+                                        <input type="text" onkeypress="return event.charCode >= 48 && event.charCode <= 57" ng-blur="calculaTransferencia(transferencia)" ng-keypress="presskey($event)" ng-model="transferencia.importe" class="form-control txtIngresos">
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-danger" id="btnDel" ng-click="delTransferencia(transferencia)">
+                                            <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <td></td>
+                                <td></td>
+                                <td>{{getTotal('transferencias') | currency}}</td>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+                <div class="rowTablas">
+                    <br/>
+                    <div id="tblTotales">
+                        <div class="titleBloque">
+                            Total Operaciones
+                            <div class="paso"> Resultados
+                                <div class="pasoNumero"> 4</div>
+                            </div>
+                        </div>
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>Banco-Cta</th>
+                                    <th>Saldo</th>
+                                    <th>A transferir</th>
+                                    <th>Total Disponible</th>
+                                    <th>Excedente/Faltante</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="egreso in egresos">
+                                    <td>
+                                        {{egreso.cuenta}}
+                                    </td>
+                                    <td>
+                                        <input type="text" ng-model="egreso.saldo" ng-blur="calculaTotalOperaciones()" ng-hide="egreso.ingreso != 0" class="form-control txtIngresos" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                        <label ng-hide="egreso.ingreso == 0">{{egreso.saldoIngreso | currency}}</label>
+                                    </td>
+                                    <td>
+                                        {{egreso.aTransferir | currency}}
+                                    </td>
+                                    <td>
+                                        {{egreso.total | currency}}
+                                    </td>
+                                    <td>
+                                        <span ng-class="{'rojo': egreso.excedente < 0}">{{egreso.excedente | currency}}</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <td></td>
+                                <td>{{getTotal('saldo') | currency}}</td>
+                                <td>{{getTotal('aTransferir') | currency}}</td>
+                                <td>{{getTotal('egresosTotal') | currency}}</td>
+                                <td><span ng-class="{'rojo': getTotal('excedente') < 0}">{{getTotal('excedente') | currency}}</span></td>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="colapsar">
+            <a class="glyphicon glyphicon-resize-small linkManual" aria-hidden="true" data-toggle="collapse" data-target="#collapsePanel" aria-expanded="false" aria-controls="collapsePanel" ng-click="Resize()" ng-hide="colapsado" tooltip="Contraer"></a>
+            <a class="glyphicon glyphicon-resize-full linkManual" aria-hidden="true" data-toggle="collapse" data-target="#collapsePanel" aria-expanded="false" aria-controls="collapsePanel" ng-click="Resize()" ng-hide="!colapsado" tooltip="Expandir"></a>
+        </div>
+    </section>
+    <section id="filtros">
+        <div class="tituloBloque2">
+            <span class="colText ">2.- Cartera a pagar </span>
+        </div>
+        <div id="filtrosContenedor">
+            <div id="mdContentSuma3">
+                <div class="mdLineSuma" ng-repeat="grdBanco in grdBancos">
+                    <div class="sumTexto">
+                        {{grdBanco.banco}}
+                    </div>
+                    <div class="sumMonto blueInfo">
+                        <span><span ng-class="{'rojo': getDiferencia(grdBanco) < 0, 'oro' : getDiferencia(grdBanco) >= 0 }">{{getDiferencia(grdBanco) | currency}}</span><span class="negro">/</span><span class="azulClaro"> {{grdBanco.subtotal | currency}}</span></span>
+                    </div>
+                </div>
+                <div class="rows">
+                    <div class="raya rayaBlueInfo"></div>
+                </div>
+                <div class="rows">
+                    <div class="sumTexto">
+                        A pagar
+                    </div>
+                    <div class="sumMonto montoFinal blueInfo">
+                        <span id="mano" ng-click="Filtrar('pago',26,'A pagar')">{{grdApagar | currency}}
 					</span>
-				</div>
-			</div>
-			</div> 
-			<div class="row panelTotales" ng-if="blTotales">
-<!-- 				<div id="clsPagar">
+                    </div>
+                </div>
+            </div>
+            <div class="row panelTotales" ng-if="blTotales">
+                <!-- 				<div id="clsPagar">
 					<span id="clsMainLabel">Incluido</span><span id="clsPagarText" class="blueInfo"> {{cantidadTotal | currency}} </span>
 				</div> -->
-				<!--FAL variables en base al grid-->				
-				<div id="clsComplemento" >
-					<div class="clsNoPagable">
-						<span class="clsDetailLabel">Todos</span> <span id= "mano" class="clsDetailText blueInfo" ng-click="BorraFiltros()">{{GranTotal | currency}}</span>
-					</div>
-					<div class="clsNoPagable separadorNoPagable">
-						/
-					</div>
-					<div class="clsNoPagable">
-						<span class="clsDetailLabel">Pagable</span> <span id= "mano"  class="clsDetailText blueInfo" ng-click="Filtrar('False',27,'Pagables')">{{GranTotalPagable | currency}}
+                <!--FAL variables en base al grid-->
+                <div id="clsComplemento">
+                    <div class="clsNoPagable">
+                        <span class="clsDetailLabel">Todos</span> <span id="mano" class="clsDetailText blueInfo" ng-click="BorraFiltros()">{{GranTotal | currency}}</span>
+                    </div>
+                    <div class="clsNoPagable separadorNoPagable">
+                        /
+                    </div>
+                    <div class="clsNoPagable">
+                        <span class="clsDetailLabel">Pagable</span> <span id="mano" class="clsDetailText blueInfo" ng-click="Filtrar('False',27,'Pagables')">{{GranTotalPagable | currency}}
 						</span>
-					</div>
-					<div class="clsNoPagable separadorNoPagable">
-						/
-					</div>
-					<div class="clsNoPagable">
-						<span class="clsDetailLabel">No pagable</span> <span id= "mano"  class="clsDetailText blueInfo" ng-click="Filtrar('True',27,'No Pagables')">{{grdnoPagable | currency}}
+                    </div>
+                    <div class="clsNoPagable separadorNoPagable">
+                        /
+                    </div>
+                    <div class="clsNoPagable">
+                        <span class="clsDetailLabel">No pagable</span> <span id="mano" class="clsDetailText blueInfo" ng-click="Filtrar('True',27,'No Pagables')">{{grdnoPagable | currency}}
 						</span>
-					</div>
-					<div class="clsNoPagable separadorNoPagable">
-						/
-					</div>
-					<div class="clsNoPagable" >
-						<span class="clsDetailLabel">No Incluido</span> <span id= "mano" class="clsDetailText blueInfo" ng-click="Filtrar('Permitido',26,'No incluidos')">  {{ grdNoIncluido | currency }}</span>
-					</div>
-					<div class="clsNoPagable separadorNoPagable">
-						/
-					</div>
-					<div class="clsNoPagable">
-						<span class="clsDetailLabel">Reprogramado</span> <span id= "mano" class="clsDetailText blueInfo" ng-click="Filtrar('Pago Reprogramado',26,'Pago Reprogramado')">
+                    </div>
+                    <div class="clsNoPagable separadorNoPagable">
+                        /
+                    </div>
+                    <div class="clsNoPagable">
+                        <span class="clsDetailLabel">No Incluido</span> <span id="mano" class="clsDetailText blueInfo" ng-click="Filtrar('Permitido',26,'No incluidos')">  {{ grdNoIncluido | currency }}</span>
+                    </div>
+                    <div class="clsNoPagable separadorNoPagable">
+                        /
+                    </div>
+                    <div class="clsNoPagable">
+                        <span class="clsDetailLabel">Reprogramado</span> <span id="mano" class="clsDetailText blueInfo" ng-click="Filtrar('Pago Reprogramado',26,'Pago Reprogramado')">
 						{{ grdReprogramado | currency }}
 						  </span>
-					</div>
-					<div class="clsNoPagable separadorNoPagable">
-						/
-					</div>
-					
-					<div class="clsNoPagable">
-						<span class="clsDetailLabel">Porcentaje a pagar</span> <span class="clsDetailText blueInfo"> {{ (((grdApagar) * 100) / ( GranTotal )) | number:2 }} %</span>
-					</div>
-				</div>
-			</div>
-			<!--div id="chkPagable0">
+                    </div>
+                    <div class="clsNoPagable separadorNoPagable">
+                        /
+                    </div>
+                    <div class="clsNoPagable">
+                        <span class="clsDetailLabel">Porcentaje a pagar</span> <span class="clsDetailText blueInfo"> {{ (((grdApagar) * 100) / ( GranTotal )) | number:2 }} %</span>
+                    </div>
+                </div>
+            </div>
+            <!--div id="chkPagable0">
 				<div class="btn-group" role="group">
 					<button type="button" class="btn btn-primary" ng-click="FiltrarCartera('')">Todos</button>
 					<button type="button" class="btn btn-primary"  ng-click="FiltrarCartera('True')">Pagable</button>
@@ -396,45 +420,38 @@
 					<button type="button" class="btn btn-primary"  ng-click="FiltrarCartera('False')">No Incluida</button>
 				</div>
 			</div-->
-<!-- 			<div id="chkPagable1">
+            <!-- 			<div id="chkPagable1">
 				<div class="btn-group" role="group">
 					<button type="button" class="btn btn-info" ng-click="FiltrarCartera('')">BANAMEX 7187 </button>
 					<button type="button" class="btn btn-info"  ng-click="FiltrarCartera('True')"> BANCOMER 1289 </button>
 				</div>
 			</div> -->
-		</div>
-	</section>
-	
-	<section id="container">
-		<button type="button" id="btnSelectAll" ng-hide="1 > 0" class="btn btn-success" ng-disabled="!gridApi1.grid.options.multiSelect" ng-click="seleccionaTodo()"></button>
-		<button type="button" id="btnSelect" ng-hide="1 > 0" class="btn btn-success" ng-disabled="!gridApi1.grid.options.multiSelect" ng-click="selecciona()"></button>
-		<div class=" blueInfo" ng-if="blTotales">
-			<label class="tituloBloque2" ng-model="etqFiltros">{{etqFiltros}} {{msgFiltros}}</label>
-					
-		</div>
-		
-		<div id="contenedor" ng-init="iniciaGrid()">
-			<div id="grid1" ui-grid="gridOptions" ui-grid-grouping ui-grid-edit ui-grid-selection ui-grid-cellNav class="gridStyle"></div>
-		</div>
-	</section>
-	<!--FAL div donde se muestra el zip a descargar-->
-	<div id="divDocumento" class="filedownload"></div>
-	<div class="rows" ng-show="(idOperacion == 2) && (estatusLote == 2)">
-			<div class="mdPagarLabel">Observación:</div>
-			<div>
-				<textarea class="form-control" rows="3" ng-model="formData.Observacion" placeholder="Escriba un comentario"></textarea>
-			</div>	
-		</div>
-	<section id="accion">
-		<button type="button" class="btn btn-danger" ng-show="estatusLote==0" ng-click="Cancelar()">Cancelar</button>
-		<button type="button" class="btn btn-primary" data-loading-text="Generando..." ng-click="GenerarArchivo()" ng-show="estatusLote == 3">Generar Archivo</button>
-		<button id="btnGuardando" type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="Guardar(1,0)" data-loading-text="Guardando..." autocomplete="off" ng-show="(estatusLote < 3) && (idOperacion == 0)">Guardar</button>
-		<button id="btnEnviaApro" type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="EnviaAprobacion()" data-loading-text="Enviando..." autocomplete="off" ng-show="(estatusLote == 1) && (idOperacion == 0)">Enviar a Aprobación</button>		
-		<button id="btnAprobar" type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="AprobarLote(3)" data-loading-text="Aprobando..." autocomplete="off" ng-show="(idOperacion == 2) && (estatusLote == 2)">Aprobar</button>
-		<button id="btnRechazar" type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="AprobarLote(4)" data-loading-text="Rechazando..." autocomplete="off" ng-show="(idOperacion == 2) && (estatusLote == 2)">Rechazar</button>
-	</section>
-
+        </div>
+    </section>
+    <section id="container">
+        <button type="button" id="btnSelectAll" ng-hide="1 > 0" class="btn btn-success" ng-disabled="!gridApi1.grid.options.multiSelect" ng-click="seleccionaTodo()"></button>
+        <button type="button" id="btnSelect" ng-hide="1 > 0" class="btn btn-success" ng-disabled="!gridApi1.grid.options.multiSelect" ng-click="selecciona()"></button>
+        <div class=" blueInfo" ng-if="blTotales">
+            <label class="titulofiltro" ng-model="etqFiltros">{{etqFiltros}} {{msgFiltros}}</label>
+        </div>
+        <div id="contenedor" ng-init="iniciaGrid()">
+            <div id="grid1" ui-grid="gridOptions" ui-grid-grouping ui-grid-edit ui-grid-selection ui-grid-cellNav class="gridStyle"></div>
+        </div>
+    </section>
+    <!--FAL div donde se muestra el zip a descargar-->
+    <div id="divDocumento" class="filedownload"></div>
+    <div class="rows" ng-show="(idOperacion == 2) && (estatusLote == 2)">
+        <div class="mdPagarLabel">Observación:</div>
+        <div>
+            <textarea class="form-control" rows="3" ng-model="formData.Observacion" placeholder="Escriba un comentario"></textarea>
+        </div>
+    </div>
+    <section id="accion">
+        <button type="button" class="btn btn-danger" ng-show="estatusLote==0" ng-click="Cancelar()">Cancelar</button>
+        <button type="button" class="btn btn-primary" data-loading-text="Generando..." ng-click="GenerarArchivo()" ng-show="estatusLote == 3">Generar Archivo</button>
+        <button id="btnGuardando" type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="Guardar(1,0)" data-loading-text="Guardando..." autocomplete="off" ng-show="(estatusLote < 3) && (idOperacion == 0)">Guardar</button>
+        <button id="btnEnviaApro" type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="EnviaAprobacion()" data-loading-text="Enviando..." autocomplete="off" ng-show="(estatusLote == 1) && (idOperacion == 0)">Enviar a Aprobación</button>
+        <button id="btnAprobar" type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="AprobarLote(3)" data-loading-text="Aprobando..." autocomplete="off" ng-show="(idOperacion == 2) && (estatusLote == 2)">Aprobar</button>
+        <button id="btnRechazar" type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="AprobarLote(4)" data-loading-text="Rechazando..." autocomplete="off" ng-show="(idOperacion == 2) && (estatusLote == 2)">Rechazar</button>
+    </section>
 </div>
-
-
-

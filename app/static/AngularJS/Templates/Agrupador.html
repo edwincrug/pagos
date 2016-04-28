@@ -1,18 +1,19 @@
 <link href="../../css/agrupador.css" rel="stylesheet" />
 <div cg-busy="myPromise" ng-init="init()" resize>
- <div ng-controller="agrupadorController" class="container">
+    <div ng-controller="agrupadorController" class="container">
         <h2>Agrupamiento y orden de provedores</h2>
         <div class="floatleft">
-          <!--Trae primero los agrupadores con su descripción-->  
+            <!--Trae primero los agrupadores con su descripción-->
             <div ng-repeat="agrupador in agrupadores" class="screen floatleft">
                 <div ui-sortable="sortableOptions" class="apps-container screen floatleft" ng-model="agrupador.lista">{{agrupador.pca_descripcion}}
                     <!--Dentro de cada agrupador sus provedores-->
-                    <div ui-sortable-selectable class="app" ng-repeat="item in agrupador.lista track by item.value" >{{item.text}}</div>
+                    <div ui-sortable-selectable class="app" ng-repeat="item in agrupador.lista track by item.value">{{item.text}}</div>
                 </div>
             </div>
             <div style="clear: both;">
-                 <button class="btn btn-info" data-toggle="modal" href="#stack2" ng-click="Guardar()">Guardar</button>
+                <button class="btn btn-info" data-toggle="modal" href="#stack2" ng-click="Guardar()">Guardar</button>
             </div>
         </div>
         <div class="clear"></div>
-</div></div>
+    </div>
+</div>
