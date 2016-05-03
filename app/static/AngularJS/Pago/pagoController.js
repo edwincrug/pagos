@@ -106,6 +106,9 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                                 $rootScope.accionPagina = true;
                                 $rootScope.ConsultaLote($rootScope.noLotes.data[$rootScope.noLotes.data.length - 1], $rootScope.noLotes.data.length, 0);
                                 $rootScope.ProgPago = true;
+                                setTimeout(function() {
+                                    $("#btnSelectables").click(); //$scope.selectAll();
+                                }, 500);
                                 $scope.traeBancosCompleta();
                                 setTimeout(function() {
                                     $("#btnSelectAll").click(); //$scope.selectAll();
@@ -556,26 +559,31 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                         { name: 'tipodocto', width: '15%', displayName: 'Tipo Documento', enableCellEdit: false },
                         { name: 'cartera', width: '15%', displayName: 'Cartera', enableCellEdit: false },
                         { name: 'moneda', width: '10%', displayName: 'Moneda', enableCellEdit: false },
+                        { name: 'numeroSerie', width: '20%', displayName: 'N Serie', enableCellEdit: false },
+                        { name: 'facturaProveedor', width: '20%', displayName: 'Factura Proveedor', enableCellEdit: false },
                         { name: 'fechaVencimiento', displayName: 'Fecha de Vencimiento', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '17%', enableCellEdit: false },
                         { name: 'fechaRecepcion', displayName: 'Fecha Recepción', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '17%', enableCellEdit: false },
                         { name: 'fechaFactura', displayName: 'Fecha Factura', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '17%', enableCellEdit: false },
                         { name: 'estatus', displayName: 'Estatus', width: '10%', enableCellEdit: false },
                         { name: 'anticipo', displayName: 'Anticipo', width: '10%', enableCellEdit: false },
                         { name: 'anticipoAplicado', displayName: 'Anticipo Aplicado', width: '15%', enableCellEdit: false },
-                        { name: 'cuenta', width: '15%', displayName: '# Cuenta' },
-                        { name: 'documentoPagable', width: '15%', displayName: 'Estatus del Documento', visible: false },
-                        { name: 'ordenBloqueada', displayName: 'Bloqueada', width: '20%', visible: false },
-                        { name: 'fechaPago', displayName: 'fechaPago', width: '20%', visible: false },
-                        { name: 'estGrid', width: '15%', displayName: 'Estatus Grid', visible: false },
-                        { name: 'seleccionable', displayName: 'seleccionable', width: '20%', visible: false },
-                        { name: 'cuentaDestino', displayName: 'Cuenta Destino', width: '20%' }
+                        { name: 'cuenta', width: '15%', displayName: '# Cuenta', enableCellEdit: false },
+                        { name: 'documentoPagable', width: '15%', displayName: 'Estatus del Documento', visible: false, enableCellEdit: false },
+                        { name: 'ordenBloqueada', displayName: 'Bloqueada', width: '20%', enableCellEdit: false },
+                        { name: 'fechaPago', displayName: 'fechaPago', width: '20%', visible: false, enableCellEdit: false },
+                        { name: 'estGrid', width: '15%', displayName: 'Estatus Grid', visible: false, enableCellEdit: false },
+                        { name: 'seleccionable', displayName: 'seleccionable', width: '20%', enableCellEdit: false, visible: false },
+                        { name: 'cuentaDestino', displayName: 'Cuenta Destino', width: '20%', enableCellEdit: false },
+                        { name: 'idEstatus', displayName: 'idEstatus', width: '5%', enableCellEdit: false, visible: false }
                     ],
                     rowTemplate: '<div ng-class="{\'ordenBloqueada\':(row.entity.ordenBloqueada==\'True\' && ((row.entity.idEstatus < 1 || row.entity.idEstatus > 5) && row.entity.idEstatus != 20) && !row.isSelected)' +
                         ',\'noSeleccionable\': (row.entity.seleccionable==\'True\' && row.entity.cuentaDestino==\'SIN CUENTA DESTINO\')' +
                         ',\'bloqueadaSelec\': (row.isSelected && row.entity.ordenBloqueada==\'True\') || (row.isSelected && ((row.entity.idEstatus >= 1 && row.entity.idEstatus <= 5) || row.entity.idEstatus == 20)),' +
                         '\'selectNormal\': (row.isSelected && row.entity.ordenBloqueada==\'False\' && ((row.entity.idEstatus < 1 || row.entity.idEstatus > 5) && row.entity.idEstatus != 20))' +
                         ',\'docIncompletos\': (!row.isSelected && ((row.entity.idEstatus >= 1 && row.entity.idEstatus <= 5) || row.entity.idEstatus == 20) && row.entity.ordenBloqueada==\'False\')' +
-                        ',\'bloqDocIncom\': (!row.isSelected && ((row.entity.idEstatus >= 1 && row.entity.idEstatus <= 5) || row.entity.idEstatus == 20) && row.entity.ordenBloqueada==\'True\')}"> <div ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader == \'True\'}" ui-grid-cell></div></div>',
+                        ',\'bloqDocIncom\': (!row.isSelected && ((row.entity.idEstatus >= 1 && row.entity.idEstatus <= 5) || row.entity.idEstatus == 20) && row.entity.ordenBloqueada==\'True\')' +
+                        ',\'ordenBloqueada\':(row.entity.ordenBloqueada==\'True\' && ((row.entity.idEstatus < 1 || row.entity.idEstatus > 5) && row.entity.idEstatus != 20) && !row.isSelected)' +
+                        '}"> <div ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader == \'True\'}" ui-grid-cell></div></div>',
                     onRegisterApi: function(gridApi1) {
                         $scope.gridApi1 = gridApi1;
                         //FAL14042016 Marcado de grupos y proveedores
@@ -779,11 +787,13 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             }
         }
         $scope.seleccionaTodo = function() {
+
             $scope.selectAll(0);
         }
         $scope.selecciona = function() {
             $scope.selectAll(1);
         }
+
         $scope.selectAll = function(opcion) {
             //FAL se analizan los registros para selccionarlos y se obtienen los totales relacionados al grid
             $rootScope.grdApagarOriginal = 0;
@@ -814,6 +824,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             $scope.gridApi1.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
             $scope.gridApi1.selection.selectAllRows(true);
             $scope.grdinicia = $scope.grdinicia + 1;
+
         };
         //FAL filtros en base a variables
         $scope.Filtrar = function(value, campo, texto) {
