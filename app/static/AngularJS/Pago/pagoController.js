@@ -822,7 +822,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             };
             $scope.gridApi1.core.notifyDataChange(uiGridConstants.dataChange.OPTIONS);
             $scope.gridApi1.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
-            $scope.gridApi1.selection.selectAllRows(true);
+            //$scope.gridApi1.selection.selectAllRows(true);
             $scope.grdinicia = $scope.grdinicia + 1;
 
         };
