@@ -93,7 +93,6 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                                         $rootScope.showGrid = false;
                                         $scope.showSelCartera = false;
                                         $scope.showTotales = false;
-
                                         $scope.traeTotalxEmpresa.emp_nombre = 'La empresa seleccionada no tiene información';
                                     });
                             $rootScope.noLotes = data;
@@ -106,9 +105,6 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                                 $rootScope.accionPagina = true;
                                 $rootScope.ConsultaLote($rootScope.noLotes.data[$rootScope.noLotes.data.length - 1], $rootScope.noLotes.data.length, 0);
                                 $rootScope.ProgPago = true;
-                                setTimeout(function() {
-                                    $("#btnSelectables").click(); //$scope.selectAll();
-                                }, 500);
                                 $scope.traeBancosCompleta();
                                 setTimeout(function() {
                                     $("#btnSelectAll").click(); //$scope.selectAll();
@@ -571,7 +567,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                         { name: 'documentoPagable', width: '15%', displayName: 'Estatus del Documento', visible: false, enableCellEdit: false },
                         { name: 'ordenBloqueada', displayName: 'Bloqueada', width: '20%', enableCellEdit: false },
                         { name: 'fechaPago', displayName: 'fechaPago', width: '20%', visible: false, enableCellEdit: false },
-                        { name: 'estGrid', width: '15%', displayName: 'Estatus Grid', visible: false, enableCellEdit: false },
+                        { name: 'estGrid', width: '15%', displayName: 'Estatus Grid', enableCellEdit: false },
                         { name: 'seleccionable', displayName: 'seleccionable', width: '20%', enableCellEdit: false, visible: false },
                         { name: 'cuentaDestino', displayName: 'Cuenta Destino', width: '20%', enableCellEdit: false },
                         { name: 'idEstatus', displayName: 'idEstatus', width: '5%', enableCellEdit: false, visible: false }
@@ -600,7 +596,6 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                                     $scope.unSelectAllChildren(gridApi1, childRows[j]);
                                 }
                             }
-                            //FAL14042016 Marcado de grupos y proveedores
                             if (row.internalRow == undefined && row.isSelected == true && row.entity.seleccionable == "False") {
                                 var childRows = row.treeNode.parentRow.treeNode.children;
                                 var numchilds = row.treeNode.parentRow.treeNode.aggregations[0].value;
@@ -641,6 +636,9 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                                 //FAL actualizar cuenta pagadoras
                                 if ($scope.grdinicia > 0) {
                                     i = 0;
+                                    if (row.entity.estGrid == 'Pago Reprogramado') {
+                                        $rootScope.grdReprogramado = Math.round($rootScope.grdReprogramado * 100) / 100 - Math.round(row.entity.Pagar * 100) / 100;
+                                    };
                                     $rootScope.grdBancos.forEach(function(banco, subtotal) {
                                         if (row.entity.cuentaPagadora == $rootScope.grdBancos[i].banco) {
                                             $rootScope.grdBancos[i].subtotal = Math.round($rootScope.grdBancos[i].subtotal * 100) / 100 + Math.round(grdPagarxdocumento * 100) / 100;
@@ -659,8 +657,12 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                                         if (row.entity.cuentaPagadora == $rootScope.grdBancos[i].banco) {
                                             $rootScope.grdBancos[i].subtotal = Math.round($rootScope.grdBancos[i].subtotal * 100) / 100 - Math.round(grdPagarxdocumento * 100) / 100;
                                             $rootScope.grdApagar = $rootScope.grdApagar - row.entity.Pagar;
-                                            row.entity.estGrid = 'Permitido'
-                                        }
+                                            if (row.entity.estGrid != 'Pago Reprogramado') {
+                                                row.entity.estGrid = 'Permitido'
+                                            } else {
+                                                $rootScope.grdReprogramado = Math.round($rootScope.grdReprogramado * 100) / 100 + Math.round(row.entity.Pagar * 100) / 100;
+                                            }
+                                        };
                                         i++;
                                     });
                                 }
@@ -706,39 +708,52 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                         });
                         gridApi1.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
                             //FAL trabaja con las variables dependiendo si se edita o cambia la fecha
+                            var i = 0;
+                            var numcuentas = $rootScope.grdBancos.length;
                             if (rowEntity.estGrid == 'Pago' || rowEntity.estGrid == 'Pago Reprogramado') {
-                                old_date = new Date(rowEntity.fechaPago);
-                                oldValue = rowEntity.saldo;
+                                if (rowEntity.fechaPago == "1900-01-01T00:00:00") {
+                                    old_date = "";
+                                } else {
+                                    old_date = new Date(rowEntity.fechaPago);
+                                }
                                 if (colDef.name == 'fechaPromesaPago') {
                                     dtHoy = Date.now();
-                                    now_date = new Date(dtHoy);
-                                    new_date = new Date(newValue);
-                                    var today = new Date();
-                                    var dd = today.getDate();
-                                    var mm = today.getMonth() + 1;
-                                    var yyyy = today.getFullYear();
+                                    now_date = new Date($scope.formatDate(dtHoy));
+                                    new_date = new Date($scope.formatDate(newValue));
                                     if (new_date <= now_date) {
-                                        alertFactory.warning('La fecha promesa de pago no puede ser menor a ' + dd + '/' + mm + '/' + yyyy + ' !!!');
+                                        alertFactory.warning('La fecha promesa de pago no puede ser menor o igual a ' + $scope.formatDate(dtHoy) + ' !!!');
                                         rowEntity.fechaPromesaPago = old_date;
                                         rowEntity.estGrid = 'Pago';
                                     } else {
-                                        $rootScope.grdApagar = Math.round($rootScope.grdApagar * 100) / 100 - Math.round(rowEntity.Pagar * 100) / 100;
-                                        rowEntity.Pagar = oldValue;
-                                        $rootScope.grdApagar = Math.round($rootScope.grdApagar * 100) / 100 + Math.round(rowEntity.Pagar * 100) / 100;
-                                        $rootScope.grdReprogramado = Math.round($rootScope.grdReprogramado * 100) / 100 + Math.round(rowEntity.Pagar * 100) / 100;
-                                        $rootScope.grdApagar = Math.round($rootScope.grdApagar * 100) / 100 - Math.round(rowEntity.Pagar * 100) / 100;
+                                        // for (var i = 0; i < numcuentas; i++) {
+                                        //     if (rowEntity.cuentaPagadora == $rootScope.grdBancos[i].banco) {
+                                        //         $rootScope.grdBancos[i].subtotal = Math.round($rootScope.grdBancos[i].subtotal * 100) / 100 - Math.round(rowEntity.Pagar * 100) / 100;
+                                        //         i = numcuentas;
+                                        //     }
+                                        // };
+                                        //$rootScope.grdApagar = Math.round($rootScope.grdApagar * 100) / 100 - Math.round(rowEntity.Pagar * 100) / 100;
+                                        rowEntity.Pagar = rowEntity.saldo;
+                                        //$rootScope.grdReprogramado = Math.round($rootScope.grdReprogramado * 100) / 100 + Math.round(rowEntity.Pagar * 100) / 100;
+                                        //$rootScope.grdApagar = Math.round($rootScope.grdApagar * 100) / 100 - Math.round(rowEntity.Pagar * 100) / 100;
                                         rowEntity.estGrid = 'Pago Reprogramado';
+                                        $scope.gridApi1.selection.unSelectRow(rowEntity);
                                     }
                                 }
                                 if (colDef.name == 'Pagar') {
                                     $scope.cantidadUpdate = newValue - oldValue;
-                                    if ((newValue > oldValue) || (newValue <= 0)) {
-                                        alertFactory.warning('El pago el pago es inválido !!!');
+                                    if ((newValue > rowEntity.saldo) || (newValue <= 0)) {
+                                        alertFactory.warning('El pago es inválido !!!');
                                         rowEntity.Pagar = oldValue;
                                     } else {
                                         if (rowEntity.estGrid == 'Pago Reprogramado') {
                                             $rootScope.grdReprogramado = Math.round($rootScope.grdReprogramado * 100) / 100 - Math.round(rowEntity.Pagar * 100) / 100;
                                         }
+                                        for (var i = 0; i < numcuentas; i++) {
+                                            if (rowEntity.cuentaPagadora == $rootScope.grdBancos[i].banco) {
+                                                $rootScope.grdBancos[i].subtotal = Math.round($rootScope.grdBancos[i].subtotal * 100) / 100 + Math.round($scope.cantidadUpdate * 100) / 100;
+                                                i = numcuentas;
+                                            }
+                                        };
                                         $rootScope.grdNoIncluido = Math.round($rootScope.grdNoIncluido * 100) / 100 - Math.round($scope.cantidadUpdate * 100) / 100;
                                         $rootScope.grdApagar = Math.round($rootScope.grdApagar * 100) / 100 + Math.round($scope.cantidadUpdate * 100) / 100;
                                         rowEntity.estGrid = 'Pago';
@@ -759,6 +774,15 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                 } //grid options
         }; //funcion
         //08042016FAL recorre cada nivel y selecciona los hijos
+        $scope.formatDate = function(date) {
+            var d = new Date(date),
+                month = '' + (d.getMonth() + 1),
+                day = '' + d.getDate(),
+                year = d.getFullYear();
+            if (month.length < 2) month = '0' + month;
+            if (day.length < 2) day = '0' + day;
+            return [year, month, day].join('/');
+        }
         $scope.selectAllChildren = function(gridApi, rowEntity) {
                 if (rowEntity.children.length == 0) {
                     if (rowEntity.row.entity.seleccionable == "False") {
@@ -787,13 +811,11 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             }
         }
         $scope.seleccionaTodo = function() {
-
             $scope.selectAll(0);
         }
         $scope.selecciona = function() {
             $scope.selectAll(1);
         }
-
         $scope.selectAll = function(opcion) {
             //FAL se analizan los registros para selccionarlos y se obtienen los totales relacionados al grid
             $rootScope.grdApagarOriginal = 0;
@@ -824,7 +846,6 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             $scope.gridApi1.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
             //$scope.gridApi1.selection.selectAllRows(true);
             $scope.grdinicia = $scope.grdinicia + 1;
-
         };
         //FAL filtros en base a variables
         $scope.Filtrar = function(value, campo, texto) {
