@@ -209,12 +209,13 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                 });
         };
         //FAl--Trae el total de bancos de la empresa seleccionada
-        $scope.traeTotalxEmpresa = function(emp_idempresa, emp_nombre, emp_nombrecto) {
+        $scope.traeTotalxEmpresa = function(emp_idempresa, emp_nombre, emp_nombrecto, rfc) {
             $('#btnTotalxEmpresa').button('loading');
             $scope.showTotales = false;
             $scope.showSelCartera = false;
             //LQMA 14042016
             $rootScope.emp_nombrecto = emp_nombrecto;
+            $rootScope.rfc = rfc;
             pagoRepository.getTotalxEmpresa(emp_idempresa)
                 .then(function successCallback(response) {
                     $rootScope.GranTotal = 0;
@@ -262,7 +263,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                                 alertFactory.info('No existen Lotes');
                                 $rootScope.NuevoLote = true;
                                 var date = new Date();
-                                $rootScope.formData.nombreLoteNuevo = ("0" + (date.getMonth() + 1)).slice(-2) + ("0" + date.getDate()).slice(-2) + date.getFullYear() + '-' + $rootScope.emp_nombrecto + ('0' + ($rootScope.noLotes.data.length + 1)).slice(-2); //'-01';
+                                $rootScope.formData.nombreLoteNuevo = ("0" + (date.getMonth() + 1)).slice(-2) + ("0" + date.getDate()).slice(-2) + date.getFullYear() + '-' + $rootScope.rfc + ('0' + ($rootScope.noLotes.data.length + 1)).slice(-2); //'-01';
                             }
                         },
                         function errorCallback(response) {
@@ -478,6 +479,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             }
             $scope.noPagable = $scope.carteraVencida - $scope.cantidadTotal;
             $scope.gridOptions.data = data;
+
             $rootScope.blTotales = false;
         };
         var setGroupValues = function(columns, rows) {
@@ -819,11 +821,10 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
         $scope.selectAll = function(opcion) {
             //FAL se analizan los registros para selccionarlos y se obtienen los totales relacionados al grid
             $rootScope.grdApagarOriginal = 0;
-            $rootScope.grdnoPagable = 0;
+            //$rootScope.grdnoPagable = 0;
             $scope.etqFiltros = "Todos";
             $scope.grdinicia = 0;
             //LQMA 14032016
-            //$rootScope.gridOptions.data.forEach(function (grDatosSel, i)
             $scope.gridOptions.data.forEach(function(grDatosSel, i) {
                 if (grDatosSel.seleccionable == 'True') {
                     $rootScope.grdnoPagable = Math.round($rootScope.grdnoPagable * 100) / 100 + Math.round(grDatosSel.saldo * 100) / 100;
@@ -844,7 +845,8 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             };
             $scope.gridApi1.core.notifyDataChange(uiGridConstants.dataChange.OPTIONS);
             $scope.gridApi1.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
-            //$scope.gridApi1.selection.selectAllRows(true);
+            $scope.gridApi1.selection.selectAllRows(true);
+
             $scope.grdinicia = $scope.grdinicia + 1;
         };
         //FAL filtros en base a variables
@@ -905,6 +907,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
         $rootScope.ConsultaLoteObtiene = function(Lote, index) {
                 alertFactory.info('Consulta de Lote ' + index);
                 $scope.idLote = Lote.idLotePago;
+                $rootScope.grdnoPagable = 0;
                 $rootScope.idLotePadre = Lote.idLotePago;
                 $rootScope.nombreLote = Lote.nombre;
                 $rootScope.estatusLote = Lote.estatus;
@@ -939,6 +942,18 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                         });
                     if ($rootScope.estatusLote == 0) { //LQMA 08042016 entra cuando el lote es nuevo
                         $scope.gridOptions.data = $rootScope.datosModal; //$rootScope.modalSeleccionados;
+
+                        $scope.gridOptions.isRowSelectable = function(row) {
+                            if (row.entity.seleccionable == 'True') {
+                                return false;
+                            } else {
+                                return true;
+                            }
+                        };
+                        $scope.gridApi1.core.notifyDataChange(uiGridConstants.dataChange.OPTIONS);
+                        $scope.gridApi1.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
+
+
                         $('#btnTotalxEmpresa').button('reset');
                         if ($rootScope.crearLote) {
                             $('#inicioModal').modal('hide');
@@ -1267,7 +1282,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                         .then(function successCallback(data) {
                                 $rootScope.noLotes = data;
                                 var date = new Date();
-                                $rootScope.formData.nombreLoteNuevo = ("0" + (date.getMonth() + 1)).slice(-2) + ("0" + date.getDate()).slice(-2) + date.getFullYear() + '-' + $rootScope.emp_nombrecto + '-' + ('0' + ($rootScope.noLotes.data.length + 1)).slice(-2); //data.length + 1;
+                                $rootScope.formData.nombreLoteNuevo = ("0" + (date.getMonth() + 1)).slice(-2) + ("0" + date.getDate()).slice(-2) + date.getFullYear() + '-' + $rootScope.rfc + '-' + ('0' + ($rootScope.noLotes.data.length + 1)).slice(-2); //data.length + 1;
                                 $('#inicioModal').modal('show');
                             },
                             function errorCallback(response) {
