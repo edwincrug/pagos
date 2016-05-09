@@ -15,6 +15,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
         $rootScope.currentIdOp = null;
         $scope.idLote = 0;
         $rootScope.formData = {};
+        $rootScope.proceso = '';
         $scope.radioModel = '';
         $scope.radioTotales = 1;
         $scope.fechaHoy = new Date();
@@ -22,6 +23,8 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
         $rootScope.blTotales = true;
         $rootScope.grdBancos = [];
         $rootScope.msgFiltros = '';
+        $scope.conRef = false;
+        $scope.refMode = true;
         var errorCallBack = function(data, status, headers, config) {
             alertFactory.error('Ocurrio un problema');
         };
@@ -243,6 +246,8 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                 });
             $scope.traeBancosCompleta();
         };
+
+
         $scope.ObtieneLotes = function(newLote) //borraLote, 0 para borrar lotes sin relacion, 1 para conservarlos
             {
                 pagoRepository.getLotes($scope.idEmpresa, $rootScope.currentEmployee, 0, 0)
@@ -530,7 +535,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                             name: 'proveedor',
                             grouping: { groupPriority: 1 },
                             sort: { priority: 1, direction: 'asc' },
-                            width: '35%',
+                            width: '20%',
                             name: 'proveedor',
                             cellTemplate: '<div><div ng-if="!col.grouping || col.grouping.groupPriority === undefined || col.grouping.groupPriority === null || ( row.groupHeader && col.grouping.groupPriority === row.treeLevel )" class="ui-grid-cell-contents" title="TOOLTIP">{{COL_FIELD CUSTOM_FILTERS}}</div></div>'
                         }, {
@@ -547,8 +552,13 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                             cellFilter: 'number: 6',
                             enableCellEdit: false
                         },
-                        { name: 'cuentaPagadora', width: '15%', displayName: 'Banco' },
-                        { name: 'fechaPromesaPago', displayName: 'Fecha Promesa de Pago', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '17%' },
+                        { name: 'cuentaPagadora', width: '10%', displayName: 'Banco' },
+                        { name: 'fechaPromesaPago', displayName: 'Fecha Promesa de Pago', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '15%' }, 
+                        {   name: 'referencia',
+                            displayName: 'Referencia',
+                            width: '10%',
+                            editableCellTemplate: "<div><form name=\"inputForm\"><input type=\"INPUT_TYPE\"  ui-grid-editor ng-model=\"MODEL_COL_FIELD\"  minlength=3 maxlength=30 required><div ng-show=\"!inputForm.$valid\"><span class=\"error\">La referencia debe tener al menos 5 caracteres</span></div></form></div>"
+                        },
                         { name: 'documento', displayName: '# Documento', width: '15%', enableCellEdit: false, headerTooltip: 'Documento # de factura del provedor', cellClass: 'cellToolTip' },
                         { name: 'ordenCompra', displayName: 'Orden de compra', width: '13%', enableCellEdit: false, cellTemplate: '<div class="urlTabla" ng-class="col.colIndex()" ><a tooltip="Ver en digitalización" class="urlTabla" href="http://192.168.20.9:3200/?id={{row.entity.ordenCompra}}&employee=' + $scope.idEmpleado + '" target="_new">{{row.entity.ordenCompra}}</a></div>' },
                         { name: 'monto', displayName: 'Monto', width: '15%', cellFilter: 'currency', enableCellEdit: false },
@@ -762,6 +772,14 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                                         rowEntity.fechaPromesaPago = old_date;
                                     }
                                 }
+                                //FAL valido la referencia.
+                                if (colDef.name == 'referencia') {
+                                    if (newValue.length > 30) {
+                                        alertFactory.warning('La referencia no puede tener más de 30 caracteres');
+                                        rowEntity.referencia = oldValue;
+                                    }
+                                }
+
                             } else {
                                 alertFactory.warning('Solo se pueden modificar datos de los documentos seleccionados');
                                 if (colDef.name == 'Pagar') {
@@ -849,6 +867,52 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
 
             $scope.grdinicia = $scope.grdinicia + 1;
         };
+
+        //FAL 06052016 funcion para tratar los escenarios en la edición del lote.
+
+        $scope.proPegaReferencia = function(proceso, pegaReferencia) {
+
+            $rootScope.referencia = pegaReferencia.referencia;
+            switch (proceso) {
+                case 1:
+                    $scope.pegaReferencia.proceso = "Pegar";
+                    $scope.pagoDirecto($rootScope.referencia);
+                    break;
+                case 4:
+                    $scope.pegaReferencia.proceso = "Borrar";
+                    $scope.borraReferencias($rootScope.referencia);
+                    break;
+            }
+
+        };
+
+        //FAL Funcion de pegar referencia 09052016
+        $scope.pagoDirecto = function(referencia) {
+
+            var rows = $scope.gridApi1.selection.getSelectedRows();
+            if (rows.length == 0) {
+                alertFactory.warning('Debe seleccionar al menos un documento');
+
+            } else {
+                rows.forEach(function(row, i) {
+                    if (row.referencia == undefined || row.referencia == "") {
+                        row.referencia = referencia;
+                    }
+                });
+            }
+        };
+
+        //FAL Funcion de borrar referencia 09052016
+        $scope.borraReferencias = function(referencia) {
+
+            var rows = $scope.gridApi1.selection.getSelectedRows();
+
+            rows.forEach(function(row, i) {
+
+                row.referencia = "";
+            });
+        };
+
         //FAL filtros en base a variables
         $scope.Filtrar = function(value, campo, texto) {
             //console.log(value);
@@ -1025,6 +1089,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                                 elemento.pad_polMovimiento = row.polMovimiento;
                                 elemento.pad_fechaPromesaPago = (row.fechaPromesaPago == '' ? '1900-01-01T00:00:00' : row.fechaPromesaPago);
                                 elemento.pad_saldo = row.Pagar; //row.saldo;//
+                                elemento.pad_polReferencia = row.referencia;//FAL 09052015 mandar referencia
                                 elemento.tab_revision = 1;
                                 array.push(elemento);
                             });

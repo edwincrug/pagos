@@ -257,8 +257,8 @@ function isNumberKey(evt) {
                                                 <ul class="dropdown-menu dropdown-menu-right">
                                                     <li ng-repeat="egreso in egresos">
                                                         <a href="#" class="egresosCombo" ng-click='selBancoEgreso(egreso,transferencia)'>
-															{{egreso.cuenta}}
-														</a>
+                                                            {{egreso.cuenta}}
+                                                        </a>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -362,15 +362,15 @@ function isNumberKey(evt) {
                         A pagar
                     </div>
                     <div class="sumMonto montoFinal blueInfo">
-                        <span id="mano" ng-click="Filtrar('pago',28,'A pagar')">{{grdApagar | currency}}
-					</span>
+                        <span id="mano" ng-click="Filtrar('pago',29,'A pagar')">{{grdApagar | currency}}
+                    </span>
                     </div>
                 </div>
             </div>
             <div class="row panelTotales" ng-if="blTotales">
-                <!-- 				<div id="clsPagar">
-					<span id="clsMainLabel">Incluido</span><span id="clsPagarText" class="blueInfo"> {{cantidadTotal | currency}} </span>
-				</div> -->
+                <!--                <div id="clsPagar">
+                    <span id="clsMainLabel">Incluido</span><span id="clsPagarText" class="blueInfo"> {{cantidadTotal | currency}} </span>
+                </div> -->
                 <!--FAL variables en base al grid-->
                 <div id="clsComplemento">
                     <div class="clsNoPagable">
@@ -380,29 +380,29 @@ function isNumberKey(evt) {
                         /
                     </div>
                     <div class="clsNoPagable">
-                        <span class="clsDetailLabel">Pagable</span> <span id="mano" class="clsDetailText blueInfo" ng-click="Filtrar('False',29,'Pagables')">{{GranTotalPagable | currency}}
-						</span>
+                        <span class="clsDetailLabel">Pagable</span> <span id="mano" class="clsDetailText blueInfo" ng-click="Filtrar('False',30,'Pagables')">{{GranTotalPagable | currency}}
+                        </span>
                     </div>
                     <div class="clsNoPagable separadorNoPagable">
                         /
                     </div>
                     <div class="clsNoPagable">
-                        <span class="clsDetailLabel">No pagable</span> <span id="mano" class="clsDetailText blueInfo" ng-click="Filtrar('True',29,'No Pagables')">{{grdnoPagable | currency}}
-						</span>
+                        <span class="clsDetailLabel">No pagable</span> <span id="mano" class="clsDetailText blueInfo" ng-click="Filtrar('True',30,'No Pagables')">{{grdnoPagable | currency}}
+                        </span>
                     </div>
                     <div class="clsNoPagable separadorNoPagable">
                         /
                     </div>
                     <div class="clsNoPagable">
-                        <span class="clsDetailLabel">No Incluido</span> <span id="mano" class="clsDetailText blueInfo" ng-click="Filtrar('Permitido',28,'No incluidos')">  {{ grdNoIncluido | currency }}</span>
+                        <span class="clsDetailLabel">No Incluido</span> <span id="mano" class="clsDetailText blueInfo" ng-click="Filtrar('Permitido',29,'No incluidos')">  {{ grdNoIncluido | currency }}</span>
                     </div>
                     <div class="clsNoPagable separadorNoPagable">
                         /
                     </div>
                     <div class="clsNoPagable">
-                        <span class="clsDetailLabel">Reprogramado</span> <span id="mano" class="clsDetailText blueInfo" ng-click="Filtrar('Pago Reprogramado',28,'Pago Reprogramado')">
-						{{ grdReprogramado | currency }}
-						  </span>
+                        <span class="clsDetailLabel">Reprogramado</span> <span id="mano" class="clsDetailText blueInfo" ng-click="Filtrar('Pago Reprogramado',29,'Pago Reprogramado')">
+                        {{ grdReprogramado | currency }}
+                          </span>
                     </div>
                     <div class="clsNoPagable separadorNoPagable">
                         /
@@ -412,28 +412,51 @@ function isNumberKey(evt) {
                     </div>
                 </div>
             </div>
-            <!--div id="chkPagable0">
-				<div class="btn-group" role="group">
-					<button type="button" class="btn btn-primary" ng-click="FiltrarCartera('')">Todos</button>
-					<button type="button" class="btn btn-primary"  ng-click="FiltrarCartera('True')">Pagable</button>
-					<button type="button" class="btn btn-primary"  ng-click="FiltrarCartera('False')">Incluida</button>
-					<button type="button" class="btn btn-primary"  ng-click="FiltrarCartera('False')">No Incluida</button>
-				</div>
-			</div-->
-            <!-- 			<div id="chkPagable1">
-				<div class="btn-group" role="group">
-					<button type="button" class="btn btn-info" ng-click="FiltrarCartera('')">BANAMEX 7187 </button>
-					<button type="button" class="btn btn-info"  ng-click="FiltrarCartera('True')"> BANCOMER 1289 </button>
-				</div>
-			</div> -->
         </div>
     </section>
     <section id="container">
-   
         <button type="button" id="btnSelectAll" ng-hide="1 > 0" class="btn btn-success" ng-disabled="!gridApi1.grid.options.multiSelect" ng-click="seleccionaTodo()"></button>
         <button type="button" id="btnSelect" ng-hide="1 > 0" class="btn btn-success" ng-disabled="!gridApi1.grid.options.multiSelect" ng-click="selecciona()"></button>
-        <div class=" blueInfo" ng-if="blTotales">
-            <label class="titulofiltro" ng-model="etqFiltros">{{etqFiltros}} {{msgFiltros}}</label>
+        <div class="row">
+            <div class="col-xs-2">
+                <label class="titulofiltro" ng-model="etqFiltros">{{etqFiltros}} {{msgFiltros}}</label>
+            </div>
+            <div class="col-xs-6 text-right">
+                <label class="titulofiltro" ng-model="etqFiltros">
+                    <div class="btn-group" data-toggle="btns" id="botoneraReferencia">
+                        <div class="btn-group">
+                            <label class="btn btn-primary" ng-click="refMode = false; conRef=true;" ng-hide="conRef" ng-model="btnreferencia" uib-btn-ref="1">Con referencia</label>
+                            <label class="btn btn-primary" ng-click="refMode = true; conRef=false;" ng-hide="refMode" ng-model="radioTotales" uib-btn-ref="2">Sin referencia</label>
+                        </div>
+                    </div>
+                </label>
+            </div>
+            <div class="col-xs-4 text-right" ng-hide="refMode">
+                <table>
+                    <tr>
+                        <td>
+                            <input type="text" maxlength="30" class="form-control" placeholder="Referencia" ng-maxlength="30" ng-model='pegaReferencia.referencia'>
+                        </td>
+                        <td>
+                            <div class="input-group">
+                                <input type="text" class="form-control" ng-model='pegaReferencia.proceso' aria-label="...">
+                                <div class="input-group-btn">
+                                    <button id="btnTotalxEmpresa" type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-loading-text="Obteniendo cartera..." autocomplete="off">Seleccione </button>
+                                    <ul class="dropdown-menu dropdown-menu-right">
+                                        <li>
+                                            <a href="#" ng-click="proPegaReferencia(1,pegaReferencia)">Pegar Referencia</a>
+                                        </li>
+                                        <li>
+                                            <a href="#" ng-click="proPegaReferencia(4,pegaReferencia)">Borrar todas las referencias</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!-- /btn-group -->
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
         </div>
         <div id="contenedor" ng-init="iniciaGrid()">
             <div id="grid1" ui-grid="gridOptions" ui-grid-grouping ui-grid-edit ui-grid-selection ui-grid-cellNav class="gridStyle"></div>
