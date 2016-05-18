@@ -418,21 +418,11 @@ function isNumberKey(evt) {
         <button type="button" id="btnSelectAll" ng-hide="1 > 0" class="btn btn-success" ng-disabled="!gridApi1.grid.options.multiSelect" ng-click="seleccionaTodo()"></button>
         <button type="button" id="btnSelect" ng-hide="1 > 0" class="btn btn-success" ng-disabled="!gridApi1.grid.options.multiSelect" ng-click="selecciona()"></button>
         <div class="row">
-            <div class="col-xs-2">
+            <div class="col-xs-4">
                 <label class="titulofiltro" ng-model="etqFiltros">{{etqFiltros}} {{msgFiltros}}</label>
             </div>
-            <div class="col-xs-6 text-right">
-                <label class="titulofiltro" ng-model="etqFiltros">
-                    <div class="btn-group" data-toggle="btns" id="botoneraReferencia">
-                        <div class="btn-group">
-                            <label class="btn btn-primary" ng-click="refMode = false; conRef=true;" ng-hide="conRef" ng-model="btnreferencia" uib-btn-ref="1">Con referencia</label>
-                            <label class="btn btn-primary" ng-click="refMode = true; conRef=false;" ng-hide="refMode" ng-model="radioTotales" uib-btn-ref="2">Sin referencia</label>
-                        </div>
-                    </div>
-                </label>
-            </div>
-            <div class="col-xs-4 text-right" ng-hide="refMode">
-                <table>
+            <div class="col-xs-5 text-right">
+                <table cellpadding="10" ng-hide="refMode">
                     <tr>
                         <td>
                             <input type="text" maxlength="30" class="form-control" placeholder="Referencia" ng-maxlength="30" ng-model='pegaReferencia.referencia'>
@@ -447,7 +437,13 @@ function isNumberKey(evt) {
                                             <a href="#" ng-click="proPegaReferencia(1,pegaReferencia)">Pegar Referencia</a>
                                         </li>
                                         <li>
-                                            <a href="#" ng-click="proPegaReferencia(4,pegaReferencia)">Borrar todas las referencias</a>
+                                            <a href="#" ng-click="proPegaReferencia(2,pegaReferencia)">Pegar Referencia sobre filtros</a>
+                                        </li>
+                                        <li>
+                                            <a href="#" ng-click="proPegaReferencia(3,pegaReferencia)">Borrar Referencia sobre filtros</a>
+                                        </li>
+                                        <li>
+                                            <a href="#" ng-click="borraReferencias(pegaReferencia)">Borrar todas las referencias</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -456,6 +452,12 @@ function isNumberKey(evt) {
                         </td>
                     </tr>
                 </table>
+            </div>
+            <div class="col-xs-2" id ="form-referencia">
+                <div>
+                    <input type="checkbox" name="checkboxG3" id="checkboxG3" class="css-checkbox" ng-click="onReferencia();" />
+                    <label for="checkboxG3" class="css-label">Referencia</label>
+                </div>
             </div>
         </div>
         <div id="contenedor" ng-init="iniciaGrid()">

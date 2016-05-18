@@ -24,6 +24,7 @@
     <link href="css/toastr.css" rel="stylesheet" />
     <link href="css/angular-busy.css" rel="stylesheet" />
     <link href="../css/pago.css" rel="stylesheet" />
+    <link href="../css/stylechk.css" rel="stylesheet" />
     <!--Librearias JQuery y Bootstrap-->
     <script src="js/jquery-2.1.4.js"></script>
     <!--Agrego FAL 24022016 para la funcion de order y selected-->
@@ -131,7 +132,7 @@
                                     <button id="btnTotalxEmpresa" type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-loading-text="Obteniendo cartera..." autocomplete="off">Seleccione <span class="caret"></span></button>
                                     <ul class="dropdown-menu dropdown-menu-right">
                                         <li ng-repeat="empresa in empresas">
-                                            <a href="#" ng-click="traeTotalxEmpresa(empresa.emp_idempresa, empresa.emp_nombre,empresa.emp_nombrecto,empresa.rfc)">{{empresa.emp_nombre}}</a>
+                                            <a href="#" ng-click="traeTotalxEmpresa(empresa.emp_idempresa, empresa.emp_nombre,empresa.emp_nombrecto,empresa.rfc, empresa.tipo, empresa.pagoDirecto)">{{empresa.emp_nombre}}</a>
                                         </li>
                                     </ul>
                                 </div>
