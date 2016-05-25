@@ -25,7 +25,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
         $rootScope.msgFiltros = '';
         $rootScope.tipoEmpresa = '';
         $rootScope.pagoDirecto = '';
-        $rootScope.tipoEmpresaVarios = false;
+        $rootScope.tipoEmpresaVarios = true;
         $scope.refMode = true;
 
         var errorCallBack = function(data, status, headers, config) {
@@ -66,6 +66,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             $('.switch-checkbox').bootstrapSwitch();
             $scope.showSelCartera = true;
             $scope.llenaEncabezado();
+
             /***********************************************************/
             $scope.transferencias = [{ bancoOrigen: '', bancoDestino: '', importe: 0, disponibleOrigen: 0, index: 0 }];
             $rootScope.idOperacion = 0;
@@ -190,6 +191,18 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                     alertFactory.error('Error en empresas.');
                 });
         };
+        //FAL 23052016 TRAE LOS PARAMETROS DE ESCENARIOS DE PAGOS.
+
+        $scope.llenaParametroEscenarios = function() {
+            pagoRepository.getParametrosEscenarios($rootScope.tipoEmpresa)
+                .then(function successCallback(response) {
+                    $scope.escenarios = response.data;
+                }, function errorCallback(response) {
+                    alertFactory.error('Error al obtener los parametros del escenario de pagos.');
+                });
+        };
+
+
         //FAL Trae los bancos x empresa con todos sus saldos
         $scope.traeBancosCompleta = function() {
             //Llamada a repository para obtener data
@@ -388,26 +401,43 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             $scope.cantidadUpdate = 0;
             $scope.noPagable = 0;
             $scope.Reprogramable = 0;
+            $scope.llenaParametroEscenarios();
             var j = 0;
             for (var i = 0; i < $scope.data.length; i++) {
+
                 $scope.data[i].Pagar = $scope.data[i].saldo;
                 $scope.data[i].fechaPago = $scope.data[i].fechaPromesaPago;
+
                 if ($scope.data[i].fechaPromesaPago == "1900-01-01T00:00:00") {
                     $scope.data[i].fechaPromesaPago = "";
                 }
+
+                //FAL 23052016 dependiendo la lista de 
+                if ($scope.data[i].idProveedor == 7) {
+                    $scope.data[i].referencia = 'Planta';
+                }
+
+                if ($scope.data[i].esBanco == 'true') {
+                    $scope.data[i].referencia = 'Banco';
+                }
+
                 if ($scope.data[i].seleccionable == "False") {
                     $scope.data[i].estGrid = 'Pago';
                 }
+
                 if ($scope.data[i].seleccionable == 'True') {
                     $scope.data[i].Pagar = $scope.data[i].saldo;
                     $scope.data[i].estGrid = 'No pagar';
                 }
+
                 if ($scope.data[i].documentoPagable == 'False') {
                     $scope.data[i].Pagar = $scope.data[i].saldo;
-                } 
-                if(($scope.data[i].numeroSerie).length == 17){
-                    $scope.data[i].referencia = $scope.data[i].numeroSerie;
                 }
+
+                if (($scope.data[i].numeroSerie).length == 17) {
+                    $scope.data[i].referencia = $scope.data[i].numeroSerie.substring(9, 17);
+                }
+
                 //FAL17052016 Valido si lleva numero de serie y si es de lenght = 17 lo pango en referencia.
                 $scope.carteraVencida = $scope.carteraVencida + $scope.data[i].saldo;
 
@@ -441,7 +471,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             $rootScope.grdBancos = [];
             $rootScope.grdApagar = 0;
             if ($scope.gridOptions == null)
-            ConfiguraGrid();
+                ConfiguraGrid();
             $scope.gridOptions.data = null;
             $scope.gridOptions.data = data;
             $scope.data = data;
@@ -450,6 +480,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             $scope.cantidadUpdate = 0;
             $scope.noPagable = 0;
             $scope.Reprogramable = 0;
+            $scope.llenaParametroEscenarios();
             var cuentaEncontrada = true;
             for (var i = 0; i < $scope.data.length; i++) {
                 $scope.data[i].Pagar = $scope.data[i].saldo;
@@ -563,8 +594,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                             enableCellEdit: false
                         },
                         { name: 'cuentaPagadora', width: '10%', displayName: 'Banco', enableCellEdit: false },
-                        { name: 'fechaPromesaPago', displayName: 'Fecha Promesa de Pago', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '15%' },
-                        {
+                        { name: 'fechaPromesaPago', displayName: 'Fecha Promesa de Pago', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '15%' }, {
                             name: 'referencia',
                             displayName: 'Referencia',
                             width: '10%',
@@ -749,16 +779,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                                         rowEntity.fechaPromesaPago = old_date;
                                         rowEntity.estGrid = 'Pago';
                                     } else {
-                                        // for (var i = 0; i < numcuentas; i++) {
-                                        //     if (rowEntity.cuentaPagadora == $rootScope.grdBancos[i].banco) {
-                                        //         $rootScope.grdBancos[i].subtotal = Math.round($rootScope.grdBancos[i].subtotal * 100) / 100 - Math.round(rowEntity.Pagar * 100) / 100;
-                                        //         i = numcuentas;
-                                        //     }
-                                        // };
-                                        //$rootScope.grdApagar = Math.round($rootScope.grdApagar * 100) / 100 - Math.round(rowEntity.Pagar * 100) / 100;
                                         rowEntity.Pagar = rowEntity.saldo;
-                                        //$rootScope.grdReprogramado = Math.round($rootScope.grdReprogramado * 100) / 100 + Math.round(rowEntity.Pagar * 100) / 100;
-                                        //$rootScope.grdApagar = Math.round($rootScope.grdApagar * 100) / 100 - Math.round(rowEntity.Pagar * 100) / 100;
                                         rowEntity.estGrid = 'Pago Reprogramado';
                                         $scope.gridApi1.selection.unSelectRow(rowEntity);
                                     }
@@ -867,7 +888,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             $rootScope.grdNoIncluido = 0;
             $rootScope.grdApagarOriginal = $rootScope.grdApagar;
             $scope.gridOptions.isRowSelectable = function(row) {
-                if (row.entity.seleccionable == 'True') {
+                if ((row.entity.seleccionable == 'True') || (row.entity.referencia == 'Planta') || (row.entity.referencia == 'Banco')) {
                     return false;
                 } else {
                     return true;
@@ -911,17 +932,41 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
 
         //FAL Funcion de pegar referencia 09052016
         $scope.pagoDirecto = function(pegaReferencia) {
-
+            var lcidProveedor = "";
+            var blidProveedor = true;
+            var blprimero = true;
+            var j = 0;
             var rows = $scope.gridApi1.selection.getSelectedRows();
             if (rows.length == 0) {
                 alertFactory.warning('Debe seleccionar al menos un documento');
 
             } else {
+                //FAL si hay mas de un proveedor seleccionado salir
+
                 rows.forEach(function(row, i) {
                     if (row.referencia == undefined || row.referencia == "") {
-                        row.referencia = pegaReferencia.referencia;
+
+                    if (blprimero) {
+                        lcidProveedor = row.idProveedor;
+                        blprimero = false;
                     }
+
+                    if (lcidProveedor != row.idProveedor) {
+                        blidProveedor = false;
+                    }
+                }
                 });
+
+                if (blidProveedor) {
+                    rows.forEach(function(row, i) {
+                        if (row.referencia == undefined || row.referencia == "") {
+                            row.referencia = pegaReferencia.referencia;
+                        }
+                    });
+                } else {
+                    alertFactory.warning('No puede tener mas de un proveedor seleccionado para pegar la referencia');
+                }
+
             }
         };
         //FAL Funcion de borrar referencia 09052016
@@ -1138,8 +1183,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
 
                                 elemento.pad_saldo = row.Pagar; //row.saldo;//
 
-                                if ((row.referencia == null) ||  (row.referencia == undefined) || (row.referencia == ""))
-                                {
+                                if ((row.referencia == null) || (row.referencia == undefined) || (row.referencia == "")) {
                                     row.referencia = "AUT";
                                 }
 

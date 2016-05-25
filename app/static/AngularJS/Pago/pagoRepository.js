@@ -33,6 +33,14 @@ registrationModule.factory('pagoRepository', function($http) {
             });
 
         },
+        getParametrosEscenarios: function(id) {
+            return $http({
+                method: 'GET',
+                url: pagoUrl,
+                params: { id: '20|' + id }
+            });
+
+        },
         update: function(id) {
             return $http.post(pagoUrl + '2|' + id);
 
