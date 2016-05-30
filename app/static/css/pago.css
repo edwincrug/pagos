@@ -244,6 +244,16 @@
   color: white;
 }
 
+.bancocss .ui-grid-cell-contents {
+  background-color: #F781BE;
+  color: white;
+}
+
+.plantacss .ui-grid-cell-contents {
+  background-color: #819FF7;
+  color: white;
+}
+
 .docIncompletos .ui-grid-cell-contents {
   background-color: orange;
   color: white;
