@@ -77,7 +77,21 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             $('.switch-checkbox').bootstrapSwitch();
             $scope.showSelCartera = true;
             $scope.llenaEncabezado();
-
+             if(!($('#lgnUser').val().indexOf('[') > -1)){
+            localStorageService.set('lgnUser', $('#lgnUser').val());
+        }
+        else{
+            if(($('#lgnUser').val().indexOf('[') > -1) && !localStorageService.get('lgnUser')){
+                if(getParameterByName('employee') != ''){
+                    $rootScope.currentEmployee = getParameterByName('employee');
+                }
+                else{
+                   alert('Inicie sesión desde panel de aplicaciones.');
+                    //window.close(); 
+                }
+                
+            }
+        }
 
             /***********************************************************/
             $scope.transferencias = [{ bancoOrigen: '', bancoDestino: '', importe: 0, disponibleOrigen: 0, index: 0 }];
