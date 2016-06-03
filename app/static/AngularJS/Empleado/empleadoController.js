@@ -40,7 +40,7 @@ registrationModule.controller("empleadoController", function ($scope, $filter, $
                 }
                 else{
                    alert('Inicie sesión desde panel de aplicaciones.');
-                    window.close(); 
+                    //window.close(); 
                 }
                 
             }
