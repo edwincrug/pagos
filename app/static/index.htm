@@ -25,6 +25,9 @@
     <link href="css/angular-busy.css" rel="stylesheet" />
     <link href="../css/pago.css" rel="stylesheet" />
     <link href="../css/stylechk.css" rel="stylesheet" />
+    <!--Menu-->
+    <!-- <link rel="stylesheet" type="text/css" href="css/menu/default.css" /> -->
+    <link rel="stylesheet" type="text/css" href="css/menu/component.css" />
     <!--Librearias JQuery y Bootstrap-->
     <script src="js/jquery-2.1.4.js"></script>
     <!--Agrego FAL 24022016 para la funcion de order y selected-->
@@ -46,26 +49,22 @@
     <div id="st-container">
         <!-- content push wrapper -->
         <div class="st-pusher" ng-keyup="$event.keyCode == 13 ? Search() : null">
-            <nav class="st-menu st-effect-3" id="menu-3">
-                <h2 class="icon h2extends"><span class="glyphicon glyphicon-home headSearch" aria-hidden="true"></span>Menú</h2>
-                <ul>
-                    <li>
-                        <div class="labely" href="#"></div>
-                    </li>
-                    <li>
-                        <a class="icon-logo"></a>
-                    </li>
-                    <li ng-repeat="lote in noLotes.data" class="itemLote">
-                        <div class="loteId"> {{$index +1}}</div>
+            <nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left" id="cbp-spmenu-s1">
+                <h3 class="icon h2extends"><span class="glyphicon glyphicon-home headSearch" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;&nbsp;Menú</h3>
+                    <br>
+                    <div  id="loteCompleto"><div id="loteId">Consulta de Lotes</div></div>
+                   
+                        <div ng-repeat="lote in noLotes.data" ng-click="ConsultaLote(lote,{{$index + 1}},1)" id="loteCompleto"> <div id="loteId"> {{$index +1}}({{ lote.totalPagar | currency }})</div>
                         <div class="itemNombre"> {{ lote.nombre }}</div>
-                        <div class="itemFecha">{{ lote.fecha }}</div>
-                        <div class="itemMonto">{{ lote.totalPagar }}</div>
-                        <a ng-click="ConsultaLote(lote,{{$index + 1}},1)"> ver </a>
-                    </li>
-                </ul>
+                        <div class="itemFecha">{{ lote.fecha }}{{convertToDate(lote.fecha) | date:'small'}}</div>
+                        </div>
+
+
+                
                 <button type="button" class="btn btn-primary btnSearch" id="addMenu" tooltip="Nuevo Lote" ng-click="CrearNuevoLote()"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Nuevo Lote</button>
-                <button type="button" class="btn btn-default btnSearch" id="closeMenu"><span class="glyphicon glyphicon-remove " aria-hidden="true"></span> Cancelar</button>
+                <button type="button" class="btn btn-default btnSearch" id="closeMenu"><span class="glyphicon glyphicon-remove " aria-hidden="true"></span> Cerrar Menú</button>
             </nav>
+           
             <div id="st-trigger-effects" class="column">
                 <nav class="navbar navbar-default navHeader">
                     <!-- Inicia NAV bar -->
@@ -115,6 +114,8 @@
         <!-- /st-pusher -->
     </div>
     <!-- /st-container -->
+    <!-- Usuario autenticado -->
+    <input type="hidden" id="lgnUser" value="[[ user.idUsuario ]]">
     <!--Modal de inicio FAL-->
     <div id="inicioModal" class="modal fade" tabindex="-1" data-focus-on="input:first" ng-controller="pagoController" ng-init="traeEmpresas()" data-keyboard="false" data-backdrop="static">
         <div class="modal-dialog modal-lg">
@@ -259,68 +260,70 @@
                     <!-- Totales a pagar por bancos -->
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-info" data-toggle="modal" id="btnCrealotePD" href="#stack2" ng-click="IniciaLotePD()" ng-show="escenarios.Pdplanta" data-loading-text="Creando lote..." autocomplete="off">Crear Lote de pago directo</button>
+                    <button class="btn btn-info" data-toggle="modal" id="btnCrealotePD" href="#stack2" ng-click="IniciaLotePD()" ng-show="selPagoDirecto" data-loading-text="Creando lote..." autocomplete="off">Crear Lote de pago directo</button>
                     <button class="btn btn-info" data-toggle="modal" id="btnCrealote" href="#stack2" ng-click="IniciaLote()" ng-show="NuevoLote" data-loading-text="Creando lote..." autocomplete="off">Crear Lote</button>
                     <button type="button" class="btn btn-primary" data-dismiss="modal" ng-show="ProgPago" ng-click="ProgramacionPagos()">Ir a Programación Pago</button>
                     <!-- <button type="button" class="btn btn-primary" data-dismiss="modal" ng-show="NuevoLote">Cancelar</button> -->
                 </div>
-                </div>
-    </div>
-    <!--Fin Modal de inicio FAL-->
-    <!--FAL 15/03/2016 Modal de generando archivo-->
-    <div class="modal modal-static fade" id="processing-modal" role="dialog" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <div class="text-center">
-                        <img src="image/gifs/loading.gif" class="icon" />
-                        <h4>Generando Archivo<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button></h4>
+            </div>
+        </div>
+        <!--Fin Modal de inicio FAL-->
+        <!--FAL 15/03/2016 Modal de generando archivo-->
+        <div class="modal modal-static fade" id="processing-modal" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="text-center">
+                            <img src="image/gifs/loading.gif" class="icon" />
+                            <h4>Generando Archivo<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button></h4>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Usuario autenticado -->
-    <input type="hidden" id="lgnUser" value="[[ user.idUsuario ]]">
-    <!--Interface de usuario-->
-    <script src="js/toastr.min.js"></script>
-    <!-- Librerias Angular-->
-    <script src="js/angular.min.js"></script>
-    <script src="js/angular-animate.min.js"></script>
-    <script src="js/angular-route.min.js"></script>
-    <script src="js/ui-bootstrap-tpls-1.3.1.js"></script>
-    <script src="js/angular-local-storage.min.js"></script>
-    <script src="js/angular-touch.js"></script>
-    <script src="js/ui-grid.js"></script>
-    <!--Funciones Comunes-->
-    <script src="confront.js"></script>
-    <!--order and selected-->
-    <script src="js/sortable.js"></script>
-    <script src="js/ui.sortable.multiselection.js"></script>
-    <!--Angular Busy-->
-    <script src="js/angular-busy.js"></script>
-    <!--Librería para realizar querys-->
-    <script src="js/linq.js"></script>
-    <!--Librerias de aplicación angular-->
-    <script src="AngularJS/RegistrationModule.js"></script>
-    <!--librerias de componenetes-->
-    <script src="AngularJS/alertFactory.js"></script>
-    <!--Quitar-->
-    <script src="helpers.js"></script>
-    <!--Controllers-->
-    <script src="AngularJS/Empleado/empleadoRepository.js"></script>
-    <script src="AngularJS/Empleado/empleadoController.js"></script>
-    <script src="AngularJS/Pago/pagoRepository.js"></script>
-    <script src="AngularJS/Pago/pagoController.js"></script>
-    <script src="AngularJS/Pago/gridModalController.js"></script>
-    <script src="AngularJS/Agrupador/agrupadorRepository.js"></script>
-    <script src="AngularJS/Agrupador/agrupadorController.js"></script>
-    <script src="AngularJS/CuentasProveedor/CuentasProveedorRepository.js"></script>
-    <script src="AngularJS/CuentasProveedor/CuentasProveedorController.js"></script>
-    <!--Sidebars-->
-    <script src="js/sidebar/classie.js"></script>
-    <script src="js/sidebar/sidebarEffects.js"></script>
-    <script src="common.js"></script>
+        <!-- Usuario autenticado -->
+        <input type="hidden" id="lgnUser" value="[[ user.idUsuario ]]">
+        <!--Interface de usuario-->
+        <script src="js/toastr.min.js"></script>
+        <!-- Librerias Angular-->
+        <script src="js/angular.min.js"></script>
+        <script src="js/angular-animate.min.js"></script>
+        <script src="js/angular-route.min.js"></script>
+        <script src="js/ui-bootstrap-tpls-1.3.1.js"></script>
+        <script src="js/angular-local-storage.min.js"></script>
+        <script src="js/angular-touch.js"></script>
+        <script src="js/ui-grid.js"></script>
+        <!--Funciones Comunes-->
+        <script src="confront.js"></script>
+        <!--order and selected-->
+        <script src="js/sortable.js"></script>
+        <script src="js/ui.sortable.multiselection.js"></script>
+        <!--Angular Busy-->
+        <script src="js/angular-busy.js"></script>
+        <!--Librería para realizar querys-->
+        <script src="js/linq.js"></script>
+        <!--Librerias de aplicación angular-->
+        <script src="AngularJS/RegistrationModule.js"></script>
+        <!--librerias de componenetes-->
+        <script src="AngularJS/alertFactory.js"></script>
+        <!--Quitar-->
+        <script src="helpers.js"></script>
+        <!--Controllers-->
+        <script src="AngularJS/Empleado/empleadoRepository.js"></script>
+        <script src="AngularJS/Empleado/empleadoController.js"></script>
+        <script src="AngularJS/Pago/pagoRepository.js"></script>
+        <script src="AngularJS/Pago/pagoController.js"></script>
+        <script src="AngularJS/Pago/gridModalController.js"></script>
+        <script src="AngularJS/Agrupador/agrupadorRepository.js"></script>
+        <script src="AngularJS/Agrupador/agrupadorController.js"></script>
+        <script src="AngularJS/CuentasProveedor/CuentasProveedorRepository.js"></script>
+        <script src="AngularJS/CuentasProveedor/CuentasProveedorController.js"></script>
+        <!--Sidebars-->
+        <script src="js/sidebar/classie.js"></script>
+        <script src="js/sidebar/sidebarEffects.js"></script>
+        <script src="common.js"></script>
+        <script src="js/menu/classie.js"></script>
+
 </body>
 
 </html>

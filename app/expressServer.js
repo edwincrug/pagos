@@ -45,6 +45,12 @@ var ExpressServer = function(config){
         res.end();
     });
 
+     //Recibo las variables de login
+    this.expressServer.post('*', function(req, res){
+        var user = { idUsuario: req.body.idUsuario };
+        res.render('index', { user });
+    });
+
     //Servimos el archivo angular
     this.expressServer.get('/', function(req, res){
         res.sendfile('app/static/index.htm');

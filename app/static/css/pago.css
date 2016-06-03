@@ -245,7 +245,7 @@
 }
 
 .bancocss .ui-grid-cell-contents {
-  background-color: #F781BE;
+  background-color: #5cb85c;
   color: white;
 }
 
@@ -647,4 +647,34 @@
 #form-referencia {
   top: 0px;
   left: 100px;
+}
+
+#loteId {
+  position: relative;
+  top: 0;
+  right: 0;
+  text-align: right;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+#loteCompleto {
+  border: 2px solid #0d77b6;
+  position: relative;
+  left: 0;
+  bottom: 0;
+  text-align: left;
+  margin-left: 5px;
+  margin-bottom: 10px;
+  margin-right: 5px;
+  border-radius: 10px 10px 10px 10px;
+  color: white;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#loteCompleto:hover {
+  cursor: pointer;
+  background-color: #0d77b6;
+  color: white;
 }

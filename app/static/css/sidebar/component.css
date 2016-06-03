@@ -184,8 +184,8 @@ body,
 
 /* Effect 3: Push*/
 .st-effect-3.st-menu-open .st-pusher {
-	-webkit-transform: translate3d(300px, 0, 0);
-	transform: translate3d(300px, 0, 0);
+	-webkit-transform: translate3d(240px, 0, 0);
+	transform: translate3d(240px, 0, 0);
 }
 
 .st-effect-3.st-menu {

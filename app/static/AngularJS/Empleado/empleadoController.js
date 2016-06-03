@@ -12,7 +12,7 @@ registrationModule.controller("empleadoController", function ($scope, $filter, $
 
     //Funcion que carga al inicio para obtener la ficha de empleado
     $scope.init = function () {
-    	
+    	getEmpleado()
     	//Llamada a repository para obtener data
     	empleadoRepository.getFichaEmpleado($scope.idEmpleado)
     		.then(function successCallback(response) {
@@ -27,6 +27,28 @@ registrationModule.controller("empleadoController", function ($scope, $filter, $
   		);
 
     };
+
+    var getEmpleado = function(){
+        if(!($('#lgnUser').val().indexOf('[') > -1)){
+            localStorageService.set('lgnUser', $('#lgnUser').val());
+        }
+        else{
+            if(($('#lgnUser').val().indexOf('[') > -1) && !localStorageService.get('lgnUser')){
+                if(getParameterByName('employee') != ''){
+                    $rootScope.currentEmployee = getParameterByName('employee');
+                    return;
+                }
+                else{
+                   alert('Inicie sesión desde panel de aplicaciones.');
+                    window.close(); 
+                }
+                
+            }
+        }
+        //Obtengo el empleado logueado
+        $rootScope.currentEmployee = localStorageService.get('lgnUser');
+    };
+
 $scope.Salir = function () {
 
 	alertFactory.info('exit user');

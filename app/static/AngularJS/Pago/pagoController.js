@@ -7,10 +7,12 @@
 // -- =============================================
 registrationModule.controller("pagoController", function($scope, $http, $interval, uiGridGroupingConstants, uiGridConstants, $filter, $rootScope, localStorageService, alertFactory, pagoRepository, stats, $window) {
         $scope.idEmpresa = 4;
-        $scope.idCuenta = 4;
+        //$scope.idCuenta = 4;
         $scope.idUsuario = 4;
         //LQMA 04032016
-        $rootScope.currentEmployee = 2; //25:1;
+        if ($rootScope.currentEmployee == null) {
+            $rootScope.currentEmployee = 2; //25:1;
+        }
         $rootScope.currentId = null;
         $rootScope.currentIdOp = null;
         $scope.idLote = 0;
@@ -28,11 +30,13 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
         $rootScope.pagoDirecto = '';
         $rootScope.tipoEmpresaVarios = true;
         $scope.refMode = true;
+        $rootScope.pagoDirectoSeleccion = false;
         $rootScope.pdPlanta = false;
         $rootScope.pdBanco = false;
         $rootScope.refPlanta = 0;
         $rootScope.refpdBanco = 0;
         $rootScope.selPagoDirecto = false;
+
 
 
         var errorCallBack = function(data, status, headers, config) {
@@ -120,7 +124,9 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                                 $rootScope.accionPagina = true;
                                 $rootScope.ConsultaLote($rootScope.noLotes.data[$rootScope.noLotes.data.length - 1], $rootScope.noLotes.data.length, 0);
                                 $rootScope.ProgPago = true;
+                                $rootScope.selPagoDirecto = true;
                                 $scope.traeBancosCompleta();
+
                                 setTimeout(function() {
                                     $("#btnSelectAll").click(); //$scope.selectAll();
                                 }, 3000);
@@ -151,6 +157,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             //Obtengo el empleado logueado
             $rootScope.currentEmployee = localStorageService.get('lgnUser');
         };
+
         //LQMA obtiene el ID de padre para consultar pagos por aprobar
         var GetId = function() {
                 if (getParameterByName('id') != '') {
@@ -160,6 +167,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                     GetIdOp();
                 else {
                     ConfiguraGrid();
+                    GetEmpleado
                     setTimeout(function() { Prepagos(); }, 500);
                 }
             }
@@ -178,7 +186,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
         };
         //FAl--Llena los datos de la empresa dependiendo el usuario.
         $scope.llenaEncabezado = function() {
-            pagoRepository.getEncabezado($scope.idCuenta)
+            pagoRepository.getEncabezado($scope.idEmpresa)
                 .then(function successCallback(response) {
                     $scope.scencabezado = response.data;
                 }, function errorCallback(response) {
@@ -205,6 +213,13 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             pagoRepository.getParametrosEscenarios($rootScope.tipoEmpresa)
                 .then(function successCallback(response) {
                     $rootScope.escenarios = response.data;
+                    $rootScope.pdPlanta = $rootScope.escenarios.Pdbanco;
+                    $rootScope.pdBanco = $rootScope.escenarios.Pdplanta;
+                    $rootScope.refPlanta = $rootScope.escenarios.TipoRefPlanta;
+                    $rootScope.refpdBanco = $rootScope.escenarios.tipoRefBanco;
+                    if ($rootScope.pdPlanta || $rootScope.pdBanco) {
+                        $rootScope.selPagoDirecto = true;
+                    }
                 }, function errorCallback(response) {
                     alertFactory.error('Error al obtener los parametros del escenario de pagos.');
                 });
@@ -294,9 +309,11 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                                 $rootScope.estatusLote = $rootScope.noLotes.data[$rootScope.noLotes.data.length - 1].estatus;
                                 $rootScope.ConsultaLote($rootScope.noLotes.data[$rootScope.noLotes.data.length - 1], $rootScope.noLotes.data.length, 0);
                                 $rootScope.ProgPago = true;
+
                             } else {
                                 alertFactory.info('No existen Lotes');
                                 $rootScope.NuevoLote = true;
+
                                 var date = new Date();
                                 $rootScope.formData.nombreLoteNuevo = ("0" + (date.getMonth() + 1)).slice(-2) + ("0" + date.getDate()).slice(-2) + date.getFullYear() + '-' + $rootScope.rfc + ('0' + ($rootScope.noLotes.data.length + 1)).slice(-2); //'-01';
                             }
@@ -304,6 +321,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                         function errorCallback(response) {
                             alertFactory.error('Error al obtener los Lotes');
                         });
+
             };
         //LQMA 04032016 obtiene ingresos y egresos
         $scope.LlenaIngresos = function() {
@@ -385,7 +403,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
 
         $scope.IniciaLotePD = function() {
             $rootScope.crearLote = true;
-            $rootScope.selPagoDirecto = true;
+            $rootScope.pagoDirectoSeleccion = true;
             $('#btnCrealotePD').button('loading');
             if ($rootScope.formData.nombreLoteNuevo == null) {
                 alertFactory.warning('Debe proporcionar el nombre del nuevo lote.');
@@ -441,7 +459,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
 
             var j = 0;
             for (var i = 0; i < $scope.data.length; i++) {
-
+                $scope.data[i].tipoCartera = '';
                 $scope.data[i].Pagar = $scope.data[i].saldo;
                 $scope.data[i].fechaPago = $scope.data[i].fechaPromesaPago;
 
@@ -451,17 +469,21 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                 //FAL 23052016 dependiendo la lista de 
                 if ($rootScope.pdPlanta) {
                     if ($scope.data[i].idProveedor == 7) {
-                        $scope.data[i].referencia = 'Planta';
+                        $scope.data[i].tipoCartera = 'Planta';
                     }
 
                 }
                 if ($rootScope.pdBanco) {
                     if ($scope.data[i].esBanco == 'true') {
-                        $scope.data[i].referencia = 'Banco';
+                        $scope.data[i].tipoCartera = 'Banco';
                     }
                 }
 
+                if ($scope.data[i].tipoCartera = "") {
+                    $scope.data[i].tipoCartera = 'Varios';
+                }
 
+                
                 if ($scope.data[i].seleccionable == "False") {
                     $scope.data[i].estGrid = 'Pago';
                 }
@@ -529,6 +551,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
 
             var cuentaEncontrada = true;
             for (var i = 0; i < $scope.data.length; i++) {
+                
                 $scope.data[i].Pagar = $scope.data[i].saldo;
                 $scope.data[i].fechaPago = $scope.data[i].fechaPromesaPago;
                 if ($scope.data[i].fechaPromesaPago == "1900-01-01T00:00:00") {
@@ -670,7 +693,8 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                         { name: 'estGrid', width: '15%', displayName: 'Estatus Grid', enableCellEdit: false },
                         { name: 'seleccionable', displayName: 'seleccionable', width: '20%', enableCellEdit: false, visible: false },
                         { name: 'cuentaDestino', displayName: 'Cuenta Destino', width: '20%', enableCellEdit: false },
-                        { name: 'idEstatus', displayName: 'idEstatus', width: '20%', enableCellEdit: false, visible: true }
+                        { name: 'idEstatus', displayName: 'idEstatus', width: '20%', enableCellEdit: false, visible: true },
+                        { name: 'tipoCartera', displayName: 'tipoCartera', width: '20%', enableCellEdit: false, visible: true }
                     ],
 
                     rowTemplate: '<div ng-class="{\'ordenBloqueada\':(row.entity.ordenBloqueada==\'True\' && ((row.entity.idEstatus < 1 || row.entity.idEstatus > 5) && row.entity.idEstatus != 20) && !row.isSelected)' +
@@ -708,6 +732,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                                         ctdSeleccionados = ctdSeleccionados + 1;
                                     }
                                     if (ctdSeleccionados == numchilds) {
+                                        id = "closeMenu"
                                         row.treeNode.parentRow.treeNode.row.isSelected = true;
                                     }
                                 }
@@ -940,8 +965,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             $rootScope.grdNoIncluido = 0;
             $rootScope.grdApagarOriginal = $rootScope.grdApagar;
 
-
-            if ($rootScope.selPagoDirecto) {
+            if ($rootScope.pagoDirectoSeleccion) {
                 $scope.gridOptions.isRowSelectable = function(row) {
                     if ((row.entity.seleccionable == 'True') || (row.entity.referencia == 'Planta') || (row.entity.referencia == 'Banco')) {
                         return true;
@@ -949,16 +973,14 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                         return false;
                     }
                 };
-            }
-            else
-            {
-                 $scope.gridOptions.isRowSelectable = function(row) {
-                if ((row.entity.seleccionable == 'True') || (row.entity.referencia == 'Planta') || (row.entity.referencia == 'Banco')) {
-                    return false;
-                } else {
-                    return true;
-                }
-            };
+            } else {
+                $scope.gridOptions.isRowSelectable = function(row) {
+                    if ((row.entity.seleccionable == 'True') || (row.entity.referencia == 'Planta') || (row.entity.referencia == 'Banco')) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                };
             }
 
 
@@ -1504,12 +1526,17 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
         $rootScope.CrearNuevoLote = function() {
                 $('#closeMenu').click();
                 $rootScope.ProgPago = true;
+
                 var lotesPendientes = $.grep($rootScope.noLotes.data, function(n, i) {
                     return n.estatus === 0;
                 });
                 if (lotesPendientes.length > 0)
                     alertFactory.warning('Existe lotes sin guardar.');
                 else {
+                    if ($rootScope.pdPlanta || $rootScope.pdBanco) {
+                        $rootScope.selPagoDirecto = true;
+                    }
+
                     $rootScope.NuevoLote = true;
                     $rootScope.accionPagina = false;
                     $('#btnCrealote').button('reset');
