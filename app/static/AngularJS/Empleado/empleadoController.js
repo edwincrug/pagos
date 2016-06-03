@@ -8,7 +8,7 @@
 registrationModule.controller("empleadoController", function ($scope, $filter, $rootScope, localStorageService, alertFactory, empleadoRepository) {
 
     //Propiedades
-    $scope.idEmpleado = 1;
+    $scope.idEmpleado = 4;
 
     //Funcion que carga al inicio para obtener la ficha de empleado
     $scope.init = function () {
