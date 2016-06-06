@@ -8,11 +8,9 @@
 registrationModule.controller("pagoController", function($scope, $http, $interval, uiGridGroupingConstants, uiGridConstants, $filter, $rootScope, localStorageService, alertFactory, pagoRepository, stats, $window) {
         $scope.idEmpresa = 4;
         //$scope.idCuenta = 4;
-        $scope.idUsuario = 4;
+        //$scope.idUsuario = 4;
         //LQMA 04032016
-        if ($rootScope.currentEmployee == null) {
-            $rootScope.currentEmployee = 2; //25:1;
-        }
+      
         $rootScope.currentId = null;
         $rootScope.currentIdOp = null;
         $scope.idLote = 0;
@@ -77,21 +75,20 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             $('.switch-checkbox').bootstrapSwitch();
             $scope.showSelCartera = true;
             $scope.llenaEncabezado();
-             if(!($('#lgnUser').val().indexOf('[') > -1)){
-            localStorageService.set('lgnUser', $('#lgnUser').val());
-        }
-        else{
-            if(($('#lgnUser').val().indexOf('[') > -1) && !localStorageService.get('lgnUser')){
-                if(getParameterByName('employee') != ''){
-                    $rootScope.currentEmployee = getParameterByName('employee');
+            if (!($('#lgnUser').val().indexOf('[') > -1)) {
+                localStorageService.set('lgnUser', $('#lgnUser').val());
+                $scope.idUsuario = $('#lgnUser').val();
+            } else {
+                if (($('#lgnUser').val().indexOf('[') > -1) && !localStorageService.get('lgnUser')) {
+                    if (getParameterByName('employee') != '') {
+                        $rootScope.currentEmployee = getParameterByName('employee');
+                        $scope.idUsuario = $rootScope.currentEmployee;
+                    } else {
+                        alert('Inicie sesión desde panel de aplicaciones.');
+                        //window.close(); 
+                    }
                 }
-                else{
-                   alert('Inicie sesión desde panel de aplicaciones.');
-                    //window.close(); 
-                }
-                
             }
-        }
 
             /***********************************************************/
             $scope.transferencias = [{ bancoOrigen: '', bancoDestino: '', importe: 0, disponibleOrigen: 0, index: 0 }];
@@ -497,7 +494,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                     $scope.data[i].tipoCartera = 'Varios';
                 }
 
-                
+
                 if ($scope.data[i].seleccionable == "False") {
                     $scope.data[i].estGrid = 'Pago';
                 }
@@ -565,7 +562,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
 
             var cuentaEncontrada = true;
             for (var i = 0; i < $scope.data.length; i++) {
-                
+
                 $scope.data[i].Pagar = $scope.data[i].saldo;
                 $scope.data[i].fechaPago = $scope.data[i].fechaPromesaPago;
                 if ($scope.data[i].fechaPromesaPago == "1900-01-01T00:00:00") {
