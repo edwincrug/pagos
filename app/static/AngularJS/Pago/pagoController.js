@@ -8,10 +8,10 @@
 registrationModule.controller("pagoController", function($scope, $http, $interval, uiGridGroupingConstants, uiGridConstants, $filter, $rootScope, localStorageService, alertFactory, pagoRepository, stats, $window) {
         $scope.idEmpresa = 4;
         //$scope.idCuenta = 4;
-        $scope.idUsuario = 4;
+        $scope.idUsuario = 14;
         //LQMA 04032016
         if ($rootScope.currentEmployee == null) {
-            $rootScope.currentEmployee = 2; //25:1;
+            $rootScope.currentEmployee = 14; //25:1;
         }
         else{
                 $scope.idUsuario = $rootScope.currentEmployee;    
