@@ -8,16 +8,15 @@
 registrationModule.controller("empleadoController", function ($scope, $filter, $rootScope, localStorageService, alertFactory, empleadoRepository) {
 
     //Propiedades
-    $scope.idEmpleado = 4;
-
+   
     //Funcion que carga al inicio para obtener la ficha de empleado
     $scope.init = function () {
     	getEmpleado()
     	//Llamada a repository para obtener data
-    	empleadoRepository.getFichaEmpleado($scope.idEmpleado)
+    	empleadoRepository.getFichaEmpleado($rootScope.currentEmployee)
     		.then(function successCallback(response) {
 
-			    $scope.empleado = response.data;
+			    $rootScope.empleado = response.data;
 			    alertFactory.success('Datos de empleado obtenidos.');
 
   			}, function errorCallback(response) {
@@ -40,7 +39,7 @@ registrationModule.controller("empleadoController", function ($scope, $filter, $
                 }
                 else{
                    alert('Inicie sesión desde panel de aplicaciones.');
-                    //window.close(); 
+                    window.close(); 
                 }
                 
             }
