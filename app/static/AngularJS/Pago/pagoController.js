@@ -13,6 +13,9 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
         if ($rootScope.currentEmployee == null) {
             $rootScope.currentEmployee = 2; //25:1;
         }
+        else{
+                $scope.idUsuario = $rootScope.currentEmployee;    
+        }
         $rootScope.currentId = null;
         $rootScope.currentIdOp = null;
         $scope.idLote = 0;
