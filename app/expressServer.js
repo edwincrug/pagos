@@ -53,12 +53,12 @@ var ExpressServer = function(config){
 
     //Servimos el archivo angular
     this.expressServer.get('/', function(req, res){
-        res.sendfile('app/static/index.htm');
+        res.sendfile('app/static/index.html');
     });
 
     //Recibo las variables de login
     this.expressServer.post('*', function(req, res){
-        res.sendfile('app/static/index.htm');
+        res.sendfile('app/static/index.html');
     });
 
 };
@@ -73,8 +73,7 @@ ExpressServer.prototype.router = function(controller,funcionalidad,method,url){
            'req': req,
            'res': res,
            'next': next,
-           'connection' : cnn,
-           'parameters' : parameters
+           'connection' : cnn
        } 
        var Controller = new router[controller](conf);
        Controller.response();
