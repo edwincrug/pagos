@@ -19,7 +19,7 @@ var ExpressServer = function(config){
 
     this.expressServer.engine('html', swig.renderFile);
     this.expressServer.set('view engine', 'html');
-    this.expressServer.set('views', __dirname + '/website/views/templates');
+    this.expressServer.set('views', __dirname + '/static/');
     swig.setDefaults({varControls:['[[',']]']});
 
     if(env == 'development'){
@@ -74,7 +74,8 @@ ExpressServer.prototype.router = function(controller,funcionalidad,method,url){
            'req': req,
            'res': res,
            'next': next,
-           'connection' : cnn
+           'connection' : cnn,
+           'parameters' : parameters
        } 
        var Controller = new router[controller](conf);
        Controller.response();
