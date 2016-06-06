@@ -7,7 +7,6 @@
 // -- =============================================
 registrationModule.controller("pagoController", function($scope, $http, $interval, uiGridGroupingConstants, uiGridConstants, $filter, $rootScope, localStorageService, alertFactory, pagoRepository, stats, $window) {
         $scope.idEmpresa = 4;
-        //$scope.idCuenta = 4;
         $scope.idUsuario = 4;
         //LQMA 04032016
         if ($rootScope.currentEmployee == null) {

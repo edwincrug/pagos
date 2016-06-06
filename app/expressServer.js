@@ -19,7 +19,7 @@ var ExpressServer = function(config){
 
     this.expressServer.engine('html', swig.renderFile);
     this.expressServer.set('view engine', 'html');
-    this.expressServer.set('views', __dirname + '/website/views/templates');
+    this.expressServer.set('views', __dirname + '/static');
     swig.setDefaults({varControls:['[[',']]']});
 
     if(env == 'development'){
@@ -45,23 +45,19 @@ var ExpressServer = function(config){
         res.end();
     });
 
-     //Recibo las variables de login
-    this.expressServer.post('*', function(req, res){
-        var user = { idUsuario: req.body.idUsuario };
-        res.render('index', { user });
-    });
+   
 
     //Servimos el archivo angular
     this.expressServer.get('/', function(req, res){
         res.sendfile('app/static/index.htm');
     });
 
-    //Recibo las variables de login
-  this.expressServer.post('*', function(req, res){
+   //Recibo las variables de login
+    this.expressServer.post('*', function(req, res){
         var user = { idUsuario: req.body.idUsuario };
         res.render('index', { user });
     });
-
+ 
 };
 
 ExpressServer.prototype.router = function(controller,funcionalidad,method,url){
