@@ -476,7 +476,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
 
             var j = 0;
             for (var i = 0; i < $scope.data.length; i++) {
-                $scope.data[i].tipoCartera = '';
+
                 $scope.data[i].Pagar = $scope.data[i].saldo;
                 $scope.data[i].fechaPago = $scope.data[i].fechaPromesaPago;
 
@@ -486,20 +486,15 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                 //FAL 23052016 dependiendo la lista de 
                 if ($rootScope.pdPlanta) {
                     if ($scope.data[i].idProveedor == 7) {
-                        $scope.data[i].tipoCartera = 'Planta';
+                        $scope.data[i].referencia = 'Planta';
                     }
 
                 }
                 if ($rootScope.pdBanco) {
                     if ($scope.data[i].esBanco == 'true') {
-                        $scope.data[i].tipoCartera = 'Banco';
+                        $scope.data[i].referencia = 'Banco';
                     }
                 }
-
-                if ($scope.data[i].tipoCartera = "") {
-                    $scope.data[i].tipoCartera = 'Varios';
-                }
-
                 
                 if ($scope.data[i].seleccionable == "False") {
                     $scope.data[i].estGrid = 'Pago';
@@ -636,6 +631,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
         };
         //FAL crea los campos del grid y las rutinas en los eventos del grid.
         var ConfiguraGrid = function() {
+
             $scope.idEmpleado = $rootScope.currentEmployee;
             $scope.gridOptions = {
                     enableColumnResize: true,
@@ -684,7 +680,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                             name: 'referencia',
                             displayName: 'Referencia',
                             width: '10%',
-                            visible: $rootScope.tipoEmpresaVarios,
+                            visible: true,
                             editableCellTemplate: "<div><form name=\"inputForm\"><input type=\"INPUT_TYPE\"  ui-grid-editor ng-model=\"MODEL_COL_FIELD\"  minlength=3 maxlength=30 required><div ng-show=\"!inputForm.$valid\"><span class=\"error\">La referencia debe tener al menos 5 caracteres</span></div></form></div>"
                         },
                         { name: 'documento', displayName: '# Documento', width: '15%', enableCellEdit: false, headerTooltip: 'Documento # de factura del provedor', cellClass: 'cellToolTip' },
@@ -1159,22 +1155,29 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                 BEGIN
             ****************************************************************************************************************/
             //LQMA 08032016
-        $rootScope.ConsultaLote = function(Lote, index, mensaje) {
+        $rootScope.ConsultaLote = function(Lote, index, mensaje, esAplicacionDirecta) {
             if (mensaje == 1) {
                 if (confirm('¿Al cambiar de lote se perderan los cambios no guardados. Desea continuar??')) {
-                    $rootScope.ConsultaLoteObtiene(Lote, index);
+                    $rootScope.ConsultaLoteObtiene(Lote, index,esAplicacionDirecta);
                 }
             } else {
-                $rootScope.ConsultaLoteObtiene(Lote, index);
+                $rootScope.ConsultaLoteObtiene(Lote, index, esAplicacionDirecta);
             }
         }
-        $rootScope.ConsultaLoteObtiene = function(Lote, index) {
+        $rootScope.ConsultaLoteObtiene = function(Lote, index, esAplicacionDirecta) {
                 alertFactory.info('Consulta de Lote ' + index);
                 $scope.idLote = Lote.idLotePago;
                 $rootScope.grdnoPagable = 0;
                 $rootScope.idLotePadre = Lote.idLotePago;
                 $rootScope.nombreLote = Lote.nombre;
                 $rootScope.estatusLote = Lote.estatus;
+                if (Lote.pal_esAplicacionDirecta == 1){
+                    $rootScope.pagoDirectoSeleccion = true;
+                }
+                else
+                {
+                    $rootScope.pagoDirectoSeleccion = false;
+                }
                 //LQMA 14032016
                 if ($rootScope.accionPagina) { //LQMA 15032016: true: indica que se esta trabajando sobre la pagina para consultar data, false: consulta desde el modal
                     $scope.LlenaIngresos();
@@ -1274,7 +1277,11 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                     $('#btnGuardando').button('reset');
                     $('#btnAprobar').button('reset');
                 } else {
-                    pagoRepository.getPagosPadre($scope.idEmpresa, $rootScope.currentEmployee, $rootScope.formData.nombreLoteNuevo, $rootScope.idLotePadre)
+                    var EsPagoDirecto = 0;
+                    if($rootScope.pagoDirectoSeleccion){
+                       EsPagoDirecto = 1 
+                    }
+                    pagoRepository.getPagosPadre($scope.idEmpresa, $rootScope.currentEmployee, $rootScope.formData.nombreLoteNuevo, $rootScope.idLotePadre, EsPagoDirecto)
                         .then(function successCallback(response) {
                             $rootScope.idLotePadre = response.data;
                             var array = [];
@@ -1294,6 +1301,8 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                                 if ((row.referencia == null) || (row.referencia == undefined) || (row.referencia == "")) {
                                     row.referencia = "AUT";
                                 }
+
+
 
                                 elemento.pad_polReferencia = row.referencia; //FAL 09052015 mandar referencia
 
@@ -1318,6 +1327,32 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                                     $('#btnGuardando').button('reset');
                                     if (opcion == 2) { //aprobacion
                                         pagoRepository.setAprobacion(1, valor, $scope.idEmpresa, $rootScope.idLotePadre, $rootScope.currentEmployee, $rootScope.idAprobador, $rootScope.idAprobacion, $rootScope.idNotify, $rootScope.formData.Observacion)
+                                            .then(function successCallback(response) {
+                                                if (valor == 3) {
+                                                    alertFactory.success('Se aprobo el lote con exito');
+                                                    $('#btnAprobar').button('reset');
+                                                } else //rechazado
+                                                {
+                                                    alertFactory.success('Se rechazo el lote con exito');
+                                                    $('#btnRechazar').button('reset');
+                                                }
+                                                $rootScope.idOperacion = 0;
+                                                setTimeout(function() { window.close(); }, 3500);
+                                                $('#btnAprobar').prop('disabled', true);
+                                                $('#btnRechazar').prop('disabled', true);
+                                            }, function errorCallback(response) {
+                                                if (valor == 3) {
+                                                    alertFactory.error('Error al aprobar');
+                                                    $('#btnAprobar').button('reset');
+                                                } else //rechazado
+                                                {
+                                                    alertFactory.error('Error al rechazar');
+                                                    $('#btnRechazar').button('reset');
+                                                }
+                                            });
+                                    }
+                                     if (opcion == 3) { //aprobacion
+                                        pagoRepository.setAplicacion($scope.idEmpresa, $rootScope.idLotePadre, $rootScope.currentEmployee)
                                             .then(function successCallback(response) {
                                                 if (valor == 3) {
                                                     alertFactory.success('Se aprobo el lote con exito');
@@ -1621,6 +1656,11 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             $('#btnAprobar').button('loading');
             $scope.Guardar(2, valor);
         }; //LQMA End EnviaAprobacion
+
+         $rootScope.AprobarLotePD = function(valor) {
+            $('#btnAprobar').button('loading');
+            $scope.Guardar(3, valor);
+        };
     }) //LQMA fin bloque controller
 registrationModule.service('stats', function() {
     var coreAccumulate = function(aggregation, value) {

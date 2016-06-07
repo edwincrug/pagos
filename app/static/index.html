@@ -54,7 +54,7 @@
                     <br>
                     <div  id="loteCompleto"><div id="loteId">Consulta de Lotes</div></div>
                    
-                        <div ng-repeat="lote in noLotes.data" ng-click="ConsultaLote(lote,{{$index + 1}},1)" id="loteCompleto"> <div id="loteId"> {{$index +1}}({{ lote.totalPagar | currency }})</div>
+                        <div ng-repeat="lote in noLotes.data" ng-click="ConsultaLote(lote,{{$index + 1}},1,lote.pal_esAplicacionDirecta)" id="loteCompleto"> <div id="loteId"> {{$index +1}}({{ lote.totalPagar | currency }})</div>
                         <div class="itemNombre"> {{ lote.nombre }}</div>
                         <div class="itemFecha">{{ lote.fecha }}{{convertToDate(lote.fecha) | date:'small'}}</div>
                         </div>

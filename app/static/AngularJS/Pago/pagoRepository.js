@@ -61,11 +61,11 @@ registrationModule.factory('pagoRepository', function($http) {
             });
 
         },
-        getPagosPadre: function(idEmpresa, idEmpleado, nombreLote, idLote) {
+        getPagosPadre: function(idEmpresa, idEmpleado, nombreLote, idLote, esAplicacionDirecta) {
             return $http({
                 method: 'GET',
                 url: pagoUrl,
-                params: { id: '6|' + idEmpresa + '|' + idEmpleado + '|' + nombreLote + '|' + idLote }
+                params: { id: '6|' + idEmpresa + '|' + idEmpleado + '|' + nombreLote + '|' + idLote + '|' + esAplicacionDirecta }
             });
 
         },
@@ -141,12 +141,23 @@ registrationModule.factory('pagoRepository', function($http) {
         },
         //LQMA
         setAprobacion: function(idProc, nodo, idEmpresa, idLote, idUsuario, idAprobador, idAprobacion, idNotify, Observacion) {
+            return $http({
+                url: pagoUrl,
+                method: "POST",
+                params: { id: '6|' + idProc + '|' + nodo + '|' + idEmpresa + '|' + idLote + '|' + idUsuario + '|' + idAprobador + '|' + Observacion + '|' + idAprobacion + '|' + idNotify }
+            });
+        },
+
+        //FAL 07062016 inserta el lote en la tabla final de aplicación
+            setAplicacion: function(idEmpresa, idLote, idUsuario) {
                 return $http({
                     url: pagoUrl,
                     method: "POST",
-                    params: { id: '6|' + idProc + '|' + nodo + '|' + idEmpresa + '|' + idLote + '|' + idUsuario + '|' + idAprobador + '|' + Observacion + '|' + idAprobacion + '|' + idNotify }
+                    params: { id: '7|'  + idEmpresa + '|' + idLote + '|' + idUsuario }
                 });
             } //FAL
+
+        //FAL
 
     };
 });
