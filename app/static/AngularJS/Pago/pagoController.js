@@ -39,6 +39,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
         $rootScope.refPlanta = 0;
         $rootScope.refpdBanco = 0;
         $rootScope.selPagoDirecto = false;
+        $rootScope.selPlantaBanco = false;
 
 
 
@@ -421,10 +422,11 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
         $scope.IniciaLotePD = function() {
             $rootScope.crearLote = true;
             $rootScope.pagoDirectoSeleccion = true;
+            $rootScope.selPlantaBanco = true;
             $('#btnCrealotePD').button('loading');
             if ($rootScope.formData.nombreLoteNuevo == null) {
                 alertFactory.warning('Debe proporcionar el nombre del nuevo lote.');
-                $('#btnCrealote').button('reset');
+                $('#btnCrealotePD').button('reset');
             } else {
                 //Configura GRID ECG
                 $scope.gridOptions = null;
@@ -978,7 +980,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             $rootScope.grdNoIncluido = 0;
             $rootScope.grdApagarOriginal = $rootScope.grdApagar;
 
-            if ($rootScope.pagoDirectoSeleccion) {
+            if ($rootScope.selPlantaBanco) {
                 $scope.gridOptions.isRowSelectable = function(row) {
                     if ((row.entity.seleccionable == 'True') || (row.entity.referencia == 'Planta') || (row.entity.referencia == 'Banco')) {
                         return true;
