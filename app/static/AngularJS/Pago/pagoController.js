@@ -12,9 +12,8 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
         //LQMA 04032016
         if ($rootScope.currentEmployee == null) {
             $rootScope.currentEmployee = 14; //25:1;
-        }
-        else{
-                $scope.idUsuario = $rootScope.currentEmployee;    
+        } else {
+            $scope.idUsuario = $rootScope.currentEmployee;
         }
         $rootScope.currentId = null;
         $rootScope.currentIdOp = null;
@@ -81,21 +80,19 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             $('.switch-checkbox').bootstrapSwitch();
             $scope.showSelCartera = true;
             $scope.llenaEncabezado();
-             if(!($('#lgnUser').val().indexOf('[') > -1)){
-            localStorageService.set('lgnUser', $('#lgnUser').val());
-        }
-        else{
-            if(($('#lgnUser').val().indexOf('[') > -1) && !localStorageService.get('lgnUser')){
-                if(getParameterByName('employee') != ''){
-                    $rootScope.currentEmployee = getParameterByName('employee');
+            if (!($('#lgnUser').val().indexOf('[') > -1)) {
+                localStorageService.set('lgnUser', $('#lgnUser').val());
+            } else {
+                if (($('#lgnUser').val().indexOf('[') > -1) && !localStorageService.get('lgnUser')) {
+                    if (getParameterByName('employee') != '') {
+                        $rootScope.currentEmployee = getParameterByName('employee');
+                    } else {
+                        alert('Inicie sesión desde panel de aplicaciones.');
+                        //window.close(); 
+                    }
+
                 }
-                else{
-                   alert('Inicie sesión desde panel de aplicaciones.');
-                    //window.close(); 
-                }
-                
             }
-        }
 
             /***********************************************************/
             $scope.transferencias = [{ bancoOrigen: '', bancoDestino: '', importe: 0, disponibleOrigen: 0, index: 0 }];
@@ -498,7 +495,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                         $scope.data[i].referencia = 'Banco';
                     }
                 }
-                
+
                 if ($scope.data[i].seleccionable == "False") {
                     $scope.data[i].estGrid = 'Pago';
                 }
@@ -566,7 +563,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
 
             var cuentaEncontrada = true;
             for (var i = 0; i < $scope.data.length; i++) {
-                
+
                 $scope.data[i].Pagar = $scope.data[i].saldo;
                 $scope.data[i].fechaPago = $scope.data[i].fechaPromesaPago;
                 if ($scope.data[i].fechaPromesaPago == "1900-01-01T00:00:00") {
@@ -1159,17 +1156,19 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             ****************************************************************************************************************/
             //LQMA 08032016
         $rootScope.ConsultaLote = function(Lote, index, mensaje, esAplicacionDirecta) {
-            if ($rootScope.selPlantaBanco && esAplicacionDirecta == 1)
-            {
-               esAplicacionDirecta = 1; 
-            }
-            else
-            {
-                esAplicacionDirecta = 0; 
+            if ($rootScope.selPlantaBanco && esAplicacionDirecta == 1) {
+                esAplicacionDirecta = 1;
+            } else {
+                if ($rootScope.selPlantaBanco) {
+                    esAplicacionDirecta = 1;
+                } else {
+                    esAplicacionDirecta = 0;
+                }
+
             }
             if (mensaje == 1) {
                 if (confirm('¿Al cambiar de lote se perderan los cambios no guardados. Desea continuar??')) {
-                    $rootScope.ConsultaLoteObtiene(Lote, index,esAplicacionDirecta);
+                    $rootScope.ConsultaLoteObtiene(Lote, index, esAplicacionDirecta);
                 }
             } else {
                 $rootScope.ConsultaLoteObtiene(Lote, index, esAplicacionDirecta);
@@ -1183,16 +1182,14 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                 $rootScope.nombreLote = Lote.nombre;
                 $rootScope.estatusLote = Lote.estatus;
                 $rootScope.NuevoLote = false;
-                if (Lote.pal_esAplicacionDirecta == 1 || esAplicacionDirecta == 1){
+                if (Lote.pal_esAplicacionDirecta == 1 || esAplicacionDirecta == 1) {
                     $rootScope.pagoDirectoSeleccion = true;
                     $rootScope.selPlantaBanco = true;
                     Lote.pal_esAplicacionDirecta = 1;
-                }
-                else
-                {
+                } else {
                     $rootScope.pagoDirectoSeleccion = false;
-                     $rootScope.selPlantaBanco = false;
-                     Lote.pal_esAplicacionDirecta = 0;
+                    $rootScope.selPlantaBanco = false;
+                    Lote.pal_esAplicacionDirecta = 0;
                 }
                 //LQMA 14032016
                 if ($rootScope.accionPagina) { //LQMA 15032016: true: indica que se esta trabajando sobre la pagina para consultar data, false: consulta desde el modal
@@ -1279,8 +1276,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             }, 500);
         }; //fin de funcion cancelar
         var guardaValida = function(negativos, saldo, opcion, valor) {
-            if ($rootScope.selPlantaBanco)
-            {
+            if ($rootScope.selPlantaBanco) {
                 saldo = 0.01;
             }
             if (negativos > 0) {
@@ -1298,8 +1294,8 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                     $('#btnAprobar').button('reset');
                 } else {
                     var EsPagoDirecto = 0;
-                    if($rootScope.selPlantaBanco){
-                       EsPagoDirecto = 1 
+                    if ($rootScope.selPlantaBanco) {
+                        EsPagoDirecto = 1
                     }
                     pagoRepository.getPagosPadre($scope.idEmpresa, $rootScope.currentEmployee, $rootScope.formData.nombreLoteNuevo, $rootScope.idLotePadre, EsPagoDirecto)
                         .then(function successCallback(response) {
@@ -1371,7 +1367,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                                                 }
                                             });
                                     }
-                                     if (opcion == 3) { //aprobacion
+                                    if (opcion == 3) { //aprobacion
                                         pagoRepository.setAplicacion($scope.idEmpresa, $rootScope.idLotePadre, $rootScope.currentEmployee)
                                             .then(function successCallback(response) {
                                                 if (valor == 3) {
@@ -1678,7 +1674,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             $scope.Guardar(2, valor);
         }; //LQMA End EnviaAprobacion
 
-         $rootScope.AprobarLotePD = function(valor) {
+        $rootScope.AprobarLotePD = function(valor) {
             $('#btnAprobar').button('loading');
             $scope.Guardar(3, valor);
         };
