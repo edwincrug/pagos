@@ -402,6 +402,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
         //LQMA 07032016
         $scope.IniciaLote = function() {
             $rootScope.crearLote = true;
+            $rootScope.selPlantaBanco = false;
             $('#btnCrealote').button('loading');
             if ($rootScope.formData.nombreLoteNuevo == null) {
                 alertFactory.warning('Debe proporcionar el nombre del nuevo lote.');
@@ -1173,8 +1174,10 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                 $rootScope.idLotePadre = Lote.idLotePago;
                 $rootScope.nombreLote = Lote.nombre;
                 $rootScope.estatusLote = Lote.estatus;
+                $rootScope.NuevoLote = false;
                 if (Lote.pal_esAplicacionDirecta == 1){
                     $rootScope.pagoDirectoSeleccion = true;
+                    $rootScope.selPlantaBanco = true;
                 }
                 else
                 {
