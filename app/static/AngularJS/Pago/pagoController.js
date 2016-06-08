@@ -1265,7 +1265,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             }, 500);
         }; //fin de funcion cancelar
         var guardaValida = function(negativos, saldo, opcion, valor) {
-            if (selPlantaBanco)
+            if ($rootScope.selPlantaBanco)
             {
                 saldo = 0.01;
             }
