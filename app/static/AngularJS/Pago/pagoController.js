@@ -1159,9 +1159,13 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             ****************************************************************************************************************/
             //LQMA 08032016
         $rootScope.ConsultaLote = function(Lote, index, mensaje, esAplicacionDirecta) {
-            if ($rootScope.selPlantaBanco)
+            if ($rootScope.selPlantaBanco && esAplicacionDirecta == 1)
             {
                esAplicacionDirecta = 1; 
+            }
+            else
+            {
+                esAplicacionDirecta = 0; 
             }
             if (mensaje == 1) {
                 if (confirm('¿Al cambiar de lote se perderan los cambios no guardados. Desea continuar??')) {
