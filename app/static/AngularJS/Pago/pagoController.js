@@ -1156,16 +1156,13 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             ****************************************************************************************************************/
             //LQMA 08032016
         $rootScope.ConsultaLote = function(Lote, index, mensaje, esAplicacionDirecta) {
-            if ($rootScope.selPlantaBanco && esAplicacionDirecta == 1) {
+           
+           if (esAplicacionDirecta == undefined)
+           {
                 esAplicacionDirecta = 1;
-            } else {
-                if ($rootScope.selPlantaBanco) {
-                    esAplicacionDirecta = 1;
-                } else {
-                    esAplicacionDirecta = 0;
-                }
+           }
 
-            }
+
             if (mensaje == 1) {
                 if (confirm('¿Al cambiar de lote se perderan los cambios no guardados. Desea continuar??')) {
                     $rootScope.ConsultaLoteObtiene(Lote, index, esAplicacionDirecta);
@@ -1185,11 +1182,11 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                 if (Lote.pal_esAplicacionDirecta == 1 || esAplicacionDirecta == 1) {
                     $rootScope.pagoDirectoSeleccion = true;
                     $rootScope.selPlantaBanco = true;
-                    Lote.pal_esAplicacionDirecta = 1;
+
                 } else {
                     $rootScope.pagoDirectoSeleccion = false;
                     $rootScope.selPlantaBanco = false;
-                    Lote.pal_esAplicacionDirecta = 0;
+
                 }
                 //LQMA 14032016
                 if ($rootScope.accionPagina) { //LQMA 15032016: true: indica que se esta trabajando sobre la pagina para consultar data, false: consulta desde el modal
