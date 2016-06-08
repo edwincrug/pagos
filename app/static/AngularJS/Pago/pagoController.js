@@ -312,6 +312,11 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             {
                 pagoRepository.getLotes($scope.idEmpresa, $rootScope.currentEmployee, 0, 0)
                     .then(function successCallback(data) {
+                            var EsPagoDirecto = 0;
+                            if($rootScope.selPlantaBanco){
+                                EsPagoDirecto = 1;
+                            }
+
                             $rootScope.noLotes = data;
                             if (newLote != 0) {
                                 $rootScope.noLotes.data.push(newLote);
@@ -322,7 +327,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                                 alertFactory.success('Total de lotes: ' + $rootScope.noLotes.data.length);
                                 $rootScope.idLotePadre = $rootScope.noLotes.data[$rootScope.noLotes.data.length - 1].idLotePago;
                                 $rootScope.estatusLote = $rootScope.noLotes.data[$rootScope.noLotes.data.length - 1].estatus;
-                                $rootScope.ConsultaLote($rootScope.noLotes.data[$rootScope.noLotes.data.length - 1], $rootScope.noLotes.data.length, 0);
+                                $rootScope.ConsultaLote($rootScope.noLotes.data[$rootScope.noLotes.data.length - 1], $rootScope.noLotes.data.length, 0,EsPagoDirecto);
                                 $rootScope.ProgPago = true;
 
                             } else {
@@ -1157,12 +1162,6 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             //LQMA 08032016
         $rootScope.ConsultaLote = function(Lote, index, mensaje, esAplicacionDirecta) {
            
-           if (esAplicacionDirecta == undefined)
-           {
-                esAplicacionDirecta = 1;
-           }
-
-
             if (mensaje == 1) {
                 if (confirm('¿Al cambiar de lote se perderan los cambios no guardados. Desea continuar??')) {
                     $rootScope.ConsultaLoteObtiene(Lote, index, esAplicacionDirecta);
