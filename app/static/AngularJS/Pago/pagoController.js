@@ -1182,6 +1182,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                 else
                 {
                     $rootScope.pagoDirectoSeleccion = false;
+                     $rootScope.selPlantaBanco = false;
                 }
                 //LQMA 14032016
                 if ($rootScope.accionPagina) { //LQMA 15032016: true: indica que se esta trabajando sobre la pagina para consultar data, false: consulta desde el modal
