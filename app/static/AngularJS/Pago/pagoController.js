@@ -1602,6 +1602,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                     $rootScope.NuevoLote = true;
                     $rootScope.accionPagina = false;
                     $('#btnCrealote').button('reset');
+                    $('#btnCrealotePD').button('reset');
                     pagoRepository.getLotes($scope.idEmpresa, $rootScope.currentEmployee, 0, 0)
                         .then(function successCallback(data) {
                                 $rootScope.noLotes = data;
