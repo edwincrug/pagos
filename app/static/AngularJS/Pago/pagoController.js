@@ -1265,6 +1265,10 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             }, 500);
         }; //fin de funcion cancelar
         var guardaValida = function(negativos, saldo, opcion, valor) {
+            if (selPlantaBanco)
+            {
+                saldo = 0.01;
+            }
             if (negativos > 0) {
                 alertFactory.warning('Existen disponibles en valores negativos. Verifique las transferencias.');
                 $('#btnGuardando').button('reset');
@@ -1280,7 +1284,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                     $('#btnAprobar').button('reset');
                 } else {
                     var EsPagoDirecto = 0;
-                    if($rootScope.pagoDirectoSeleccion){
+                    if($rootScope.selPlantaBanco){
                        EsPagoDirecto = 1 
                     }
                     pagoRepository.getPagosPadre($scope.idEmpresa, $rootScope.currentEmployee, $rootScope.formData.nombreLoteNuevo, $rootScope.idLotePadre, EsPagoDirecto)

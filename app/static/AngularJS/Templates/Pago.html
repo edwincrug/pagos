@@ -106,7 +106,7 @@ function isNumberKey(evt) {
             </div>
         </div>
     </section>
-    <section id="flujoEfectivo">
+    <section id="flujoEfectivo" ng-hide="selPlantaBanco">
         <div class="tituloBloque1">
             <span class="colText lightBlue"> 1.- Flujo de Efectivo  </span>
         </div>
@@ -476,9 +476,14 @@ function isNumberKey(evt) {
         <button type="button" class="btn btn-danger" ng-show="estatusLote==0" ng-click="Cancelar()">Cancelar</button>
         <button type="button" class="btn btn-primary" data-loading-text="Generando..." ng-click="GenerarArchivo()" ng-show="estatusLote == 3">Generar Archivo</button>
         <button id="btnGuardando" type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="Guardar(1,0)" data-loading-text="Guardando..." autocomplete="off" ng-show="(estatusLote < 3) && (idOperacion == 0)">Guardar</button>
-        <button id="btnEnviaApro" type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="EnviaAprobacion()" data-loading-text="Enviando..." autocomplete="off" ng-show="(estatusLote == 1) && (idOperacion == 0) && (!pagoDirectoSeleccion)">Enviar a Aprobación</button>
-        <button id="btnEnviaApro" type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="AprobarLotePD(4)" data-loading-text="Aplicando..." autocomplete="off" ng-show="(estatusLote == 1) && (idOperacion == 0) && (pagoDirectoSeleccion)">Aplicación Directa</button>
+
+        <button id="btnEnviaApro" type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="EnviaAprobacion()" data-loading-text="Enviando..." autocomplete="off" ng-show="(estatusLote == 1) && (idOperacion == 0) && (!selPlantaBanco)">Enviar a Aprobación</button>
+
+        <button id="btnEnviaApro" type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="AprobarLotePD(4)" data-loading-text="Aplicando..." autocomplete="off" ng-show="(estatusLote == 1) && (idOperacion == 0) && (selPlantaBanco)">Aplicación Directa</button>
+
         <button id="btnAprobar" type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="AprobarLote(3)" data-loading-text="Aprobando..." autocomplete="off" ng-show="(idOperacion == 2) && (estatusLote == 2)">Aprobar</button>
+
         <button id="btnRechazar" type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="AprobarLote(4)" data-loading-text="Rechazando..." autocomplete="off" ng-show="(idOperacion == 2) && (estatusLote == 2)">Rechazar</button>
+
     </section>
 </div>
