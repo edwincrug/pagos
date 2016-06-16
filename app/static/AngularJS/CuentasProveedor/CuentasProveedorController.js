@@ -53,8 +53,8 @@ function llenaLista(id) {
                 {
                     tmpList.push(
                     {
-                    text: $scope.proveedoresCuenta[i].nombreProveedor + id + '-' + $scope.proveedoresCuenta[i].idProveedor,
-                    value: $scope.proveedoresCuenta[i].idProveedor + '-' + $scope.proveedoresCuenta[i].idCuentaPagadora
+                    text: $scope.proveedoresCuenta[i].nombreProveedor+ '-' + i + id + '-' + $scope.proveedoresCuenta[i].idProveedor,
+                    value: $scope.proveedoresCuenta[i].idProveedor+ '-' + i + id + '-' + $scope.proveedoresCuenta[i].idCuentaPagadora
                     });
                  i++;    
                 }

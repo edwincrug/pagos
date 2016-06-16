@@ -16,6 +16,11 @@
         templateUrl: '/AngularJS/Templates/CuentasProveedor.html',
         controller: 'CuentasProveedorController'
     });
+
+     $routeProvider.when('/loteAdmin', {
+        templateUrl: '/AngularJS/Templates/LotesAdmin.html',
+        controller: 'lotesadminController'
+    });
     $locationProvider.html5Mode(true);
 });
 
