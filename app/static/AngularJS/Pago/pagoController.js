@@ -313,7 +313,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                 pagoRepository.getLotes($scope.idEmpresa, $rootScope.currentEmployee, 0, 0)
                     .then(function successCallback(data) {
                             var EsPagoDirecto = 0;
-                            if($rootScope.selPlantaBanco){
+                            if ($rootScope.selPlantaBanco) {
                                 EsPagoDirecto = 1;
                             }
 
@@ -327,7 +327,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                                 alertFactory.success('Total de lotes: ' + $rootScope.noLotes.data.length);
                                 $rootScope.idLotePadre = $rootScope.noLotes.data[$rootScope.noLotes.data.length - 1].idLotePago;
                                 $rootScope.estatusLote = $rootScope.noLotes.data[$rootScope.noLotes.data.length - 1].estatus;
-                                $rootScope.ConsultaLote($rootScope.noLotes.data[$rootScope.noLotes.data.length - 1], $rootScope.noLotes.data.length, 0,EsPagoDirecto);
+                                $rootScope.ConsultaLote($rootScope.noLotes.data[$rootScope.noLotes.data.length - 1], $rootScope.noLotes.data.length, 0, EsPagoDirecto);
                                 $rootScope.ProgPago = true;
 
                             } else {
@@ -464,6 +464,9 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                 .success(llenaGridSuccessCallback)
                 .error(errorCallBack);
         }; //Propiedades
+
+
+
         //FAL20042016 cuando no hay lotes creados
         var getCarteraCallback = function(data, status, headers, config) {
             //FAL fecha no presentada y contadores
@@ -473,14 +476,17 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             $scope.cantidadUpdate = 0;
             $scope.noPagable = 0;
             $scope.Reprogramable = 0;
-
-            $rootScope.pdPlanta = $rootScope.escenarios.Pdbanco;
-            $rootScope.pdBanco = $rootScope.escenarios.Pdplanta;
+            var contador = 1;
+            $rootScope.pdPlanta = $rootScope.escenarios.Pdplanta;
+            $rootScope.pdBanco = $rootScope.escenarios.Pdbanco;
             $rootScope.refPlanta = $rootScope.escenarios.TipoRefPlanta;
             $rootScope.refpdBanco = $rootScope.escenarios.tipoRefBanco;
-
+            $rootScope.grdPagoDirecto = [];
             var j = 0;
-            for (var i = 0; i < $scope.data.length; i++) {
+            var tamdata = $scope.data.length;
+            for (var i = 0; i < tamdata; i++) {
+
+
 
                 $scope.data[i].Pagar = $scope.data[i].saldo;
                 $scope.data[i].fechaPago = $scope.data[i].fechaPromesaPago;
@@ -492,8 +498,18 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                 if ($rootScope.pdPlanta) {
                     if ($scope.data[i].idProveedor == 7) {
                         $scope.data[i].referencia = 'Planta';
+                    var datadirecto = $scope.data[i];
+                    $rootScope.grdPagoDirecto.push(datadirecto);
+                    } else {
+                        $scope.data[i].referencia = '';
                     }
-
+                }
+                if ($rootScope.pdPlanta) {
+                    if ($scope.data[i].idProveedor == 6) {
+                        $scope.data[i].referencia = 'Financiera';
+                      var datadirecto = $scope.data[i];
+                    $rootScope.grdPagoDirecto.push(datadirecto);
+                    }
                 }
                 if ($rootScope.pdBanco) {
                     if ($scope.data[i].esBanco == 'true') {
@@ -521,10 +537,26 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                 //FAL17052016 Valido si lleva numero de serie y si es de lenght = 17 lo pango en referencia.
                 $scope.carteraVencida = $scope.carteraVencida + $scope.data[i].saldo;
 
+                
+                                
             }
             $scope.noPagable = $scope.carteraVencida - $scope.cantidadTotal;
-            //FAL inicio contadores
-            $rootScope.datosModal = $scope.data;
+
+            //FAL 20062016 separación de cartera en caso de pago directo
+
+            if ($rootScope.selPlantaBanco) {
+                
+                 $rootScope.datosModal = $rootScope.grdPagoDirecto;
+
+            }
+            else
+            {
+                 $rootScope.datosModal = $scope.data;
+
+            }
+
+           
+
             var newLote = { idLotePago: '0', idEmpresa: $scope.idEmpresa, idUsuario: $rootScope.currentEmployee, fecha: '', nombre: $rootScope.formData.nombreLoteNuevo, estatus: 0 };
             $scope.ObtieneLotes(newLote);
             $scope.LlenaIngresos();
@@ -532,7 +564,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             //LQMA 15032016
             $rootScope.accionPagina = true;
             $rootScope.grdApagar = 0;
-            //FAL 19042016 llena totales de bancos desde la consulta de lulu.
+            //FAL 19042016 llena totales de bancos desde la consulta
             $rootScope.grdBancos = [];
             $rootScope.grdApagar = 0;
             $rootScope.bancosCompletas.forEach(function(banco, k) {
@@ -610,7 +642,9 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                 $scope.carteraVencida = $scope.carteraVencida + $scope.data[i].saldo;
             }
             $scope.noPagable = $scope.carteraVencida - $scope.cantidadTotal;
+
             $scope.gridOptions.data = data;
+
             $rootScope.blTotales = false;
         };
         var setGroupValues = function(columns, rows) {
@@ -689,7 +723,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                             editableCellTemplate: "<div><form name=\"inputForm\"><input type=\"INPUT_TYPE\"  ui-grid-editor ng-model=\"MODEL_COL_FIELD\"  minlength=3 maxlength=30 required><div ng-show=\"!inputForm.$valid\"><span class=\"error\">La referencia debe tener al menos 5 caracteres</span></div></form></div>"
                         },
                         { name: 'documento', displayName: '# Documento', width: '15%', enableCellEdit: false, headerTooltip: 'Documento # de factura del provedor', cellClass: 'cellToolTip' },
-                        { name: 'ordenCompra', displayName: 'Orden de compra', width: '13%', enableCellEdit: false, cellTemplate: '<div class="urlTabla" ng-class="col.colIndex()" ><a tooltip="Ver en digitalización" class="urlTabla" href="http://192.168.20.9:3200/?id={{row.entity.ordenCompra}}&employee=' + $scope.idEmpleado + '" target="_new">{{row.entity.ordenCompra}}</a></div>' },
+                        { name: 'ordenCompra', displayName: 'Orden de compra', width: '13%', enableCellEdit: false, cellTemplate: '<div class="urlTabla" ng-class="col.colIndex()" ><a tooltip="Ver en digitalización" class="urlTabla" href="http://192.168.20.41:3200/?id={{row.entity.ordenCompra}}&employee=' + $scope.idEmpleado + '" target="_new">{{row.entity.ordenCompra}}</a></div>' },
                         { name: 'monto', displayName: 'Monto', width: '15%', cellFilter: 'currency', enableCellEdit: false },
                         { name: 'saldo', displayName: 'Saldo', width: '15%', cellFilter: 'currency', enableCellEdit: false },
                         { name: 'tipo', width: '15%', displayName: 'Tipo', enableCellEdit: false },
@@ -1161,7 +1195,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             ****************************************************************************************************************/
             //LQMA 08032016
         $rootScope.ConsultaLote = function(Lote, index, mensaje, esAplicacionDirecta) {
-           
+
             if (mensaje == 1) {
                 if (confirm('¿Al cambiar de lote se perderan los cambios no guardados. Desea continuar??')) {
                     $rootScope.ConsultaLoteObtiene(Lote, index, esAplicacionDirecta);
@@ -1655,122 +1689,119 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
         $rootScope.AbreConsultaLotes = function() {
             $('#closeMenu').click();
             $('#consultaModal').modal('show');
-           
+
         };
 
-         $rootScope.Abrecuentas = function() {
+        $rootScope.Abrecuentas = function() {
             $('#closeMenu').click();
-           $window.location.href = '/cuentas';
-           
+            $window.location.href = '/cuentas';
+
         };
 
         $rootScope.AbreAgrupador = function() {
             $('#closeMenu').click();
-           $window.location.href = '/agrupador';
-           
+            $window.location.href = '/agrupador';
+
         };
 
-         $rootScope.AbreAdministrador = function() {
+        $rootScope.AbreAdministrador = function() {
             $('#closeMenu').click();
-           $window.location.href = '/loteAdmin';
-           
+             $window.location.href = '/loteAdmin';
+
         };
 
         //FAL funciones de calendar
 
- $scope.today = function() {
-    $scope.dt = new Date();
-  };
-  $scope.today();
+        $scope.today = function() {
+            $scope.dt = new Date();
+        };
+        $scope.today();
 
-  $scope.clear = function() {
-    $scope.dt = null;
-  };
+        $scope.clear = function() {
+            $scope.dt = null;
+        };
 
-  $scope.inlineOptions = {
-    customClass: getDayClass,
-    minDate: new Date(),
-    showWeeks: true
-  };
+        $scope.inlineOptions = {
+            customClass: getDayClass,
+            minDate: new Date(),
+            showWeeks: true
+        };
 
-  $scope.dateOptions = {
-    dateDisabled: disabled,
-    formatYear: 'yy',
-    maxDate: new Date(2020, 5, 22),
-    minDate: new Date(),
-    startingDay: 1
-  };
+        $scope.dateOptions = {
+            dateDisabled: disabled,
+            formatYear: 'yy',
+            maxDate: new Date(2020, 5, 22),
+            minDate: new Date(),
+            startingDay: 1
+        };
 
-  // Disable weekend selection
-  function disabled(data) {
-    var date = data.date,
-      mode = data.mode;
-    return mode === 'day' && (date.getDay() === 0 || date.getDay() === 6);
-  }
-
-  $scope.toggleMin = function() {
-    $scope.inlineOptions.minDate = $scope.inlineOptions.minDate ? null : new Date();
-    $scope.dateOptions.minDate = $scope.inlineOptions.minDate;
-  };
-
-  $scope.toggleMin();
-
-  $scope.open1 = function() {
-    $scope.popup1.opened = true;
-  };
-
-  $scope.open2 = function() {
-    $scope.popup2.opened = true;
-  };
-
-  $scope.setDate = function(year, month, day) {
-    $scope.dt = new Date(year, month, day);
-  };
-
-  $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
-  $scope.format = $scope.formats[0];
-  $scope.altInputFormats = ['M!/d!/yyyy'];
-
-  $scope.popup1 = {
-    opened: false
-  };
-
-  $scope.popup2 = {
-    opened: false
-  };
-
-  var tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  var afterTomorrow = new Date();
-  afterTomorrow.setDate(tomorrow.getDate() + 1);
-  $scope.events = [
-    {
-      date: tomorrow,
-      status: 'full'
-    },
-    {
-      date: afterTomorrow,
-      status: 'partially'
-    }
-  ];
-
-  function getDayClass(data) {
-    var date = data.date,
-      mode = data.mode;
-    if (mode === 'day') {
-      var dayToCheck = new Date(date).setHours(0,0,0,0);
-
-      for (var i = 0; i < $scope.events.length; i++) {
-        var currentDay = new Date($scope.events[i].date).setHours(0,0,0,0);
-
-        if (dayToCheck === currentDay) {
-          return $scope.events[i].status;
+        // Disable weekend selection
+        function disabled(data) {
+            var date = data.date,
+                mode = data.mode;
+            return mode === 'day' && (date.getDay() === 0 || date.getDay() === 6);
         }
-      }
-    }
 
-    return '';
-  }
+        $scope.toggleMin = function() {
+            $scope.inlineOptions.minDate = $scope.inlineOptions.minDate ? null : new Date();
+            $scope.dateOptions.minDate = $scope.inlineOptions.minDate;
+        };
+
+        $scope.toggleMin();
+
+        $scope.open1 = function() {
+            $scope.popup1.opened = true;
+        };
+
+        $scope.open2 = function() {
+            $scope.popup2.opened = true;
+        };
+
+        $scope.setDate = function(year, month, day) {
+            $scope.dt = new Date(year, month, day);
+        };
+
+        $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
+        $scope.format = $scope.formats[0];
+        $scope.altInputFormats = ['M!/d!/yyyy'];
+
+        $scope.popup1 = {
+            opened: false
+        };
+
+        $scope.popup2 = {
+            opened: false
+        };
+
+        var tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        var afterTomorrow = new Date();
+        afterTomorrow.setDate(tomorrow.getDate() + 1);
+        $scope.events = [{
+            date: tomorrow,
+            status: 'full'
+        }, {
+            date: afterTomorrow,
+            status: 'partially'
+        }];
+
+        function getDayClass(data) {
+            var date = data.date,
+                mode = data.mode;
+            if (mode === 'day') {
+                var dayToCheck = new Date(date).setHours(0, 0, 0, 0);
+
+                for (var i = 0; i < $scope.events.length; i++) {
+                    var currentDay = new Date($scope.events[i].date).setHours(0, 0, 0, 0);
+
+                    if (dayToCheck === currentDay) {
+                        return $scope.events[i].status;
+                    }
+                }
+            }
+
+            return '';
+        }
 
         //LQMA 08042016
         $rootScope.EnviaAprobacion = function() {

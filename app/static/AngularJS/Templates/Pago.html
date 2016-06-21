@@ -1,16 +1,23 @@
 
 <SCRIPT language=Javascript>
-<!--
+// <!--
 
-function isNumberKey(evt) {
-    //var e = evt || window.event;
-    var charCode = (evt.which) ? evt.which : evt.keyCode
-    if (charCode > 31 && (charCode < 48 || charCode > 57))
+ function isNumberKey(evt) {
+     var e = evt || window.event;
+     var charCode = (evt.which) ? evt.which : evt.keyCode
+        
+        if (charCode > 31 && (charCode < 48 || charCode > 57))
+        
         return false;
 
     return true;
-}
-//-->
+ }
+
+
+
+
+
+
 </SCRIPT>
 <div cg-busy="myPromise" ng-init="init()" id="contentManager" resize>
     <section id="global">
@@ -195,7 +202,7 @@ function isNumberKey(evt) {
                                         Caja:
                                     </td>
                                     <td>
-                                        <input type="text" id="txtCaja" ng-model="caja" onkeypress="return event.charCode >= 48 && event.charCode <= 57" class="form-control txtIngresos">
+                                        <input type="text" id="txtCaja" ng-model="caja" ng-keypress="presskey($event)" onkeypress="return isNumberKey(event)" class="form-control txtIngresos">
                                     </td>
                                 </tr>
                                 <tr>
@@ -203,7 +210,7 @@ function isNumberKey(evt) {
                                         Cobranza esperada:
                                     </td>
                                     <td>
-                                        <input type="text" id="txtCobranza" onkeypress="return event.charCode >= 48 && event.charCode <= 57" ng-model="cobrar" class="form-control txtIngresos">
+                                        <input type="text" id="txtCobranza" ng-keypress="presskey($event)" onkeypress="return isNumberKey(event)" ng-model="cobrar" class="form-control txtIngresos">
                                     </td>
                                 </tr>
                             </tbody>
@@ -267,7 +274,7 @@ function isNumberKey(evt) {
                                         <!-- /input-group -->
                                     </td>
                                     <td>
-                                        <input type="text" onkeypress="return event.charCode >= 48 && event.charCode <= 57" ng-blur="calculaTransferencia(transferencia)" ng-keypress="presskey($event)" ng-model="transferencia.importe" class="form-control txtIngresos">
+                                        <input type="text" ng-keypress="presskey($event)" onkeypress="return isNumberKey(event)" ng-blur="calculaTransferencia(transferencia)"  ng-model="transferencia.importe" class="form-control txtIngresos">
                                     </td>
                                     <td>
                                         <button type="button" class="btn btn-danger" id="btnDel" ng-click="delTransferencia(transferencia)">
