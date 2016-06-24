@@ -157,7 +157,7 @@ registrationModule.factory('pagoRepository', function($http) {
                 });
             } //FAL
 
-        //FAL
+        
 
     };
 });

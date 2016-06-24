@@ -5,7 +5,7 @@
 // -- Modificó:
 // -- Fecha:
 // -- =============================================
-registrationModule.controller("pagoController", function ($scope, $http, $interval, uiGridGroupingConstants, uiGridConstants, $filter, $rootScope, localStorageService, alertFactory, pagoRepository, stats, $window) {
+registrationModule.controller("pagoController", function ($scope, $http, $interval, uiGridGroupingConstants, uiGridConstants, $filter, $rootScope, localStorageService, alertFactory, pagoRepository, stats, $window, $location) {
         $scope.idEmpresa = 4;
         //$scope.idCuenta = 4;
         $scope.idUsuario = 14;
@@ -92,10 +92,8 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                         alert('Inicie sesión desde panel de aplicaciones.');
                         //window.close(); 
                     }
-
                 }
             }
-
             /***********************************************************/
             $scope.transferencias = [{
                 bancoOrigen: '',
@@ -1485,7 +1483,7 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 guardaValida(negativos, saldo, opcion, valor);
             }, 500);
         }; //fin de funcion guardar
-        $scope.Cancelar = function () {
+        $rootScope.Cancelar = function () {
             //LQMA 16032016
             $scope.gridOptions.data = [];
             $rootScope.noLotes = null;
@@ -1823,6 +1821,23 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
                 return total;
             } //get total end
             //LQMA 10032016
+
+        $scope.irgenerarLote = function () {
+            $('#closeMenu').click();
+            var url = $location.url();
+
+           if (url == "/"){
+            $rootScope.CrearNuevoLote();
+           }
+           else
+           {
+            $window.location.href = '/';
+           }
+           
+
+
+     };
+
         $rootScope.CrearNuevoLote = function () {
                 $('#closeMenu').click();
                 $rootScope.ProgPago = true;
@@ -1911,6 +1926,12 @@ registrationModule.controller("pagoController", function ($scope, $http, $interv
             $window.location.href = '/loteAdmin';
 
         };
+
+         $rootScope.generarLotes = function () {
+            $('#closeMenu').click();
+            $window.location.href = '/';
+
+     };
 
         //FAL funciones de calendar
 

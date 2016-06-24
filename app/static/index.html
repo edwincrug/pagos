@@ -65,19 +65,24 @@
         <div class="st-pusher" ng-keyup="$event.keyCode == 13 ? Search() : null">
             <nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left" id="cbp-spmenu-s1">
                 <h3 class="icon h2extends"><span class="glyphicon glyphicon-home headSearch" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;&nbsp;Menú</h3>
-                <div id="loteCompleto" ng-click="AbreAdministrador()">
-                    <div id="loteId">Administración de Lotes</div>
+                <div class="loteCompleto" ng-click="AbreAdministrador()">
+                    <div class="loteId">Administración de Lotes</div>
                 </div>
-                <div ng-repeat="lote in noLotes.data" ng-click="ConsultaLote(lote,{{$index + 1}},1,lote.pal_esAplicacionDirecta)" id="loteCompleto">
-                    <div id="loteId"> {{$index +1}}({{ lote.totalPagar | currency }})</div>
+                <div ng-repeat="lote in noLotes.data" ng-click="ConsultaLote(lote,{{$index + 1}},1,lote.pal_esAplicacionDirecta)" class="loteCompleto" >
+                    <div class="loteId"> {{$index +1}}({{ lote.totalPagar | currency }})</div>
                     <div class="itemNombre"> {{ lote.nombre }}</div>
                     <div class="itemFecha">{{ lote.fecha }}{{convertToDate(lote.fecha) | date:'small'}}</div>
                 </div>
-                <div id="loteCompleto" ng-click="CrearNuevoLote()">
-                    <span class="glyphicon glyphicon-plus" aria-hidden="true" id="loteId">Nuevo Lote</span>
+
+                <div class="loteCompleto" ng-controller="pagoController" ng-click="irgenerarLote()">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true" class="loteId"> Generar Lote</span>
+                </div>
+
+                <div class="loteCompleto" >
+                    <span class="glyphicon glyphicon-remove " aria-hidden="true" id="closeMenu"> Cerrar Menú</span>
                 </div>
                 <!--                <button type="button" class="btn btn-primary btnSearch" id="addMenu" tooltip="Nuevo Lote" ng-click="CrearNuevoLote()"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Nuevo Lote</button>-->
-                <button type="button" class="btn btn-default btnSearch" id="closeMenu"><span class="glyphicon glyphicon-remove " aria-hidden="true"></span> Cerrar Menú</button>
+               <!--  <button type="button" class="btn btn-default btnSearch" id="closeMenu"><span class="glyphicon glyphicon-remove " aria-hidden="true"></span> Cerrar Menú</button> -->
             </nav>
             <div id="st-trigger-effects" class="column">
                 <nav class="navbar navbar-default navHeader">
