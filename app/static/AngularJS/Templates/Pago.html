@@ -146,7 +146,7 @@
                 </div>
             </div>
         </div>
-        <div class="collapse in" id="collapsePanel">
+        <div class="collapse in" id="collapsePanel" ng-hide="expaprobado">
             <div id="contenedorTablas">
                 <div class="rowTablas">
                     <div id="tblBancos">
@@ -183,7 +183,7 @@
                     </div>
                     <div id="tblOtros">
                         <div class="titleBloque">
-                            Ingresos Otros
+                            Otros
                             <div class="paso"> Paso
                                 <div class="pasoNumero"> 2</div>
                             </div>
@@ -194,6 +194,7 @@
                                 <tr>
                                     <th>Concepto</th>
                                     <th>Total Disponible</th>
+                                    <th>&nbsp</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -204,6 +205,7 @@
                                     <td>
                                         <input type="text" id="txtCaja" ng-model="caja" ng-keypress="presskey($event)" onkeypress="return isNumberKey(event)" class="form-control txtIngresos">
                                     </td>
+                                    <td ng-class="{'danger':caja == '0', 'warning':caja < 0,'info': caja > 0}">{{caja | currency}}</td>
                                 </tr>
                                 <tr>
                                     <td>
@@ -212,10 +214,12 @@
                                     <td>
                                         <input type="text" id="txtCobranza" ng-keypress="presskey($event)" onkeypress="return isNumberKey(event)" ng-model="cobrar" class="form-control txtIngresos">
                                     </td>
+                                     <td ng-class="{'danger':cobrar == '0', 'warning':cobrar < 0,'info': cobrar > 0}">{{cobrar | currency}}</td>
                                 </tr>
                             </tbody>
                             <tfoot>
                                 <td></td>
+                                <td>{{getTotal('otrosIngresos') | currency}}</td>
                                 <td>{{getTotal('otrosIngresos') | currency}}</td>
                             </tfoot>
                         </table>

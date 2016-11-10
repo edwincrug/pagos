@@ -9,9 +9,9 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title></title>
-    <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Programación de pagos - Grupo Andrade</title>
+    <meta name='description' content='Grupo Andrade' />
     <!-- Libreria de Google Fonts -->
     <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900italic' rel='stylesheet' type='text/css'>
     <!--Hojas de estilos-->
@@ -40,24 +40,24 @@
     <link rel="stylesheet" type="text/css" href="css/sidebar/body.css" />
     <link rel="stylesheet" type="text/css" href="css/ui-grid.css" />
     <link rel="stylesheet" type="text/css" href="css/sidetools/component.css" />
+    <link rel="stylesheet" type="text/css" href="css/pago.css" />
     <script src="js/sidebar/modernizr.custom.js"></script>
     <base href='/'>
 </head>
 
 <body ng-app="registrationModule">
     <style>
-        .full button span {
-            background-color: limegreen;
-            border-radius: 32px;
-            color: black;
-        }
-        
-        .partially button span {
-            background-color: orange;
-            border-radius: 32px;
-            color: black;
-        }
-
+    .full button span {
+        background-color: limegreen;
+        border-radius: 32px;
+        color: black;
+    }
+    
+    .partially button span {
+        background-color: orange;
+        border-radius: 32px;
+        color: black;
+    }
     </style>
     <!-- Contenedor de información -->
     <div id="st-container">
@@ -65,24 +65,17 @@
         <div class="st-pusher" ng-keyup="$event.keyCode == 13 ? Search() : null">
             <nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left" id="cbp-spmenu-s1">
                 <h3 class="icon h2extends"><span class="glyphicon glyphicon-home headSearch" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;&nbsp;Menú</h3>
-                <div class="loteCompleto" ng-click="AbreAdministrador()">
-                    <div class="loteId">Administración de Lotes</div>
-                </div>
-                <div ng-repeat="lote in noLotes.data" ng-click="ConsultaLote(lote,{{$index + 1}},1,lote.pal_esAplicacionDirecta)" class="loteCompleto" >
-                    <div class="loteId"> {{$index +1}}({{ lote.totalPagar | currency }})</div>
+                <br>
+                <!-- <div id="loteCompleto" ng-click="AbreAdministrador()">
+                    <div id="loteId">Administración de Lotes</div>
+                </div> -->
+                <div ng-repeat="lote in noLotes.data" ng-click="ConsultaLote(lote,{{$index + 1}},1,lote.pal_esAplicacionDirecta)" id="loteCompleto">
+                    <div id="loteId"> {{$index +1}}({{ lote.totalPagar | currency }})</div>
                     <div class="itemNombre"> {{ lote.nombre }}</div>
                     <div class="itemFecha">{{ lote.fecha }}{{convertToDate(lote.fecha) | date:'small'}}</div>
                 </div>
-
-                <div class="loteCompleto" ng-controller="pagoController" ng-click="irgenerarLote()">
-                    <span class="glyphicon glyphicon-plus" aria-hidden="true" class="loteId"> Generar Lote</span>
-                </div>
-
-                <div class="loteCompleto" >
-                    <span class="glyphicon glyphicon-remove " aria-hidden="true" id="closeMenu"> Cerrar Menú</span>
-                </div>
-                <!--                <button type="button" class="btn btn-primary btnSearch" id="addMenu" tooltip="Nuevo Lote" ng-click="CrearNuevoLote()"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Nuevo Lote</button>-->
-               <!--  <button type="button" class="btn btn-default btnSearch" id="closeMenu"><span class="glyphicon glyphicon-remove " aria-hidden="true"></span> Cerrar Menú</button> -->
+                <button type="button" class="btn btn-primary btnSearch" id="addMenu" tooltip="Nuevo Lote" ng-click="CrearNuevoLote()"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Nuevo Lote</button>
+                <button type="button" class="btn btn-default btnSearch" id="closeMenu"><span class="glyphicon glyphicon-remove " aria-hidden="true"></span> Cerrar Menú</button>
             </nav>
             <div id="st-trigger-effects" class="column">
                 <nav class="navbar navbar-default navHeader">
@@ -134,7 +127,7 @@
     </div>
     <!-- /st-container -->
     <!--Modal de inicio FAL-->
-    <div id="inicioModal" class="modal fade" tabindex="-1" data-focus-on="input:first" ng-controller="pagoController" data-keyboard="false" data-backdrop="static">
+    <div id="inicioModal" class="modal fade" tabindex="-1" data-focus-on="input:first" ng-controller="pagoController" ng-init="traeEmpresas()" data-keyboard="false" data-backdrop="static">
         <!-- <div id="inicioModal" class="modal fade" ng-controller="pagoController" ng-init="traeEmpresas()" data-keyboard="false"> -->
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -249,7 +242,7 @@
                         </div>
                         <div id="mdRadio">
                             <div class="btn-group" role="group">
-                                <!--input id="switch-onText" type="checkbox" checked data-on-text="Con toda la cartera" data-off-text="Seleccionar" ng-controller="pagoController" ng-init="iniciaCheck()" switchChange="selDatos()" ng-change="selDatos()" ng-model="confirmed"-->
+                              
                                 <button id="btnTodalaCartera" type="button" class="btn btn-primary" ng-model="radioModel" ng-click="OcultaGridModal(false)" data-loading-text="Leyendo..." autocomplete="off" uncheckable>Con</button>
                                 <button type="button" class="btn btn-primary" ng-model="radioModel" ng-click="MuestraGridModal(true)" id="btnSeleccionarCartera" data-loading-text="Leyendo..." autocomplete="off" uncheckable>Sel</button>
                                 <button id="btnTodalaCartera" type="button" class="btn btn-primary" data-loading-text="Cargando..." ng-model="radioModel" uib-btn-radio="'cartera'" ng-click="OcultaGridModal(false)" autocomplete="off">Con toda la cartera</button>
@@ -286,7 +279,7 @@
         </div>
     </div>
     <!--Fin Modal de inicio FAL-->
-
+    
     <!--Interface de usuario-->
     <script src="js/toastr.min.js"></script>
     <!-- Librerias Angular-->
