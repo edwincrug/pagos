@@ -6,14 +6,14 @@
 // -- Fecha:
 // -- =============================================
 registrationModule.controller("pagoController", function($scope, $http, $interval, uiGridGroupingConstants, uiGridConstants, $filter, $rootScope, localStorageService, alertFactory, pagoRepository, stats, $window) {
-
+        
         //$scope.idCuenta = 4;
-        $rootScope.idUsuario = 15;
+        $scope.idUsuario = 15;
         //LQMA 04032016
         if ($rootScope.currentEmployee == null) {
             $rootScope.currentEmployee = 15; //25:1;
         } else {
-            $rootScope.idUsuario = $rootScope.currentEmployee;
+            $scope.idUsuario = $rootScope.currentEmployee;
         }
         $rootScope.currentId = null;
         $rootScope.currentIdOp = null;
@@ -39,14 +39,9 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
         $rootScope.refpdBanco = 0;
         $rootScope.selPagoDirecto = false;
         $rootScope.selPlantaBanco = false;
-        $rootScope.buscarLotes = false;
-        $rootScope.buscarTrasferencias = false;
-        $scope.hidebuscando = false;
-        $rootScope.gridXvencer = [];
-        $rootScope.montominimo = 0;
 
-        
-        
+
+
         var errorCallBack = function(data, status, headers, config) {
             alertFactory.error('Ocurrio un problema');
         };
@@ -71,92 +66,13 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                 return false;
             return true;
         }
-
-        $rootScope.gridXvencer = {
-                    enableColumnResize: true,
-                    enableRowSelection: true,
-                    enableGridMenu: true,
-                    enableFiltering: true,
-                    enableGroupHeaderSelection: false,
-                    treeRowHeaderAlwaysVisible: true,
-                    showColumnFooter: true,
-                    showGridFooter: true,
-                    height: 900,
-                    cellEditableCondition: function($scope) {
-                        return $scope.row.entity.seleccionable;
-                    },
-                    columnDefs: [{
-                            name: 'nombreAgrupador',
-                            grouping: { groupPriority: 0 },
-                            sort: { priority: 0, direction: 'asc' },
-                            width: '15%',
-                            displayName: 'Grupo',
-                            enableCellEdit: false
-                        }, {
-                            name: 'proveedor',
-                            grouping: { groupPriority: 1 },
-                            sort: { priority: 1, direction: 'asc' },
-                            width: '20%',
-                            name: 'proveedor',
-                            enableCellEdit: false,
-                            cellTemplate: '<div><div ng-if="!col.grouping || col.grouping.groupPriority === undefined || col.grouping.groupPriority === null || ( row.groupHeader && col.grouping.groupPriority === row.treeLevel )" class="ui-grid-cell-contents" title="TOOLTIP">{{COL_FIELD CUSTOM_FILTERS}}</div></div>'
-                        },
-                        { name: 'documento', displayName: '# Documento', width: '15%', enableCellEdit: false, headerTooltip: 'Documento # de factura del provedor', cellClass: 'cellToolTip' },
-                        { name: 'ordenCompra', displayName: 'Orden de compra', width: '13%', enableCellEdit: false, cellTemplate: '<div class="urlTabla" ng-class="col.colIndex()" ><a tooltip="Ver en digitalización" class="urlTabla" href="http://192.168.20.9:3200/?id={{row.entity.ordenCompra}}&employee=' + $scope.idEmpleado + '" target="_new">{{row.entity.ordenCompra}}</a></div>' },
-                        { name: 'monto', displayName: 'Monto', width: '15%', cellFilter: 'currency', enableCellEdit: false },
-                        { name: 'saldo', displayName: 'Saldo', width: '15%', cellFilter: 'currency', enableCellEdit: false }, {
-                            field: 'Pagar',
-                            displayName: 'Pagar (total)',
-                            width: '10%',
-                            cellFilter: 'currency',
-                            enableCellEdit: ($rootScope.currentIdOp == 1) ? false : true,
-                            editableCellTemplate: '<div><form name="inputForm"><input type="number" ng-class="\'colt\' + col.uid" ui-grid-editor ng-model="MODEL_COL_FIELD"></form></div>'
-                        },
-                        { name: 'cuentaPagadora', width: '10%', displayName: 'Banco Origen', enableCellEdit: false },
-                        { name: 'cuenta', width: '15%', displayName: '# Cuenta', enableCellEdit: false },
-                        { name: 'fechaPromesaPago', displayName: 'Fecha Promesa de Pago', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '15%' }, {
-                            name: 'referencia',
-                            displayName: 'Referencia',
-                            width: '10%',
-                            visible: true,
-                            editableCellTemplate: "<div><form name=\"inputForm\"><input type=\"INPUT_TYPE\"  ui-grid-editor ng-model=\"MODEL_COL_FIELD\"  minlength=3 maxlength=30 required><div ng-show=\"!inputForm.$valid\"><span class=\"error\">La referencia debe tener al menos 5 caracteres</span></div></form></div>"
-                        },
-                        { name: 'tipo', width: '15%', displayName: 'Tipo', enableCellEdit: false },
-                        { name: 'tipodocto', width: '15%', displayName: 'Tipo Documento', enableCellEdit: false },
-                        { name: 'cartera', width: '15%', displayName: 'Cartera', enableCellEdit: false },
-                        { name: 'moneda', width: '10%', displayName: 'Moneda', enableCellEdit: false },
-                        { name: 'numeroSerie', width: '20%', displayName: 'N Serie', enableCellEdit: false },
-                        { name: 'facturaProveedor', width: '20%', displayName: 'Factura Proveedor', enableCellEdit: false },
-                        { name: 'fechaVencimiento', displayName: 'Fecha de Vencimiento', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '17%', enableCellEdit: false },
-                        { name: 'fechaRecepcion', displayName: 'Fecha Recepción', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '17%', enableCellEdit: false },
-                        { name: 'fechaFactura', displayName: 'Fecha Factura', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '17%', enableCellEdit: false }, {
-                            field: 'saldoPorcentaje',
-                            displayName: 'Porcentaje %',
-                            width: '10%',
-                            cellFilter: 'number: 6',
-                            enableCellEdit: false
-                        },
-                        { name: 'estatus', displayName: 'Estatus', width: '10%', enableCellEdit: false },
-                        { name: 'anticipo', displayName: 'Anticipo', width: '10%', enableCellEdit: false },
-                        { name: 'anticipoAplicado', displayName: 'Anticipo Aplicado', width: '15%', enableCellEdit: false },
-                        { name: 'documentoPagable', width: '15%', displayName: 'Estatus del Documento', visible: false, enableCellEdit: false },
-                        { name: 'ordenBloqueada', displayName: 'Bloqueada', width: '20%', enableCellEdit: false },
-                        { name: 'fechaPago', displayName: 'fechaPago', width: '20%', visible: false, enableCellEdit: false },
-                        { name: 'estGrid', width: '15%', displayName: 'Estatus Grid', enableCellEdit: false },
-                        { name: 'seleccionable', displayName: 'seleccionable', width: '20%', enableCellEdit: false, visible: false },
-                        { name: 'cuentaDestino', displayName: 'Cuenta Destino', width: '20%', enableCellEdit: false },
-                        { name: 'idEstatus', displayName: 'idEstatus', width: '20%', enableCellEdit: false, visible: true },
-                        { name: 'tipoCartera', displayName: 'tipoCartera', width: '20%', enableCellEdit: false, visible: true }
-                    ]};
-
         $scope.init = function() {
             $scope.caja = 0;
             $scope.cobrar = 0;
-
+            
             /***********************************************************/
             //LQMA 14032016
             ConfiguraGrid();
-            
             $rootScope.accionPagina = false; //iniciarl el grid modal en llenagrid
             //Inicializamos el switch
             $.fn.bootstrapSwitch.defaults.offColor = 'info';
@@ -173,6 +89,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                         $rootScope.currentEmployee = getParameterByName('employee');
                     } else {
                         alert('Inicie sesión desde panel de aplicaciones.');
+                        //window.close(); 
                     }
 
                 }
@@ -193,15 +110,14 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                                 .then(function successCallback(response) {
                                         $rootScope.GranTotal = 0;
                                         $rootScope.TotalxEmpresas = response.data;
-
+                                       
                                         i = 0;
                                         $rootScope.TotalxEmpresas.forEach(function(cuentaPagadora, sumaSaldo) {
                                             $rootScope.GranTotal = $rootScope.GranTotal + $rootScope.TotalxEmpresas[i].sumaSaldo;
                                             i++;
                                         });
-                                        $scope.showTotales = 1;
+                                        $scope.showTotales = true;
                                         $scope.showSelCartera = true;
-                                        $rootScope.buscarLotes = true;
                                         //LQMA  07032016
                                         //LQMA 14032016
                                     },
@@ -211,7 +127,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                                         $rootScope.GranTotal = 0;
                                         $rootScope.showGrid = false;
                                         $scope.showSelCartera = false;
-                                        $scope.showTotales = 0;
+                                        $scope.showTotales = false;
                                         $scope.traeTotalxEmpresa.emp_nombre = 'La empresa seleccionada no tiene información';
                                     });
                             $rootScope.noLotes = data;
@@ -236,41 +152,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                             alertFactory.error('Error al obtener el Lote');
                         });
             }
-
-            $scope.traeTrasferencias = false;
-
-
-            pagoRepository.getUserTransferencia($rootScope.idUsuario)
-                .then(function successCallback(response) {
-                    if (response.data.length > 0) //mostrar boton crear lote
-                    {
-                        $scope.traeTrasferencias = true;
-
-                    }
-                    else
-                    {
-                        $scope.traeTrasferencias = false;
-                    }
-
-
-                }, function errorCallback(response) {
-                    $scope.traeTrasferencias = false;
-                });
-
-            setTimeout(function() {
-                if ($scope.traeTrasferencias) {
-                    $window.location.href = '/transferencia';
-                } else {
-                    $('#inicioModal').modal('show');
-                }
-            }, 3000);
-
-
-
-
-        };
-
-        //Fin funcion Init
+        }; //Fin funcion Init
         /////////////////////////////////////////////
         //Obtiene ID de empleado
         //LQMA
@@ -332,32 +214,15 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             //Llamada a repository para obtener data
             //LQMA 03032016
             $rootScope.showGrid = false;
-            pagoRepository.getEmpresas($rootScope.idUsuario)
+            pagoRepository.getEmpresas($scope.idUsuario)
                 .then(function successCallback(response) {
                     $scope.empresas = response.data;
-                    //
-                    $scope.showTotales = 0;
+                    $('#inicioModal').modal('show');
+                    $scope.showTotales = false;
                 }, function errorCallback(response) {
                     alertFactory.error('Error en empresas.');
                 });
-
-        }
-
-        $scope.traeTransferenciasUser = function(idUsuario) {
-
-            pagoRepository.getEmpresas($rootScope.idUsuario)
-                .then(function successCallback(response) {
-                    $scope.empresas = response.data;
-                    //
-                    $scope.showTotales = 0;
-                }, function errorCallback(response) {
-                    alertFactory.error('Error en empresas.');
-                });
-
-        }
-
-
-        // };
+        };
         //FAL 23052016 TRAE LOS PARAMETROS DE ESCENARIOS DE PAGOS.
 
         $scope.llenaParametroEscenarios = function() {
@@ -370,8 +235,10 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                     $rootScope.refpdBanco = $rootScope.escenarios.tipoRefBanco;
                     if ($rootScope.pdPlanta || $rootScope.pdBanco) {
                         $rootScope.selPagoDirecto = true;
-                    } else {
-                        $rootScope.selPagoDirecto = false;
+                    }
+                    else
+                    {
+                        $rootScope.selPagoDirecto = false; 
                     }
                 }, function errorCallback(response) {
                     alertFactory.error('Error al obtener los parametros del escenario de pagos.');
@@ -404,14 +271,13 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                 });
         };
         //FAl--Trae el total de bancos de la empresa seleccionada
-        $scope.traeTotalxEmpresa = function(emp_idempresa, emp_nombre, emp_nombrecto, rfc, tipo, pagoDirecto, monto_minimo) {
+        $scope.traeTotalxEmpresa = function(emp_idempresa, emp_nombre, emp_nombrecto, rfc, tipo, pagoDirecto) {
             $('#btnTotalxEmpresa').button('loading');
-            $scope.showTotales = 0;
+            $scope.showTotales = false;
             $scope.showSelCartera = false;
             //LQMA 14042016
             $rootScope.emp_nombrecto = emp_nombrecto;
             $rootScope.rfc = rfc;
-            $rootScope.montominimo = monto_minimo;
             pagoRepository.getTotalxEmpresa(emp_idempresa)
                 .then(function successCallback(response) {
                     $rootScope.GranTotal = 0;
@@ -423,11 +289,10 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                         i++;
                     });
                     $scope.traeTotalxEmpresa.emp_nombre = emp_nombre;
-                    $scope.showTotales = 1;
+                    $scope.showTotales = true;
                     $rootScope.tipoEmpresa = tipo;
                     $rootScope.pagoDirecto = pagoDirecto;
                     $scope.showSelCartera = true;
-                    $rootScope.buscarLotes = true;
                     $scope.ObtieneLotes(0);
                     $('#btnTotalxEmpresa').button('reset');
                     $scope.llenaParametroEscenarios();
@@ -441,11 +306,11 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                     $rootScope.GranTotal = 0;
                     $rootScope.showGrid = false;
                     $scope.showSelCartera = false;
-                    $scope.showTotales = 0;
+                    $scope.showTotales = false;
                     $scope.traeTotalxEmpresa.emp_nombre = 'La empresa seleccionada no tiene información';
                     $('#btnTotalxEmpresa').button('reset');
                 });
-
+            
         };
 
 
@@ -517,8 +382,8 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
         //         });
         // };
 
-        $scope.LlenaEgresos = function() {
-            pagoRepository.getEgresos($rootScope.idEmpresa, $scope.idLote)
+         $scope.LlenaEgresos = function() {
+            pagoRepository.getEgresos($rootScope.idEmpresa, $scope.idLote) 
                 .then(function successCallback(response) {
                     $rootScope.egresos = response.data;
                     angular.forEach($rootScope.grdBancos, function(empresa, key) {
@@ -591,144 +456,6 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             }
         }; //FIN inicia Lote
 
-        //presnto los datapickers.
-
-
-        $scope.BuscarLotes = function() {
-
-            $scope.showTotales = 2;
-
-            $scope.gridLotesoptions = {
-                enableRowSelection: true,
-                enableRowHeaderSelection: true
-                    //,rowTemplate: rowTemplate()
-            };
-
-
-
-            $scope.gridLotesoptions.columnDefs = [
-                { name: 'fecha', displayName: 'Fecha Lote', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '17%', enableCellEdit: false },
-                { name: 'nombre' },
-                { name: 'estatus' },
-                { name: 'totalPagar', displayName: 'Total a pagar', width: '15%', cellFilter: 'currency', enableCellEdit: false },
-                { name: 'buscar', displayName: '', width: '5%', cellTemplate: '<div><button class="btn btn-warning" ><span class="glyphicon glyphicon-search" ng-click="grid.appScope.ConsultaLoteObtieneBusqueda(row.entity,0,0)"></span></button></div>' },
-                { name: 'idLotePago', displayName: 'Lote', width: '20%', enableCellEdit: false, visible: false },
-            ];
-
-
-
-            $scope.gridLotesoptions.multiSelect = false;
-            $scope.gridLotesoptions.modifierKeysToMultiSelect = false;
-            $scope.gridLotesoptions.noUnselect = true;
-            $scope.gridLotesoptions.onRegisterApi = function(gridApi) {
-                $scope.gridApiLote = gridApi;
-            };
-        }
-
-        $scope.BuscarLotesxFecha = function(fechaini, fechafin) {
-
-
-            var fecha_ini = $scope.formatDate(fechaini);
-            var fecha_fin = $scope.formatDate(fechafin);
-
-            pagoRepository.getLotesxFecha($rootScope.idEmpresa, $rootScope.idUsuario, fecha_ini, fecha_fin)
-
-
-            .then(function successCallback(response) {
-                $scope.gridLotesoptions.data = response.data;
-
-                if (response.data.length == 0) {
-                    alertFactory.infoTopFull('No existen lotes para este rango de fechas');
-                }
-
-            }, function errorCallback(response) {
-                alertFactory.error('Error al obtener los datos del encabezado.');
-            });
-        }
-
-
-        $rootScope.ConsultaLoteObtieneBusqueda = function(Lote, index, esAplicacionDirecta) {
-            $scope.hidebuscando = true;
-            $('#inicioModal').modal('hide');
-            $scope.idLote = Lote.idLotePago;
-            $rootScope.grdnoPagable = 0;
-            $rootScope.idLotePadre = Lote.idLotePago;
-            $rootScope.nombreLote = Lote.nombre;
-            $rootScope.estatusLote = Lote.estatus;
-            $rootScope.NuevoLote = false;
-            if (Lote.pal_esAplicacionDirecta == 1 || esAplicacionDirecta == 1) {
-                $rootScope.pagoDirectoSeleccion = true;
-                $rootScope.selPlantaBanco = true;
-
-            } else {
-                $rootScope.pagoDirectoSeleccion = false;
-                $rootScope.selPlantaBanco = false;
-
-            }
-            if ($rootScope.estatusLote == 2) {
-                $scope.expaprobado = true;
-            } else {
-                $scope.expaprobado = false;
-            }
-
-            $scope.LlenaIngresos();
-            pagoRepository.getOtrosIngresos($scope.idLote)
-                .then(function successCallback(response) {
-                    $scope.caja = 0;
-                    $scope.cobrar = 0;
-                    if (response.data.length > 0) {
-                        $scope.caja = response.data[0].pio_caja;
-                        $scope.cobrar = response.data[0].pio_cobranzaEsperada;
-                    }
-                }, function errorCallback(response) {
-                    alertFactory.error('Error al obtener Otros Ingresos.');
-                });
-            pagoRepository.getTransferencias($scope.idLote)
-                .then(function successCallback(response) {
-                    $scope.transferencias = [];
-                    if (response.data.length > 0) {
-                        angular.forEach(response.data, function(transferencia, key) {
-                            var newTransferencia = transferencia;
-                            $scope.transferencias.push(newTransferencia);
-                        });
-                    } else {
-                        var newTransferencia = { bancoOrigen: '', bancoDestino: '', importe: 0, index: index };
-                        $scope.transferencias.push(newTransferencia);
-                    }
-                }, function errorCallback(response) {
-                    alertFactory.error('Error al obtener Transferencias.');
-                });
-            if ($rootScope.estatusLote == 0) { //LQMA 08042016 entra cuando el lote es nuevo
-                $scope.gridOptions.data = $rootScope.datosModal; //$rootScope.modalSeleccionados;
-
-                $scope.gridOptions.isRowSelectable = function(row) {
-                    if (row.entity.seleccionable == 'True') {
-                        return false;
-                    } else {
-                        return true;
-                    }
-                };
-                $scope.gridApi1.core.notifyDataChange(uiGridConstants.dataChange.OPTIONS);
-                $scope.gridApi1.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
-
-
-                $('#btnTotalxEmpresa').button('reset');
-                if ($rootScope.crearLote) {
-                    $('#inicioModal').modal('hide');
-                    $rootScope.crearLote = false;
-                }
-                //$scope.selectAll(0);
-            } else //LQMA 08042016 entra cuando se consulta un lote guardado
-                pagoRepository.getDatosAprob($scope.idLote)
-                .success(llenaLoteConsultaSuccessCallback) //LQMA 08042016.success(llenaGridSuccessCallback)
-                .error(errorCallBack);
-            setTimeout(function() {
-                $("#btnSelectAll").click(); //$scope.selectAll();
-            }, 500);
-        }
-
-
-
         $scope.IniciaLotePD = function() {
             $rootScope.crearLote = true;
             $rootScope.pagoDirectoSeleccion = true;
@@ -765,7 +492,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                 pagoRepository.getDatos($rootScope.idEmpresa)
                     .success(llenaGridSuccessCallback)
                     .error(errorCallBack);
-
+                
             } else
                 pagoRepository.getDatos($rootScope.idEmpresa)
                 .success(llenaGridSuccessCallback)
@@ -784,13 +511,12 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             $scope.noPagable = 0;
             $scope.Reprogramable = 0;
             var contador = 1;
-
+            
             $rootScope.pdPlanta = $rootScope.escenarios.Pdplanta;
             $rootScope.pdBanco = $rootScope.escenarios.Pdbanco;
             $rootScope.refPlanta = $rootScope.escenarios.TipoRefPlanta;
             $rootScope.refpdBanco = $rootScope.escenarios.tipoRefBanco;
             $rootScope.grdPagoDirecto = [];
-            $rootScope.grdPagoxvencer = [];
             var j = 0;
             var tamdata = $scope.data.length;
             for (var i = 0; i < tamdata; i++) {
@@ -802,16 +528,13 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
 
                 if ($scope.data[i].fechaPromesaPago == "1900-01-01T00:00:00") {
                     $scope.data[i].fechaPromesaPago = "";
-                    var Pagoxvencer = $scope.data[i];
-                    $rootScope.grdPagoxvencer.push(Pagoxvencer);
                 }
-
                 //FAL 23052016 dependiendo la lista de 
                 if ($rootScope.pdPlanta) {
                     if ($scope.data[i].idProveedor == 7) {
                         $scope.data[i].referencia = 'Planta';
-                        var datadirecto = $scope.data[i];
-                        $rootScope.grdPagoDirecto.push(datadirecto);
+                    var datadirecto = $scope.data[i];
+                    $rootScope.grdPagoDirecto.push(datadirecto);
                     } else {
                         $scope.data[i].referencia = '';
                     }
@@ -819,8 +542,8 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                 if ($rootScope.pdPlanta) {
                     if ($scope.data[i].idProveedor == 6) {
                         $scope.data[i].referencia = 'Financiera';
-                        var datadirecto = $scope.data[i];
-                        $rootScope.grdPagoDirecto.push(datadirecto);
+                      var datadirecto = $scope.data[i];
+                    $rootScope.grdPagoDirecto.push(datadirecto);
                     }
                 }
                 if ($rootScope.pdBanco) {
@@ -849,23 +572,25 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                 //FAL17052016 Valido si lleva numero de serie y si es de lenght = 17 lo pango en referencia.
                 $scope.carteraVencida = $scope.carteraVencida + $scope.data[i].saldo;
 
-
-
+                
+                                
             }
             $scope.noPagable = $scope.carteraVencida - $scope.cantidadTotal;
 
             //FAL 20062016 separación de cartera en caso de pago directo
 
             if ($rootScope.selPlantaBanco) {
+                
+                 $rootScope.datosModal = $rootScope.grdPagoDirecto;
 
-                $rootScope.datosModal = $rootScope.grdPagoDirecto;
-
-            } else {
-                $rootScope.datosModal = $scope.data;
+            }
+            else
+            {
+                 $rootScope.datosModal = $scope.data;
 
             }
 
-
+           
 
             var newLote = { idLotePago: '0', idEmpresa: $rootScope.idEmpresa, idUsuario: $rootScope.currentEmployee, fecha: '', nombre: $rootScope.formData.nombreLoteNuevo, estatus: 0 };
             $scope.ObtieneLotes(newLote);
@@ -887,10 +612,6 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             });
             $rootScope.blTotales = true;
             $rootScope.idOperacion = 0;
-            //FAL grid  x vencer
-
-            $rootScope.gridXvencer.data =  $rootScope.grdPagoxvencer;
-
         };
         //LQMA ADD 08042016 Cuando ya existe un lote.
         var llenaLoteConsultaSuccessCallback = function(data, status, headers, config) {
@@ -919,8 +640,6 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                 $scope.data[i].fechaPago = $scope.data[i].fechaPromesaPago;
                 if ($scope.data[i].fechaPromesaPago == "1900-01-01T00:00:00") {
                     $scope.data[i].fechaPromesaPago = "";
-                    var Pagoxvencer = $scope.data[i];
-                    $rootScope.grdPagoxvencer.push(Pagoxvencer);
                 }
                 if ($scope.data[i].seleccionable == "False") {
                     $scope.data[i].estGrid = 'Pago';
@@ -960,7 +679,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             $scope.noPagable = $scope.carteraVencida - $scope.cantidadTotal;
 
             $scope.gridOptions.data = data;
-            $rootScope.gridXvencer =  $rootScope.grdPagoxvencer;
+
             $rootScope.blTotales = false;
         };
         var setGroupValues = function(columns, rows) {
@@ -1020,7 +739,8 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                         { name: 'documento', displayName: '# Documento', width: '15%', enableCellEdit: false, headerTooltip: 'Documento # de factura del provedor', cellClass: 'cellToolTip' },
                         { name: 'ordenCompra', displayName: 'Orden de compra', width: '13%', enableCellEdit: false, cellTemplate: '<div class="urlTabla" ng-class="col.colIndex()" ><a tooltip="Ver en digitalización" class="urlTabla" href="http://192.168.20.9:3200/?id={{row.entity.ordenCompra}}&employee=' + $scope.idEmpleado + '" target="_new">{{row.entity.ordenCompra}}</a></div>' },
                         { name: 'monto', displayName: 'Monto', width: '15%', cellFilter: 'currency', enableCellEdit: false },
-                        { name: 'saldo', displayName: 'Saldo', width: '15%', cellFilter: 'currency', enableCellEdit: false }, {
+                        { name: 'saldo', displayName: 'Saldo', width: '15%', cellFilter: 'currency', enableCellEdit: false },
+                        {
                             field: 'Pagar',
                             displayName: 'Pagar (total)',
                             width: '10%',
@@ -1045,7 +765,8 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                         { name: 'facturaProveedor', width: '20%', displayName: 'Factura Proveedor', enableCellEdit: false },
                         { name: 'fechaVencimiento', displayName: 'Fecha de Vencimiento', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '17%', enableCellEdit: false },
                         { name: 'fechaRecepcion', displayName: 'Fecha Recepción', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '17%', enableCellEdit: false },
-                        { name: 'fechaFactura', displayName: 'Fecha Factura', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '17%', enableCellEdit: false }, {
+                        { name: 'fechaFactura', displayName: 'Fecha Factura', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '17%', enableCellEdit: false },
+                         {
                             field: 'saldoPorcentaje',
                             displayName: 'Porcentaje %',
                             width: '10%',
@@ -1164,8 +885,8 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                                 }
                             }
 
-                            $scope.calculaTotalOperaciones();
-                            recalculaIngresos();
+                             $scope.calculaTotalOperaciones();
+                             recalculaIngresos();
 
                         });
                         gridApi1.selection.on.rowSelectionChangedBatch($scope, function(rows) {
@@ -1206,8 +927,8 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                                 });
                             }
 
-                            $scope.calculaTotalOperaciones();
-                            recalculaIngresos();
+                          $scope.calculaTotalOperaciones();
+                          recalculaIngresos();
 
                         });
                         gridApi1.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
@@ -1274,11 +995,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                             }
                         });
                     }
-                }
-
-
-   // $rootScope.gridXvencer = $scope.gridOptions;
-                 //grid options
+                } //grid options
         }; //funcion
         //08042016FAL recorre cada nivel y selecciona los hijos
         $scope.formatDate = function(date) {
@@ -1533,9 +1250,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             }
         }
         $rootScope.ConsultaLoteObtiene = function(Lote, index, esAplicacionDirecta) {
-                //alertFactory.info('Consulta de Lote ' + index);
-
-                $scope.hidebuscando = false;
+                alertFactory.info('Consulta de Lote ' + index);
                 $scope.idLote = Lote.idLotePago;
                 $rootScope.grdnoPagable = 0;
                 $rootScope.idLotePadre = Lote.idLotePago;
@@ -1551,10 +1266,13 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                     $rootScope.selPlantaBanco = false;
 
                 }
-                if ($rootScope.estatusLote == 2) {
-                    $scope.expaprobado = true;
-                } else {
-                    $scope.expaprobado = false;
+                if ($rootScope.estatusLote == 2)
+                {
+                   $scope.expaprobado = true;
+                }
+                else
+                {
+                   $scope.expaprobado = false; 
                 }
                 //LQMA 14032016
                 if ($rootScope.accionPagina) { //LQMA 15032016: true: indica que se esta trabajando sobre la pagina para consultar data, false: consulta desde el modal
@@ -1620,7 +1338,8 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             $('#btnGuardando').button('loading');
             var negativos = 0;
             var saldo = 0;
-            if (opcion == 3) {
+            if (opcion == 3)
+            {
                 saldo = 1;
             }
             angular.forEach($rootScope.ingresos, function(ingreso, key) {
@@ -1661,9 +1380,9 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
 
             if (valor == 3) {
                 saldo = 0.01;
-
+                
             }
-
+   
             if ($rootScope.selPlantaBanco) {
                 saldo = 0.01;
             }
@@ -1681,27 +1400,10 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                     $('#btnGuardando').button('reset');
                     $('#btnAprobar').button('reset');
                 } else {
-
-
                     var EsPagoDirecto = 0;
                     if ($rootScope.selPlantaBanco) {
                         EsPagoDirecto = 1
                     }
-
-                    var pasaxegresos = true;
-                    angular.forEach($rootScope.egresos, function(egreso, key) {
-                        if (egreso.excedente < $rootScope.montominimo)
-                        {
-                            pasaxegresos = false;
-                             alertFactory.warning('Existe una cuenta con saldo menor al mínimo');
-                             $('#btnGuardando').button('reset');
-                        }
-                     });
-
-
-                    if(pasaxegresos)
-
-                    {
                     pagoRepository.getPagosPadre($rootScope.idEmpresa, $rootScope.currentEmployee, $rootScope.formData.nombreLoteNuevo, $rootScope.idLotePadre, EsPagoDirecto)
                         .then(function successCallback(response) {
                             $rootScope.idLotePadre = response.data;
@@ -1803,11 +1505,6 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                             alertFactory.error('Error al insertar en tabla padre.');
                             $('#btnguardando').button('reset');
                         });
-
-
-                        };
-
-
                 }
             } //fin else
         };
@@ -1815,8 +1512,6 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             Funciones de guardado de datos
             END
         ****************************************************************************************************************/
-       
-
         $scope.addTransferencia = function() {
             var index = $scope.transferencias.length;
             var newTransferencia = { bancoOrigen: '', bancoDestino: '', importe: 0, index: index };
@@ -1923,9 +1618,9 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                 });
             });
         }
-        $scope.calculaTotalOperaciones = function() {
+               $scope.calculaTotalOperaciones = function() {
             //$scope.egresos = [{id: 1,nombre:'HSBC', cuenta: 228139,saldo: 90000, aTransferir: 25000, total:0,excedente:0, ingreso:1, egreso:0},
-            angular.forEach($rootScope.egresos, function(egreso, keyegreso) {
+                angular.forEach($rootScope.egresos, function(egreso, keyegreso) {
                 var totalDestino = 0;
                 var montoApagara = 0;
                 angular.forEach($scope.transferencias, function(transferencia, key) {
@@ -1946,14 +1641,14 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                 egreso.aTransferir = totalDestino;
                 var sss = parseInt(egreso.ingreso);
                 var suma = (sss == 1) ? parseInt(egreso.saldoIngreso) : parseInt(egreso.saldo);
-
+                
                 egreso.total = parseInt(egreso.aTransferir) + suma;
 
                 angular.forEach($rootScope.grdBancos, function(banco, key) {
                     if (banco.banco == egreso.cuenta)
                         egreso.excedente = egreso.total - banco.subtotal;
                 });
-
+                
                 // 
                 //egreso.excedente = egreso.totalPagar - egreso.total;
                 // egreso.excedente = parseInt(egreso.total) - parseInt(egreso.totalPagar) ;
@@ -2100,15 +1795,14 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
 
         $rootScope.AbreAdministrador = function() {
             $('#closeMenu').click();
-            $window.location.href = '/loteAdmin';
+             $window.location.href = '/loteAdmin';
 
         };
 
         //FAL funciones de calendar
 
         $scope.today = function() {
-            $scope.dtini = new Date();
-            $scope.dtfin = new Date();
+            $scope.dt = new Date();
         };
         $scope.today();
 
@@ -2123,7 +1817,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
         };
 
         $scope.dateOptions = {
-            //dateDisabled: disabled,
+            dateDisabled: disabled,
             formatYear: 'yy',
             maxDate: new Date(2020, 5, 22),
             minDate: new Date(),
@@ -2156,7 +1850,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             $scope.dt = new Date(year, month, day);
         };
 
-        $scope.formats = ['dd/MM/yyyy', 'dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
+        $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
         $scope.format = $scope.formats[0];
         $scope.altInputFormats = ['M!/d!/yyyy'];
 
@@ -2221,14 +1915,6 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             $('#btnAprobar').button('loading');
             $scope.Guardar(3, valor);
         };
-
-
-       
-
-
-
-
-
     }) //LQMA fin bloque controller
 registrationModule.service('stats', function() {
     var coreAccumulate = function(aggregation, value) {

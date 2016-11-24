@@ -20,7 +20,7 @@
 
 </SCRIPT>
 <div cg-busy="myPromise" ng-init="init()" id="contentManager" resize>
-    <section id="global">
+    <section id="global" ng-hide="hidebuscando">
         <div id="tituloEmpresa">
             <h1 id="title">{{ scencabezado.empNombre }}</h1>
             <div id="nombreLote">
@@ -483,7 +483,7 @@
             <textarea class="form-control" rows="3" ng-model="formData.Observacion" placeholder="Escriba un comentario"></textarea>
         </div>
     </div>
-    <section id="accion">
+    <section id="accion" ng-hide="hidebuscando">
         <button type="button" class="btn btn-danger" ng-show="estatusLote==0" ng-click="Cancelar()">Cancelar</button>
         <button type="button" class="btn btn-primary" data-loading-text="Generando..." ng-click="GenerarArchivo()" ng-show="estatusLote == 3 && !selPlantaBanco">Generar Archivo</button>
         <button id="btnGuardando" type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="Guardar(1,0)" data-loading-text="Guardando..." autocomplete="off" ng-show="(estatusLote < 3) && (idOperacion == 0)">Guardar</button>
@@ -497,4 +497,39 @@
         <button id="btnRechazar" type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="AprobarLote(4)" data-loading-text="Rechazando..." autocomplete="off" ng-show="(idOperacion == 2) && (estatusLote == 2)">Rechazar</button>
 
     </section>
+
+<!-- Seccion 3 A vencer -->
+
+
+    <section id="filtros" > 
+        <div class="tituloBloque3" ng-hide="selPlantaBanco">
+            <span class="colText ">3.- Cartera por vencer </span>
+        </div>
+        
+        <div id="contenedor">
+            <div ui-grid="gridXvencer"  class="gridStylexvencer"></div>
+        </div>
+        
+      <!--   <table class="table">
+        <thead>
+            <tr>
+                <th>Número de Lote</th>
+                <th>Banco Origen</th>
+                <th>Banco Destino</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="vencer in grdPagoxvencer">
+                <td>{{vencer.proveedor}}</td>
+                <td>{{vencer.saldo}}</td>
+                <td>{{vencer.documento}}</td>
+            </tr>
+          </tbody>
+    </table> -->
+        
+
+    </section>
+
+
 </div>

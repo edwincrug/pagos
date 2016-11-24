@@ -5,7 +5,7 @@
 // -- Modificó: 
 // -- Fecha: 
 // -- =============================================
-registrationModule.controller("empleadoController", function ($scope, $filter, $rootScope, localStorageService, alertFactory, empleadoRepository) {
+registrationModule.controller("empleadoController", function ($scope, $filter, $rootScope, localStorageService, alertFactory, empleadoRepository, $window) {
 
     //Propiedades
    
@@ -42,13 +42,15 @@ registrationModule.controller("empleadoController", function ($scope, $filter, $
                 }
                 else{
                    alert('Inicie sesión desde panel de aplicaciones.');
-                    window.close(); 
+                   
                 }
                 
             }
         }
         //Obtengo el empleado logueado
         $rootScope.currentEmployee = localStorageService.get('lgnUser');
+
+        
     };
 
 $scope.Salir = function () {

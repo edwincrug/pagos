@@ -112,23 +112,7 @@ registrationModule.factory('pagoRepository', function($http) {
             return $http({
                 method: 'GET',
                 url: pagoUrl,
-                params: { id: '19|' + idEmpresa  }
-            });
-        },
-
-        getLotesxFecha: function(idEmpresa,idUsuario,fechaini,fechafin) {
-            return $http({
-                method: 'GET',
-                url: pagoUrl,
-                params: { id: '21|' + idEmpresa + '|' + idUsuario + '|' + fechaini + '|' + fechafin}
-            });
-        },
-
-         getUserTransferencia: function(idUsuario) {
-            return $http({
-                method: 'GET',
-                url: pagoUrl,
-                params: { id: '23|' + idUsuario }
+                params: { id: '19|' + idEmpresa }
             });
         },
 
