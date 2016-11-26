@@ -171,8 +171,15 @@ registrationModule.factory('pagoRepository', function($http) {
                     method: "POST",
                     params: { id: '7|'  + idEmpresa + '|' + idLote + '|' + idUsuario }
                 });
-            } //FAL
+            }, //FAL
 
+        getDatosxvencer: function(id) {
+            return $http({
+                method: 'GET',
+                url: pagoUrl,
+                params: { id: '24|' + id }
+            });
+        }
         //FAL
 
     };

@@ -42,7 +42,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
         $rootScope.buscarLotes = false;
         $rootScope.buscarTrasferencias = false;
         $scope.hidebuscando = false;
-        $rootScope.gridXvencer = [];
+        
         $rootScope.montominimo = 0;
 
         
@@ -72,82 +72,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             return true;
         }
 
-        $rootScope.gridXvencer = {
-                    enableColumnResize: true,
-                    enableRowSelection: true,
-                    enableGridMenu: true,
-                    enableFiltering: true,
-                    enableGroupHeaderSelection: false,
-                    treeRowHeaderAlwaysVisible: true,
-                    showColumnFooter: true,
-                    showGridFooter: true,
-                    height: 900,
-                    cellEditableCondition: function($scope) {
-                        return $scope.row.entity.seleccionable;
-                    },
-                    columnDefs: [{
-                            name: 'nombreAgrupador',
-                            grouping: { groupPriority: 0 },
-                            sort: { priority: 0, direction: 'asc' },
-                            width: '15%',
-                            displayName: 'Grupo',
-                            enableCellEdit: false
-                        }, {
-                            name: 'proveedor',
-                            grouping: { groupPriority: 1 },
-                            sort: { priority: 1, direction: 'asc' },
-                            width: '20%',
-                            name: 'proveedor',
-                            enableCellEdit: false,
-                            cellTemplate: '<div><div ng-if="!col.grouping || col.grouping.groupPriority === undefined || col.grouping.groupPriority === null || ( row.groupHeader && col.grouping.groupPriority === row.treeLevel )" class="ui-grid-cell-contents" title="TOOLTIP">{{COL_FIELD CUSTOM_FILTERS}}</div></div>'
-                        },
-                        { name: 'documento', displayName: '# Documento', width: '15%', enableCellEdit: false, headerTooltip: 'Documento # de factura del provedor', cellClass: 'cellToolTip' },
-                        { name: 'ordenCompra', displayName: 'Orden de compra', width: '13%', enableCellEdit: false, cellTemplate: '<div class="urlTabla" ng-class="col.colIndex()" ><a tooltip="Ver en digitalización" class="urlTabla" href="http://192.168.20.9:3200/?id={{row.entity.ordenCompra}}&employee=' + $scope.idEmpleado + '" target="_new">{{row.entity.ordenCompra}}</a></div>' },
-                        { name: 'monto', displayName: 'Monto', width: '15%', cellFilter: 'currency', enableCellEdit: false },
-                        { name: 'saldo', displayName: 'Saldo', width: '15%', cellFilter: 'currency', enableCellEdit: false }, {
-                            field: 'Pagar',
-                            displayName: 'Pagar (total)',
-                            width: '10%',
-                            cellFilter: 'currency',
-                            enableCellEdit: ($rootScope.currentIdOp == 1) ? false : true,
-                            editableCellTemplate: '<div><form name="inputForm"><input type="number" ng-class="\'colt\' + col.uid" ui-grid-editor ng-model="MODEL_COL_FIELD"></form></div>'
-                        },
-                        { name: 'cuentaPagadora', width: '10%', displayName: 'Banco Origen', enableCellEdit: false },
-                        { name: 'cuenta', width: '15%', displayName: '# Cuenta', enableCellEdit: false },
-                        { name: 'fechaPromesaPago', displayName: 'Fecha Promesa de Pago', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '15%' }, {
-                            name: 'referencia',
-                            displayName: 'Referencia',
-                            width: '10%',
-                            visible: true,
-                            editableCellTemplate: "<div><form name=\"inputForm\"><input type=\"INPUT_TYPE\"  ui-grid-editor ng-model=\"MODEL_COL_FIELD\"  minlength=3 maxlength=30 required><div ng-show=\"!inputForm.$valid\"><span class=\"error\">La referencia debe tener al menos 5 caracteres</span></div></form></div>"
-                        },
-                        { name: 'tipo', width: '15%', displayName: 'Tipo', enableCellEdit: false },
-                        { name: 'tipodocto', width: '15%', displayName: 'Tipo Documento', enableCellEdit: false },
-                        { name: 'cartera', width: '15%', displayName: 'Cartera', enableCellEdit: false },
-                        { name: 'moneda', width: '10%', displayName: 'Moneda', enableCellEdit: false },
-                        { name: 'numeroSerie', width: '20%', displayName: 'N Serie', enableCellEdit: false },
-                        { name: 'facturaProveedor', width: '20%', displayName: 'Factura Proveedor', enableCellEdit: false },
-                        { name: 'fechaVencimiento', displayName: 'Fecha de Vencimiento', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '17%', enableCellEdit: false },
-                        { name: 'fechaRecepcion', displayName: 'Fecha Recepción', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '17%', enableCellEdit: false },
-                        { name: 'fechaFactura', displayName: 'Fecha Factura', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '17%', enableCellEdit: false }, {
-                            field: 'saldoPorcentaje',
-                            displayName: 'Porcentaje %',
-                            width: '10%',
-                            cellFilter: 'number: 6',
-                            enableCellEdit: false
-                        },
-                        { name: 'estatus', displayName: 'Estatus', width: '10%', enableCellEdit: false },
-                        { name: 'anticipo', displayName: 'Anticipo', width: '10%', enableCellEdit: false },
-                        { name: 'anticipoAplicado', displayName: 'Anticipo Aplicado', width: '15%', enableCellEdit: false },
-                        { name: 'documentoPagable', width: '15%', displayName: 'Estatus del Documento', visible: false, enableCellEdit: false },
-                        { name: 'ordenBloqueada', displayName: 'Bloqueada', width: '20%', enableCellEdit: false },
-                        { name: 'fechaPago', displayName: 'fechaPago', width: '20%', visible: false, enableCellEdit: false },
-                        { name: 'estGrid', width: '15%', displayName: 'Estatus Grid', enableCellEdit: false },
-                        { name: 'seleccionable', displayName: 'seleccionable', width: '20%', enableCellEdit: false, visible: false },
-                        { name: 'cuentaDestino', displayName: 'Cuenta Destino', width: '20%', enableCellEdit: false },
-                        { name: 'idEstatus', displayName: 'idEstatus', width: '20%', enableCellEdit: false, visible: true },
-                        { name: 'tipoCartera', displayName: 'tipoCartera', width: '20%', enableCellEdit: false, visible: true }
-                    ]};
+        
 
         $scope.init = function() {
             $scope.caja = 0;
@@ -156,7 +81,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             /***********************************************************/
             //LQMA 14032016
             ConfiguraGrid();
-            
+            ConfiguraGridxvencer();
             $rootScope.accionPagina = false; //iniciarl el grid modal en llenagrid
             //Inicializamos el switch
             $.fn.bootstrapSwitch.defaults.offColor = 'info';
@@ -264,10 +189,6 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                     $('#inicioModal').modal('show');
                 }
             }, 3000);
-
-
-
-
         };
 
         //Fin funcion Init
@@ -581,13 +502,20 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             } else {
                 //Configura GRID ECG
                 $scope.gridOptions = null;
+                $scope.gridXvencer = null;
                 ConfiguraGrid();
+                ConfiguraGridxvencer();
+
+                $scope.llenagridxvencer($rootScope.idEmpresa);
                 //LQMA 10032016
                 $rootScope.NuevoLote = true;
                 //LQMA add 08042016
                 pagoRepository.getDatos($rootScope.idEmpresa)
                     .success(getCarteraCallback)
                     .error(errorCallBack);
+
+
+
             }
         }; //FIN inicia Lote
 
@@ -729,6 +657,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
 
 
 
+
         $scope.IniciaLotePD = function() {
             $rootScope.crearLote = true;
             $rootScope.pagoDirectoSeleccion = true;
@@ -741,6 +670,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                 //Configura GRID ECG
                 $scope.gridOptions = null;
                 ConfiguraGrid();
+                ConfiguraGridxvencer();
                 //LQMA 10032016
                 $rootScope.NuevoLote = true;
                 //LQMA add 08042016
@@ -802,8 +732,6 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
 
                 if ($scope.data[i].fechaPromesaPago == "1900-01-01T00:00:00") {
                     $scope.data[i].fechaPromesaPago = "";
-                    var Pagoxvencer = $scope.data[i];
-                    $rootScope.grdPagoxvencer.push(Pagoxvencer);
                 }
 
                 //FAL 23052016 dependiendo la lista de 
@@ -849,6 +777,27 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                 //FAL17052016 Valido si lleva numero de serie y si es de lenght = 17 lo pango en referencia.
                 $scope.carteraVencida = $scope.carteraVencida + $scope.data[i].saldo;
 
+            $scope.llenagridxvencer = function(idempresa)
+            {
+
+                setTimeout(function() {
+
+            pagoRepository.getDatosxvencer(idempresa)
+                .then(function successCallback(response) {
+
+                        $scope.gridXvencer.data = response.data;
+
+                        }, function errorCallback(response) {
+                            
+                         $scope.gridXvencer.data = [];
+
+                        });
+
+
+                    }, 500);
+
+
+            }    
 
 
             }
@@ -889,7 +838,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             $rootScope.idOperacion = 0;
             //FAL grid  x vencer
 
-            $rootScope.gridXvencer.data =  $rootScope.grdPagoxvencer;
+            
 
         };
         //LQMA ADD 08042016 Cuando ya existe un lote.
@@ -897,7 +846,10 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             $rootScope.grdBancos = [];
             $rootScope.grdApagar = 0;
             if ($scope.gridOptions == null)
-                ConfiguraGrid();
+            
+            ConfiguraGrid();
+            ConfiguraGridxvencer();
+
             $scope.gridOptions.data = null;
             $scope.gridOptions.data = data;
             $scope.data = data;
@@ -960,7 +912,6 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             $scope.noPagable = $scope.carteraVencida - $scope.cantidadTotal;
 
             $scope.gridOptions.data = data;
-            $rootScope.gridXvencer =  $rootScope.grdPagoxvencer;
             $rootScope.blTotales = false;
         };
         var setGroupValues = function(columns, rows) {
@@ -1374,6 +1325,91 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
 
         //FAL 06052016 funcion para tratar los escenarios en la edición del lote.
 
+        //FAL configuracion grid x vencer
+        var ConfiguraGridxvencer = function() {
+
+            $scope.gridXvencer = {
+                    enableColumnResize: true,
+                    enableRowSelection: true,
+                    enableGridMenu: true,
+                    enableFiltering: true,
+                    enableGroupHeaderSelection: false,
+                    treeRowHeaderAlwaysVisible: true,
+                    showColumnFooter: true,
+                    showGridFooter: true,
+                    height: 900,
+                    cellEditableCondition: function($scope) {
+                        return $scope.row.entity.seleccionable;
+                    },
+                    columnDefs: [{
+                            name: 'nombreAgrupador',
+                            grouping: { groupPriority: 0 },
+                            sort: { priority: 0, direction: 'asc' },
+                            width: '15%',
+                            displayName: 'Grupo',
+                            enableCellEdit: false
+                        }, {
+                            name: 'proveedor',
+                            grouping: { groupPriority: 1 },
+                            sort: { priority: 1, direction: 'asc' },
+                            width: '20%',
+                            name: 'proveedor',
+                            enableCellEdit: false,
+                            cellTemplate: '<div><div ng-if="!col.grouping || col.grouping.groupPriority === undefined || col.grouping.groupPriority === null || ( row.groupHeader && col.grouping.groupPriority === row.treeLevel )" class="ui-grid-cell-contents" title="TOOLTIP">{{COL_FIELD CUSTOM_FILTERS}}</div></div>'
+                        },
+                        { name: 'documento', displayName: '# Documento', width: '15%', enableCellEdit: false, headerTooltip: 'Documento # de factura del provedor', cellClass: 'cellToolTip' },
+                        { name: 'ordenCompra', displayName: 'Orden de compra', width: '13%', enableCellEdit: false, cellTemplate: '<div class="urlTabla" ng-class="col.colIndex()" ><a tooltip="Ver en digitalización" class="urlTabla" href="http://192.168.20.9:3200/?id={{row.entity.ordenCompra}}&employee=' + $scope.idEmpleado + '" target="_new">{{row.entity.ordenCompra}}</a></div>' },
+                        { name: 'monto', displayName: 'Monto', width: '15%', cellFilter: 'currency', enableCellEdit: false },
+                        { name: 'saldo', displayName: 'Saldo', width: '15%', cellFilter: 'currency', enableCellEdit: false }, {
+                            field: 'Pagar',
+                            displayName: 'Pagar (total)',
+                            width: '10%',
+                            cellFilter: 'currency',
+                            enableCellEdit: ($rootScope.currentIdOp == 1) ? false : true,
+                            editableCellTemplate: '<div><form name="inputForm"><input type="number" ng-class="\'colt\' + col.uid" ui-grid-editor ng-model="MODEL_COL_FIELD"></form></div>'
+                        },
+                        { name: 'cuentaPagadora', width: '10%', displayName: 'Banco Origen', enableCellEdit: false },
+                        { name: 'cuenta', width: '15%', displayName: '# Cuenta', enableCellEdit: false },
+                        { name: 'fechaPromesaPago', displayName: 'Fecha Promesa de Pago', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '15%' }, {
+                            name: 'referencia',
+                            displayName: 'Referencia',
+                            width: '10%',
+                            visible: true,
+                            editableCellTemplate: "<div><form name=\"inputForm\"><input type=\"INPUT_TYPE\"  ui-grid-editor ng-model=\"MODEL_COL_FIELD\"  minlength=3 maxlength=30 required><div ng-show=\"!inputForm.$valid\"><span class=\"error\">La referencia debe tener al menos 5 caracteres</span></div></form></div>"
+                        },
+                        { name: 'tipo', width: '15%', displayName: 'Tipo', enableCellEdit: false },
+                        { name: 'tipodocto', width: '15%', displayName: 'Tipo Documento', enableCellEdit: false },
+                        { name: 'cartera', width: '15%', displayName: 'Cartera', enableCellEdit: false },
+                        { name: 'moneda', width: '10%', displayName: 'Moneda', enableCellEdit: false },
+                        { name: 'numeroSerie', width: '20%', displayName: 'N Serie', enableCellEdit: false },
+                        { name: 'facturaProveedor', width: '20%', displayName: 'Factura Proveedor', enableCellEdit: false },
+                        { name: 'fechaVencimiento', displayName: 'Fecha de Vencimiento', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '17%', enableCellEdit: false },
+                        { name: 'fechaRecepcion', displayName: 'Fecha Recepción', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '17%', enableCellEdit: false },
+                        { name: 'fechaFactura', displayName: 'Fecha Factura', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '17%', enableCellEdit: false }, {
+                            field: 'saldoPorcentaje',
+                            displayName: 'Porcentaje %',
+                            width: '10%',
+                            cellFilter: 'number: 6',
+                            enableCellEdit: false
+                        },
+                        { name: 'estatus', displayName: 'Estatus', width: '10%', enableCellEdit: false },
+                        { name: 'anticipo', displayName: 'Anticipo', width: '10%', enableCellEdit: false },
+                        { name: 'anticipoAplicado', displayName: 'Anticipo Aplicado', width: '15%', enableCellEdit: false },
+                        { name: 'documentoPagable', width: '15%', displayName: 'Estatus del Documento', visible: false, enableCellEdit: false },
+                        { name: 'ordenBloqueada', displayName: 'Bloqueada', width: '20%', enableCellEdit: false },
+                        { name: 'fechaPago', displayName: 'fechaPago', width: '20%', visible: false, enableCellEdit: false },
+                        { name: 'estGrid', width: '15%', displayName: 'Estatus Grid', enableCellEdit: false },
+                        { name: 'seleccionable', displayName: 'seleccionable', width: '20%', enableCellEdit: false, visible: false },
+                        { name: 'cuentaDestino', displayName: 'Cuenta Destino', width: '20%', enableCellEdit: false },
+                        { name: 'idEstatus', displayName: 'idEstatus', width: '20%', enableCellEdit: false, visible: true },
+                        { name: 'tipoCartera', displayName: 'tipoCartera', width: '20%', enableCellEdit: false, visible: true }
+                    ]};
+
+                   
+                    
+
+        }
+
         $scope.proPegaReferencia = function(proceso, pegaReferencia) {
             switch (proceso) {
                 case 1:
@@ -1603,6 +1639,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                         if ($rootScope.crearLote) {
                             $('#inicioModal').modal('hide');
                             $rootScope.crearLote = false;
+
                         }
                         //$scope.selectAll(0);
                     } else //LQMA 08042016 entra cuando se consulta un lote guardado
@@ -2221,14 +2258,6 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             $('#btnAprobar').button('loading');
             $scope.Guardar(3, valor);
         };
-
-
-       
-
-
-
-
-
     }) //LQMA fin bloque controller
 registrationModule.service('stats', function() {
     var coreAccumulate = function(aggregation, value) {

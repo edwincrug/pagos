@@ -619,6 +619,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             $rootScope.grdApagar = 0;
             if ($scope.gridOptions == null)
                 ConfiguraGrid();
+
             $scope.gridOptions.data = null;
             $scope.gridOptions.data = data;
             $scope.data = data;
@@ -679,6 +680,10 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             $scope.noPagable = $scope.carteraVencida - $scope.cantidadTotal;
 
             $scope.gridOptions.data = data;
+
+             ConfiguraGridxvencer();
+
+            $scope.llenagridxvencer($rootScope.idEmpresa);
 
             $rootScope.blTotales = false;
         };
