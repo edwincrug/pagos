@@ -5,7 +5,7 @@
 // -- Modificó:
 // -- Fecha:
 // -- =============================================
-registrationModule.controller("pagoController", function($scope, $http, $interval, uiGridGroupingConstants, uiGridConstants, $filter, $rootScope, localStorageService, alertFactory, pagoRepository, stats, $window) {
+registrationModule.controller("pagoController", function($scope, $http, $interval, uiGridGroupingConstants, uiGridConstants, $filter, $rootScope, localStorageService, alertFactory, pagoRepository, stats, $window, $routeParams) {
 
         //$scope.idCuenta = 4;
         $rootScope.idUsuario = 15;
@@ -42,11 +42,11 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
         $rootScope.buscarLotes = false;
         $rootScope.buscarTrasferencias = false;
         $scope.hidebuscando = false;
-        
+
         $rootScope.montominimo = 0;
 
-        
-        
+
+
         var errorCallBack = function(data, status, headers, config) {
             alertFactory.error('Ocurrio un problema');
         };
@@ -72,7 +72,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             return true;
         }
 
-        
+
 
         $scope.init = function() {
             $scope.caja = 0;
@@ -104,10 +104,11 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             }
             /********************/
 
-            if (getParameterByName('transfer') != '') {
-                console.log("hola estoy llegando desde otro lado");
+            if ($routeParams.idLote != '') {
 
-            return;
+                var idLote = $routeParams.idLote;
+                $scope.ConsultaLoteObtieneBusqueda(idLote, 0, 0);
+                return;
             }
 
             /***********************************************************/
@@ -178,9 +179,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                     {
                         $scope.traeTrasferencias = true;
 
-                    }
-                    else
-                    {
+                    } else {
                         $scope.traeTrasferencias = false;
                     }
 
@@ -784,27 +783,26 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                 //FAL17052016 Valido si lleva numero de serie y si es de lenght = 17 lo pango en referencia.
                 $scope.carteraVencida = $scope.carteraVencida + $scope.data[i].saldo;
 
-            $scope.llenagridxvencer = function(idempresa)
-            {
+                $scope.llenagridxvencer = function(idempresa) {
 
-                setTimeout(function() {
+                    setTimeout(function() {
 
-            pagoRepository.getDatosxvencer(idempresa)
-                .then(function successCallback(response) {
+                        pagoRepository.getDatosxvencer(idempresa)
+                            .then(function successCallback(response) {
 
-                        $scope.gridXvencer.data = response.data;
+                                $scope.gridXvencer.data = response.data;
 
-                        }, function errorCallback(response) {
-                            
-                         $scope.gridXvencer.data = [];
+                            }, function errorCallback(response) {
 
-                        });
+                                $scope.gridXvencer.data = [];
+
+                            });
 
 
                     }, 500);
 
 
-            }    
+                }
 
 
             }
@@ -845,7 +843,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             $rootScope.idOperacion = 0;
             //FAL grid  x vencer
 
-            
+
 
         };
         //LQMA ADD 08042016 Cuando ya existe un lote.
@@ -853,8 +851,8 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             $rootScope.grdBancos = [];
             $rootScope.grdApagar = 0;
             if ($scope.gridOptions == null)
-            
-            ConfiguraGrid();
+
+                ConfiguraGrid();
             ConfiguraGridxvencer();
 
             $scope.gridOptions.data = null;
@@ -947,296 +945,296 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
 
             $scope.idEmpleado = $rootScope.currentEmployee;
             $scope.gridOptions = {
-                    enableColumnResize: true,
-                    enableRowSelection: true,
-                    enableGridMenu: true,
-                    enableFiltering: true,
-                    enableGroupHeaderSelection: false,
-                    treeRowHeaderAlwaysVisible: true,
-                    showColumnFooter: true,
-                    showGridFooter: true,
-                    height: 900,
-                    cellEditableCondition: function($scope) {
-                        return $scope.row.entity.seleccionable;
+                enableColumnResize: true,
+                enableRowSelection: true,
+                enableGridMenu: true,
+                enableFiltering: true,
+                enableGroupHeaderSelection: false,
+                treeRowHeaderAlwaysVisible: true,
+                showColumnFooter: true,
+                showGridFooter: true,
+                height: 900,
+                cellEditableCondition: function($scope) {
+                    return $scope.row.entity.seleccionable;
+                },
+                columnDefs: [{
+                        name: 'nombreAgrupador',
+                        grouping: { groupPriority: 0 },
+                        sort: { priority: 0, direction: 'asc' },
+                        width: '15%',
+                        displayName: 'Grupo',
+                        enableCellEdit: false
+                    }, {
+                        name: 'proveedor',
+                        grouping: { groupPriority: 1 },
+                        sort: { priority: 1, direction: 'asc' },
+                        width: '20%',
+                        name: 'proveedor',
+                        enableCellEdit: false,
+                        cellTemplate: '<div><div ng-if="!col.grouping || col.grouping.groupPriority === undefined || col.grouping.groupPriority === null || ( row.groupHeader && col.grouping.groupPriority === row.treeLevel )" class="ui-grid-cell-contents" title="TOOLTIP">{{COL_FIELD CUSTOM_FILTERS}}</div></div>'
                     },
-                    columnDefs: [{
-                            name: 'nombreAgrupador',
-                            grouping: { groupPriority: 0 },
-                            sort: { priority: 0, direction: 'asc' },
-                            width: '15%',
-                            displayName: 'Grupo',
-                            enableCellEdit: false
-                        }, {
-                            name: 'proveedor',
-                            grouping: { groupPriority: 1 },
-                            sort: { priority: 1, direction: 'asc' },
-                            width: '20%',
-                            name: 'proveedor',
-                            enableCellEdit: false,
-                            cellTemplate: '<div><div ng-if="!col.grouping || col.grouping.groupPriority === undefined || col.grouping.groupPriority === null || ( row.groupHeader && col.grouping.groupPriority === row.treeLevel )" class="ui-grid-cell-contents" title="TOOLTIP">{{COL_FIELD CUSTOM_FILTERS}}</div></div>'
-                        },
-                        { name: 'documento', displayName: '# Documento', width: '15%', enableCellEdit: false, headerTooltip: 'Documento # de factura del provedor', cellClass: 'cellToolTip' },
-                        { name: 'ordenCompra', displayName: 'Orden de compra', width: '13%', enableCellEdit: false, cellTemplate: '<div class="urlTabla" ng-class="col.colIndex()" ><a tooltip="Ver en digitalización" class="urlTabla" href="http://192.168.20.9:3200/?id={{row.entity.ordenCompra}}&employee=' + $scope.idEmpleado + '" target="_new">{{row.entity.ordenCompra}}</a></div>' },
-                        { name: 'monto', displayName: 'Monto', width: '15%', cellFilter: 'currency', enableCellEdit: false },
-                        { name: 'saldo', displayName: 'Saldo', width: '15%', cellFilter: 'currency', enableCellEdit: false }, {
-                            field: 'Pagar',
-                            displayName: 'Pagar (total)',
-                            width: '10%',
-                            cellFilter: 'currency',
-                            enableCellEdit: ($rootScope.currentIdOp == 1) ? false : true,
-                            editableCellTemplate: '<div><form name="inputForm"><input type="number" ng-class="\'colt\' + col.uid" ui-grid-editor ng-model="MODEL_COL_FIELD"></form></div>'
-                        },
-                        { name: 'cuentaPagadora', width: '10%', displayName: 'Banco Origen', enableCellEdit: false },
-                        { name: 'cuenta', width: '15%', displayName: '# Cuenta', enableCellEdit: false },
-                        { name: 'fechaPromesaPago', displayName: 'Fecha Promesa de Pago', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '15%' }, {
-                            name: 'referencia',
-                            displayName: 'Referencia',
-                            width: '10%',
-                            visible: true,
-                            editableCellTemplate: "<div><form name=\"inputForm\"><input type=\"INPUT_TYPE\"  ui-grid-editor ng-model=\"MODEL_COL_FIELD\"  minlength=3 maxlength=30 required><div ng-show=\"!inputForm.$valid\"><span class=\"error\">La referencia debe tener al menos 5 caracteres</span></div></form></div>"
-                        },
-                        { name: 'tipo', width: '15%', displayName: 'Tipo', enableCellEdit: false },
-                        { name: 'tipodocto', width: '15%', displayName: 'Tipo Documento', enableCellEdit: false },
-                        { name: 'cartera', width: '15%', displayName: 'Cartera', enableCellEdit: false },
-                        { name: 'moneda', width: '10%', displayName: 'Moneda', enableCellEdit: false },
-                        { name: 'numeroSerie', width: '20%', displayName: 'N Serie', enableCellEdit: false },
-                        { name: 'facturaProveedor', width: '20%', displayName: 'Factura Proveedor', enableCellEdit: false },
-                        { name: 'fechaVencimiento', displayName: 'Fecha de Vencimiento', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '17%', enableCellEdit: false },
-                        { name: 'fechaRecepcion', displayName: 'Fecha Recepción', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '17%', enableCellEdit: false },
-                        { name: 'fechaFactura', displayName: 'Fecha Factura', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '17%', enableCellEdit: false }, {
-                            field: 'saldoPorcentaje',
-                            displayName: 'Porcentaje %',
-                            width: '10%',
-                            cellFilter: 'number: 6',
-                            enableCellEdit: false
-                        },
-                        { name: 'estatus', displayName: 'Estatus', width: '10%', enableCellEdit: false },
-                        { name: 'anticipo', displayName: 'Anticipo', width: '10%', enableCellEdit: false },
-                        { name: 'anticipoAplicado', displayName: 'Anticipo Aplicado', width: '15%', enableCellEdit: false },
-                        { name: 'documentoPagable', width: '15%', displayName: 'Estatus del Documento', visible: false, enableCellEdit: false },
-                        { name: 'ordenBloqueada', displayName: 'Bloqueada', width: '20%', enableCellEdit: false },
-                        { name: 'fechaPago', displayName: 'fechaPago', width: '20%', visible: false, enableCellEdit: false },
-                        { name: 'estGrid', width: '15%', displayName: 'Estatus Grid', enableCellEdit: false },
-                        { name: 'seleccionable', displayName: 'seleccionable', width: '20%', enableCellEdit: false, visible: false },
-                        { name: 'cuentaDestino', displayName: 'Cuenta Destino', width: '20%', enableCellEdit: false },
-                        { name: 'idEstatus', displayName: 'idEstatus', width: '20%', enableCellEdit: false, visible: true },
-                        { name: 'tipoCartera', displayName: 'tipoCartera', width: '20%', enableCellEdit: false, visible: true }
-                    ],
+                    { name: 'documento', displayName: '# Documento', width: '15%', enableCellEdit: false, headerTooltip: 'Documento # de factura del provedor', cellClass: 'cellToolTip' },
+                    { name: 'ordenCompra', displayName: 'Orden de compra', width: '13%', enableCellEdit: false, cellTemplate: '<div class="urlTabla" ng-class="col.colIndex()" ><a tooltip="Ver en digitalización" class="urlTabla" href="http://192.168.20.9:3200/?id={{row.entity.ordenCompra}}&employee=' + $scope.idEmpleado + '" target="_new">{{row.entity.ordenCompra}}</a></div>' },
+                    { name: 'monto', displayName: 'Monto', width: '15%', cellFilter: 'currency', enableCellEdit: false },
+                    { name: 'saldo', displayName: 'Saldo', width: '15%', cellFilter: 'currency', enableCellEdit: false }, {
+                        field: 'Pagar',
+                        displayName: 'Pagar (total)',
+                        width: '10%',
+                        cellFilter: 'currency',
+                        enableCellEdit: ($rootScope.currentIdOp == 1) ? false : true,
+                        editableCellTemplate: '<div><form name="inputForm"><input type="number" ng-class="\'colt\' + col.uid" ui-grid-editor ng-model="MODEL_COL_FIELD"></form></div>'
+                    },
+                    { name: 'cuentaPagadora', width: '10%', displayName: 'Banco Origen', enableCellEdit: false },
+                    { name: 'cuenta', width: '15%', displayName: '# Cuenta', enableCellEdit: false },
+                    { name: 'fechaPromesaPago', displayName: 'Fecha Promesa de Pago', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '15%' }, {
+                        name: 'referencia',
+                        displayName: 'Referencia',
+                        width: '10%',
+                        visible: true,
+                        editableCellTemplate: "<div><form name=\"inputForm\"><input type=\"INPUT_TYPE\"  ui-grid-editor ng-model=\"MODEL_COL_FIELD\"  minlength=3 maxlength=30 required><div ng-show=\"!inputForm.$valid\"><span class=\"error\">La referencia debe tener al menos 5 caracteres</span></div></form></div>"
+                    },
+                    { name: 'tipo', width: '15%', displayName: 'Tipo', enableCellEdit: false },
+                    { name: 'tipodocto', width: '15%', displayName: 'Tipo Documento', enableCellEdit: false },
+                    { name: 'cartera', width: '15%', displayName: 'Cartera', enableCellEdit: false },
+                    { name: 'moneda', width: '10%', displayName: 'Moneda', enableCellEdit: false },
+                    { name: 'numeroSerie', width: '20%', displayName: 'N Serie', enableCellEdit: false },
+                    { name: 'facturaProveedor', width: '20%', displayName: 'Factura Proveedor', enableCellEdit: false },
+                    { name: 'fechaVencimiento', displayName: 'Fecha de Vencimiento', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '17%', enableCellEdit: false },
+                    { name: 'fechaRecepcion', displayName: 'Fecha Recepción', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '17%', enableCellEdit: false },
+                    { name: 'fechaFactura', displayName: 'Fecha Factura', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '17%', enableCellEdit: false }, {
+                        field: 'saldoPorcentaje',
+                        displayName: 'Porcentaje %',
+                        width: '10%',
+                        cellFilter: 'number: 6',
+                        enableCellEdit: false
+                    },
+                    { name: 'estatus', displayName: 'Estatus', width: '10%', enableCellEdit: false },
+                    { name: 'anticipo', displayName: 'Anticipo', width: '10%', enableCellEdit: false },
+                    { name: 'anticipoAplicado', displayName: 'Anticipo Aplicado', width: '15%', enableCellEdit: false },
+                    { name: 'documentoPagable', width: '15%', displayName: 'Estatus del Documento', visible: false, enableCellEdit: false },
+                    { name: 'ordenBloqueada', displayName: 'Bloqueada', width: '20%', enableCellEdit: false },
+                    { name: 'fechaPago', displayName: 'fechaPago', width: '20%', visible: false, enableCellEdit: false },
+                    { name: 'estGrid', width: '15%', displayName: 'Estatus Grid', enableCellEdit: false },
+                    { name: 'seleccionable', displayName: 'seleccionable', width: '20%', enableCellEdit: false, visible: false },
+                    { name: 'cuentaDestino', displayName: 'Cuenta Destino', width: '20%', enableCellEdit: false },
+                    { name: 'idEstatus', displayName: 'idEstatus', width: '20%', enableCellEdit: false, visible: true },
+                    { name: 'tipoCartera', displayName: 'tipoCartera', width: '20%', enableCellEdit: false, visible: true }
+                ],
 
-                    rowTemplate: '<div ng-class="{\'ordenBloqueada\':(row.entity.ordenBloqueada==\'True\' && ((row.entity.idEstatus < 1 || row.entity.idEstatus > 5) && row.entity.idEstatus != 20) && !row.isSelected)' +
-                        ',\'bloqueadaSelec\': (row.isSelected && row.entity.ordenBloqueada==\'True\') || (row.isSelected && ((row.entity.idEstatus >= 1 && row.entity.idEstatus <= 5) || row.entity.idEstatus == 20)),' +
-                        '\'bancocss\': (row.entity.referencia==\'Banco\'),' +
-                        '\'plantacss\': (row.entity.referencia==\'Planta\'),' +
-                        '\'selectNormal\': (row.isSelected && row.entity.ordenBloqueada==\'False\' && ((row.entity.idEstatus < 1 || row.entity.idEstatus > 5) && row.entity.idEstatus != 20))' +
-                        ',\'docIncompletos\': (!row.isSelected && ((row.entity.idEstatus >= 1 && row.entity.idEstatus <= 5) || row.entity.idEstatus == 20) && row.entity.ordenBloqueada==\'False\')' +
-                        ',\'bloqDocIncom\': (!row.isSelected && ((row.entity.idEstatus >= 1 && row.entity.idEstatus <= 5) || row.entity.idEstatus == 20) && row.entity.ordenBloqueada==\'True\')' +
-                        ',\'ordenBloqueada\':(row.entity.ordenBloqueada==\'True\' && ((row.entity.idEstatus < 1 || row.entity.idEstatus > 5) && row.entity.idEstatus != 20) && !row.isSelected)' +
-                        '}"> <div ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader == \'True\'}" ui-grid-cell></div></div>',
+                rowTemplate: '<div ng-class="{\'ordenBloqueada\':(row.entity.ordenBloqueada==\'True\' && ((row.entity.idEstatus < 1 || row.entity.idEstatus > 5) && row.entity.idEstatus != 20) && !row.isSelected)' +
+                    ',\'bloqueadaSelec\': (row.isSelected && row.entity.ordenBloqueada==\'True\') || (row.isSelected && ((row.entity.idEstatus >= 1 && row.entity.idEstatus <= 5) || row.entity.idEstatus == 20)),' +
+                    '\'bancocss\': (row.entity.referencia==\'Banco\'),' +
+                    '\'plantacss\': (row.entity.referencia==\'Planta\'),' +
+                    '\'selectNormal\': (row.isSelected && row.entity.ordenBloqueada==\'False\' && ((row.entity.idEstatus < 1 || row.entity.idEstatus > 5) && row.entity.idEstatus != 20))' +
+                    ',\'docIncompletos\': (!row.isSelected && ((row.entity.idEstatus >= 1 && row.entity.idEstatus <= 5) || row.entity.idEstatus == 20) && row.entity.ordenBloqueada==\'False\')' +
+                    ',\'bloqDocIncom\': (!row.isSelected && ((row.entity.idEstatus >= 1 && row.entity.idEstatus <= 5) || row.entity.idEstatus == 20) && row.entity.ordenBloqueada==\'True\')' +
+                    ',\'ordenBloqueada\':(row.entity.ordenBloqueada==\'True\' && ((row.entity.idEstatus < 1 || row.entity.idEstatus > 5) && row.entity.idEstatus != 20) && !row.isSelected)' +
+                    '}"> <div ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader == \'True\'}" ui-grid-cell></div></div>',
 
-                    onRegisterApi: function(gridApi1) {
-                        $scope.gridApi1 = gridApi1;
-                        //FAL14042016 Marcado de grupos y proveedores
-                        gridApi1.selection.on.rowSelectionChanged($scope, function(row, rows) {
-                            if (row.internalRow == true && row.isSelected == true) {
-                                var childRows = row.treeNode.children;
-                                for (var j = 0, length = childRows.length; j < length; j++) {
-                                    $scope.selectAllChildren(gridApi1, childRows[j]);
+                onRegisterApi: function(gridApi1) {
+                    $scope.gridApi1 = gridApi1;
+                    //FAL14042016 Marcado de grupos y proveedores
+                    gridApi1.selection.on.rowSelectionChanged($scope, function(row, rows) {
+                        if (row.internalRow == true && row.isSelected == true) {
+                            var childRows = row.treeNode.children;
+                            for (var j = 0, length = childRows.length; j < length; j++) {
+                                $scope.selectAllChildren(gridApi1, childRows[j]);
+                            }
+                        }
+                        if (row.internalRow == true && row.isSelected == false) {
+                            var childRows = row.treeNode.children;
+                            for (var j = 0, length = childRows.length; j < length; j++) {
+                                $scope.unSelectAllChildren(gridApi1, childRows[j]);
+                            }
+                        }
+                        if (row.internalRow == undefined && row.isSelected == true && row.entity.seleccionable == "False") {
+                            var childRows = row.treeNode.parentRow.treeNode.children;
+                            var numchilds = row.treeNode.parentRow.treeNode.aggregations[0].value;
+                            var ctdSeleccionados = 0;
+                            for (var j = 0; j < numchilds; j++) {
+                                if (childRows[j].row.isSelected == true) {
+                                    ctdSeleccionados = ctdSeleccionados + 1;
+                                }
+                                if (ctdSeleccionados == numchilds) {
+                                    id = "closeMenu"
+                                    row.treeNode.parentRow.treeNode.row.isSelected = true;
                                 }
                             }
-                            if (row.internalRow == true && row.isSelected == false) {
-                                var childRows = row.treeNode.children;
-                                for (var j = 0, length = childRows.length; j < length; j++) {
-                                    $scope.unSelectAllChildren(gridApi1, childRows[j]);
+                        }
+                        if (row.internalRow == undefined && row.isSelected == false) {
+                            var childRows = row.treeNode.parentRow.treeNode.children;
+                            var numchildRows = row.treeNode.parentRow.treeNode.aggregations[0].value;
+                            var ctdSeleccionados = 0;
+                            for (var j = 0; j < numchildRows; j++) {
+                                if (childRows[j].row.isSelected == true) {
+                                    ctdSeleccionados = ctdSeleccionados + 1;
+                                }
+                                if (ctdSeleccionados > 0) {
+                                    j = numchildRows;
+                                    row.treeNode.parentRow.treeNode.row.isSelected = false;
+                                    row.treeNode.parentRow.treeNode.parentRow.treeNode.row.isSelected = false;
                                 }
                             }
-                            if (row.internalRow == undefined && row.isSelected == true && row.entity.seleccionable == "False") {
-                                var childRows = row.treeNode.parentRow.treeNode.children;
-                                var numchilds = row.treeNode.parentRow.treeNode.aggregations[0].value;
-                                var ctdSeleccionados = 0;
-                                for (var j = 0; j < numchilds; j++) {
-                                    if (childRows[j].row.isSelected == true) {
-                                        ctdSeleccionados = ctdSeleccionados + 1;
-                                    }
-                                    if (ctdSeleccionados == numchilds) {
-                                        id = "closeMenu"
-                                        row.treeNode.parentRow.treeNode.row.isSelected = true;
-                                    }
-                                }
-                            }
-                            if (row.internalRow == undefined && row.isSelected == false) {
-                                var childRows = row.treeNode.parentRow.treeNode.children;
-                                var numchildRows = row.treeNode.parentRow.treeNode.aggregations[0].value;
-                                var ctdSeleccionados = 0;
-                                for (var j = 0; j < numchildRows; j++) {
-                                    if (childRows[j].row.isSelected == true) {
-                                        ctdSeleccionados = ctdSeleccionados + 1;
-                                    }
-                                    if (ctdSeleccionados > 0) {
-                                        j = numchildRows;
-                                        row.treeNode.parentRow.treeNode.row.isSelected = false;
-                                        row.treeNode.parentRow.treeNode.parentRow.treeNode.row.isSelected = false;
-                                    }
-                                }
-                            }
-                            //FAL seleccionado de padres sin afectar las sumas
-                            if (row.entity.Pagar == null) {
-                                var grdPagarxdocumento = 0
-                            } else {
-                                grdPagarxdocumento = row.entity.Pagar;
-                            }
-                            if (row.isSelected) {
-                                $rootScope.grdNoIncluido = Math.round($rootScope.grdNoIncluido * 100) / 100 - Math.round(grdPagarxdocumento * 100) / 100;
-                                if ($rootScope.grdNoIncluido < 0) { $rootScope.grdNoIncluido = 0; }
-                                //FAL actualizar cuenta pagadoras
-                                if ($scope.grdinicia > 0) {
-                                    i = 0;
-                                    if (row.entity.estGrid == 'Pago Reprogramado') {
-                                        $rootScope.grdReprogramado = Math.round($rootScope.grdReprogramado * 100) / 100 - Math.round(row.entity.Pagar * 100) / 100;
-                                    };
-                                    $rootScope.grdBancos.forEach(function(banco, subtotal) {
-                                        if (row.entity.cuentaPagadora == $rootScope.grdBancos[i].banco) {
-                                            $rootScope.grdBancos[i].subtotal = Math.round($rootScope.grdBancos[i].subtotal * 100) / 100 + Math.round(grdPagarxdocumento * 100) / 100;
-                                            $rootScope.grdApagar = $rootScope.grdApagar + row.entity.Pagar;
-                                            row.entity.estGrid = 'Pago'
-                                        }
-                                        i++;
-                                    });
-                                }
-                            } else {
-                                $rootScope.grdNoIncluido = Math.round($rootScope.grdNoIncluido * 100) / 100 + Math.round(grdPagarxdocumento * 100) / 100;
-                                //FAL actualizar cuenta pagadoras
+                        }
+                        //FAL seleccionado de padres sin afectar las sumas
+                        if (row.entity.Pagar == null) {
+                            var grdPagarxdocumento = 0
+                        } else {
+                            grdPagarxdocumento = row.entity.Pagar;
+                        }
+                        if (row.isSelected) {
+                            $rootScope.grdNoIncluido = Math.round($rootScope.grdNoIncluido * 100) / 100 - Math.round(grdPagarxdocumento * 100) / 100;
+                            if ($rootScope.grdNoIncluido < 0) { $rootScope.grdNoIncluido = 0; }
+                            //FAL actualizar cuenta pagadoras
+                            if ($scope.grdinicia > 0) {
                                 i = 0;
-                                if ($scope.grdinicia > 0) {
-                                    $rootScope.grdBancos.forEach(function(banco, subtotal) {
-                                        if (row.entity.cuentaPagadora == $rootScope.grdBancos[i].banco) {
-                                            $rootScope.grdBancos[i].subtotal = Math.round($rootScope.grdBancos[i].subtotal * 100) / 100 - Math.round(grdPagarxdocumento * 100) / 100;
-                                            $rootScope.grdApagar = $rootScope.grdApagar - row.entity.Pagar;
-                                            if (row.entity.estGrid != 'Pago Reprogramado') {
-                                                row.entity.estGrid = 'Permitido'
-                                            } else {
-                                                $rootScope.grdReprogramado = Math.round($rootScope.grdReprogramado * 100) / 100 + Math.round(row.entity.Pagar * 100) / 100;
-                                            }
-                                        };
-                                        i++;
-                                    });
-                                }
-                            }
-
-                            $scope.calculaTotalOperaciones();
-                            recalculaIngresos();
-
-                        });
-                        gridApi1.selection.on.rowSelectionChangedBatch($scope, function(rows) {
-                            //FAL 29042016 cambio de seleccion de padres
-                            var i = 0;
-                            var numcuentas = $rootScope.grdBancos.length;
-                            $rootScope.grdNoIncluido = 0;
-                            if ($scope.grdinicia > 0) {
-                                $rootScope.grdBancos.forEach(function(banco, l) {
-                                    $rootScope.grdBancos[l].subtotal = 0;
-                                    $rootScope.grdApagar = 0;
+                                if (row.entity.estGrid == 'Pago Reprogramado') {
+                                    $rootScope.grdReprogramado = Math.round($rootScope.grdReprogramado * 100) / 100 - Math.round(row.entity.Pagar * 100) / 100;
+                                };
+                                $rootScope.grdBancos.forEach(function(banco, subtotal) {
+                                    if (row.entity.cuentaPagadora == $rootScope.grdBancos[i].banco) {
+                                        $rootScope.grdBancos[i].subtotal = Math.round($rootScope.grdBancos[i].subtotal * 100) / 100 + Math.round(grdPagarxdocumento * 100) / 100;
+                                        $rootScope.grdApagar = $rootScope.grdApagar + row.entity.Pagar;
+                                        row.entity.estGrid = 'Pago'
+                                    }
+                                    i++;
                                 });
                             }
+                        } else {
+                            $rootScope.grdNoIncluido = Math.round($rootScope.grdNoIncluido * 100) / 100 + Math.round(grdPagarxdocumento * 100) / 100;
+                            //FAL actualizar cuenta pagadoras
+                            i = 0;
                             if ($scope.grdinicia > 0) {
-                                rows.forEach(function(row, i) {
-                                    if (row.isSelected) {
-                                        if (row.entity.seleccionable == 'False') {
-                                            row.entity.estGrid = 'Pago';
-                                            $rootScope.grdNoIncluido = 0;
-                                            for (var i = 0; i < numcuentas; i++) {
-                                                if (row.entity.cuentaPagadora == $rootScope.grdBancos[i].banco) {
-                                                    $rootScope.grdBancos[i].subtotal = Math.round($rootScope.grdBancos[i].subtotal * 100) / 100 + Math.round(row.entity.Pagar * 100) / 100;
-                                                    $rootScope.grdApagar = $rootScope.grdApagar + row.entity.Pagar;
-                                                    i = numcuentas;
-                                                }
-                                            };
-                                            $rootScope.grdNoIncluido = 0;
+                                $rootScope.grdBancos.forEach(function(banco, subtotal) {
+                                    if (row.entity.cuentaPagadora == $rootScope.grdBancos[i].banco) {
+                                        $rootScope.grdBancos[i].subtotal = Math.round($rootScope.grdBancos[i].subtotal * 100) / 100 - Math.round(grdPagarxdocumento * 100) / 100;
+                                        $rootScope.grdApagar = $rootScope.grdApagar - row.entity.Pagar;
+                                        if (row.entity.estGrid != 'Pago Reprogramado') {
+                                            row.entity.estGrid = 'Permitido'
+                                        } else {
+                                            $rootScope.grdReprogramado = Math.round($rootScope.grdReprogramado * 100) / 100 + Math.round(row.entity.Pagar * 100) / 100;
                                         }
-                                    } else {
-                                        if (row.entity.seleccionable == 'False') {
-                                            row.entity.estGrid = 'Permitido';
-                                            $rootScope.grdNoIncluido = $rootScope.grdApagarOriginal;
-                                            row.treeNode.parentRow.treeNode.row.isSelected = false;
-                                            row.treeNode.parentRow.treeNode.parentRow.treeNode.row.isSelected = false;
-                                            $rootScope.grdApagar = 0;
-                                        }
-                                    }
+                                    };
+                                    i++;
                                 });
                             }
+                        }
 
-                            $scope.calculaTotalOperaciones();
-                            recalculaIngresos();
+                        $scope.calculaTotalOperaciones();
+                        recalculaIngresos();
 
-                        });
-                        gridApi1.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
-                            //FAL trabaja con las variables dependiendo si se edita o cambia la fecha
-                            var i = 0;
-                            var numcuentas = $rootScope.grdBancos.length;
-                            if (rowEntity.estGrid == 'Pago' || rowEntity.estGrid == 'Pago Reprogramado') {
-                                if (rowEntity.fechaPago == "1900-01-01T00:00:00") {
-                                    old_date = "";
-                                } else {
-                                    old_date = new Date(rowEntity.fechaPago);
-                                }
-                                if (colDef.name == 'fechaPromesaPago') {
-                                    dtHoy = Date.now();
-                                    now_date = new Date($scope.formatDate(dtHoy));
-                                    new_date = new Date($scope.formatDate(newValue));
-                                    if (new_date <= now_date) {
-                                        alertFactory.warning('La fecha promesa de pago no puede ser menor o igual a ' + $scope.formatDate(dtHoy) + ' !!!');
-                                        rowEntity.fechaPromesaPago = old_date;
-                                        rowEntity.estGrid = 'Pago';
-                                    } else {
-                                        rowEntity.Pagar = rowEntity.saldo;
-                                        rowEntity.estGrid = 'Pago Reprogramado';
-                                        $scope.gridApi1.selection.unSelectRow(rowEntity);
-                                    }
-                                }
-                                if (colDef.name == 'Pagar') {
-                                    $scope.cantidadUpdate = newValue - oldValue;
-                                    if ((newValue > rowEntity.saldo) || (newValue <= 0)) {
-                                        alertFactory.warning('El pago es inválido !!!');
-                                        rowEntity.Pagar = oldValue;
-                                    } else {
-                                        if (rowEntity.estGrid == 'Pago Reprogramado') {
-                                            $rootScope.grdReprogramado = Math.round($rootScope.grdReprogramado * 100) / 100 - Math.round(rowEntity.Pagar * 100) / 100;
-                                        }
+                    });
+                    gridApi1.selection.on.rowSelectionChangedBatch($scope, function(rows) {
+                        //FAL 29042016 cambio de seleccion de padres
+                        var i = 0;
+                        var numcuentas = $rootScope.grdBancos.length;
+                        $rootScope.grdNoIncluido = 0;
+                        if ($scope.grdinicia > 0) {
+                            $rootScope.grdBancos.forEach(function(banco, l) {
+                                $rootScope.grdBancos[l].subtotal = 0;
+                                $rootScope.grdApagar = 0;
+                            });
+                        }
+                        if ($scope.grdinicia > 0) {
+                            rows.forEach(function(row, i) {
+                                if (row.isSelected) {
+                                    if (row.entity.seleccionable == 'False') {
+                                        row.entity.estGrid = 'Pago';
+                                        $rootScope.grdNoIncluido = 0;
                                         for (var i = 0; i < numcuentas; i++) {
-                                            if (rowEntity.cuentaPagadora == $rootScope.grdBancos[i].banco) {
-                                                $rootScope.grdBancos[i].subtotal = Math.round($rootScope.grdBancos[i].subtotal * 100) / 100 + Math.round($scope.cantidadUpdate * 100) / 100;
+                                            if (row.entity.cuentaPagadora == $rootScope.grdBancos[i].banco) {
+                                                $rootScope.grdBancos[i].subtotal = Math.round($rootScope.grdBancos[i].subtotal * 100) / 100 + Math.round(row.entity.Pagar * 100) / 100;
+                                                $rootScope.grdApagar = $rootScope.grdApagar + row.entity.Pagar;
                                                 i = numcuentas;
                                             }
                                         };
-                                        $rootScope.grdNoIncluido = Math.round($rootScope.grdNoIncluido * 100) / 100 - Math.round($scope.cantidadUpdate * 100) / 100;
-                                        $rootScope.grdApagar = Math.round($rootScope.grdApagar * 100) / 100 + Math.round($scope.cantidadUpdate * 100) / 100;
-                                        rowEntity.estGrid = 'Pago';
-                                        rowEntity.fechaPromesaPago = old_date;
+                                        $rootScope.grdNoIncluido = 0;
+                                    }
+                                } else {
+                                    if (row.entity.seleccionable == 'False') {
+                                        row.entity.estGrid = 'Permitido';
+                                        $rootScope.grdNoIncluido = $rootScope.grdApagarOriginal;
+                                        row.treeNode.parentRow.treeNode.row.isSelected = false;
+                                        row.treeNode.parentRow.treeNode.parentRow.treeNode.row.isSelected = false;
+                                        $rootScope.grdApagar = 0;
                                     }
                                 }
-                                //FAL valido la referencia.
-                                if (colDef.name == 'referencia') {
-                                    if (newValue.length > 30) {
-                                        alertFactory.warning('La referencia no puede tener más de 30 caracteres');
-                                        rowEntity.referencia = oldValue;
-                                    }
-                                }
+                            });
+                        }
 
+                        $scope.calculaTotalOperaciones();
+                        recalculaIngresos();
+
+                    });
+                    gridApi1.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
+                        //FAL trabaja con las variables dependiendo si se edita o cambia la fecha
+                        var i = 0;
+                        var numcuentas = $rootScope.grdBancos.length;
+                        if (rowEntity.estGrid == 'Pago' || rowEntity.estGrid == 'Pago Reprogramado') {
+                            if (rowEntity.fechaPago == "1900-01-01T00:00:00") {
+                                old_date = "";
                             } else {
-                                alertFactory.warning('Solo se pueden modificar datos de los documentos seleccionados');
-                                if (colDef.name == 'Pagar') {
-                                    rowEntity.Pagar = oldValue;
-                                }
-                                if (colDef.name == 'fechaPromesaPago') {
-                                    rowEntity.fechaPromesaPago = oldValue;
+                                old_date = new Date(rowEntity.fechaPago);
+                            }
+                            if (colDef.name == 'fechaPromesaPago') {
+                                dtHoy = Date.now();
+                                now_date = new Date($scope.formatDate(dtHoy));
+                                new_date = new Date($scope.formatDate(newValue));
+                                if (new_date <= now_date) {
+                                    alertFactory.warning('La fecha promesa de pago no puede ser menor o igual a ' + $scope.formatDate(dtHoy) + ' !!!');
+                                    rowEntity.fechaPromesaPago = old_date;
+                                    rowEntity.estGrid = 'Pago';
+                                } else {
+                                    rowEntity.Pagar = rowEntity.saldo;
+                                    rowEntity.estGrid = 'Pago Reprogramado';
+                                    $scope.gridApi1.selection.unSelectRow(rowEntity);
                                 }
                             }
-                        });
-                    }
+                            if (colDef.name == 'Pagar') {
+                                $scope.cantidadUpdate = newValue - oldValue;
+                                if ((newValue > rowEntity.saldo) || (newValue <= 0)) {
+                                    alertFactory.warning('El pago es inválido !!!');
+                                    rowEntity.Pagar = oldValue;
+                                } else {
+                                    if (rowEntity.estGrid == 'Pago Reprogramado') {
+                                        $rootScope.grdReprogramado = Math.round($rootScope.grdReprogramado * 100) / 100 - Math.round(rowEntity.Pagar * 100) / 100;
+                                    }
+                                    for (var i = 0; i < numcuentas; i++) {
+                                        if (rowEntity.cuentaPagadora == $rootScope.grdBancos[i].banco) {
+                                            $rootScope.grdBancos[i].subtotal = Math.round($rootScope.grdBancos[i].subtotal * 100) / 100 + Math.round($scope.cantidadUpdate * 100) / 100;
+                                            i = numcuentas;
+                                        }
+                                    };
+                                    $rootScope.grdNoIncluido = Math.round($rootScope.grdNoIncluido * 100) / 100 - Math.round($scope.cantidadUpdate * 100) / 100;
+                                    $rootScope.grdApagar = Math.round($rootScope.grdApagar * 100) / 100 + Math.round($scope.cantidadUpdate * 100) / 100;
+                                    rowEntity.estGrid = 'Pago';
+                                    rowEntity.fechaPromesaPago = old_date;
+                                }
+                            }
+                            //FAL valido la referencia.
+                            if (colDef.name == 'referencia') {
+                                if (newValue.length > 30) {
+                                    alertFactory.warning('La referencia no puede tener más de 30 caracteres');
+                                    rowEntity.referencia = oldValue;
+                                }
+                            }
+
+                        } else {
+                            alertFactory.warning('Solo se pueden modificar datos de los documentos seleccionados');
+                            if (colDef.name == 'Pagar') {
+                                rowEntity.Pagar = oldValue;
+                            }
+                            if (colDef.name == 'fechaPromesaPago') {
+                                rowEntity.fechaPromesaPago = oldValue;
+                            }
+                        }
+                    });
                 }
+            }
 
 
-   // $rootScope.gridXvencer = $scope.gridOptions;
-                 //grid options
+            // $rootScope.gridXvencer = $scope.gridOptions;
+            //grid options
         }; //funcion
         //08042016FAL recorre cada nivel y selecciona los hijos
         $scope.formatDate = function(date) {
@@ -1336,84 +1334,85 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
         var ConfiguraGridxvencer = function() {
 
             $scope.gridXvencer = {
-                    enableColumnResize: true,
-                    enableRowSelection: true,
-                    enableGridMenu: true,
-                    enableFiltering: true,
-                    enableGroupHeaderSelection: false,
-                    treeRowHeaderAlwaysVisible: true,
-                    showColumnFooter: true,
-                    showGridFooter: true,
-                    height: 900,
-                    cellEditableCondition: function($scope) {
-                        return $scope.row.entity.seleccionable;
+                enableColumnResize: true,
+                enableRowSelection: true,
+                enableGridMenu: true,
+                enableFiltering: true,
+                enableGroupHeaderSelection: false,
+                treeRowHeaderAlwaysVisible: true,
+                showColumnFooter: true,
+                showGridFooter: true,
+                height: 900,
+                cellEditableCondition: function($scope) {
+                    return $scope.row.entity.seleccionable;
+                },
+                columnDefs: [{
+                        name: 'nombreAgrupador',
+                        grouping: { groupPriority: 0 },
+                        sort: { priority: 0, direction: 'asc' },
+                        width: '15%',
+                        displayName: 'Grupo',
+                        enableCellEdit: false
+                    }, {
+                        name: 'proveedor',
+                        grouping: { groupPriority: 1 },
+                        sort: { priority: 1, direction: 'asc' },
+                        width: '20%',
+                        name: 'proveedor',
+                        enableCellEdit: false,
+                        cellTemplate: '<div><div ng-if="!col.grouping || col.grouping.groupPriority === undefined || col.grouping.groupPriority === null || ( row.groupHeader && col.grouping.groupPriority === row.treeLevel )" class="ui-grid-cell-contents" title="TOOLTIP">{{COL_FIELD CUSTOM_FILTERS}}</div></div>'
                     },
-                    columnDefs: [{
-                            name: 'nombreAgrupador',
-                            grouping: { groupPriority: 0 },
-                            sort: { priority: 0, direction: 'asc' },
-                            width: '15%',
-                            displayName: 'Grupo',
-                            enableCellEdit: false
-                        }, {
-                            name: 'proveedor',
-                            grouping: { groupPriority: 1 },
-                            sort: { priority: 1, direction: 'asc' },
-                            width: '20%',
-                            name: 'proveedor',
-                            enableCellEdit: false,
-                            cellTemplate: '<div><div ng-if="!col.grouping || col.grouping.groupPriority === undefined || col.grouping.groupPriority === null || ( row.groupHeader && col.grouping.groupPriority === row.treeLevel )" class="ui-grid-cell-contents" title="TOOLTIP">{{COL_FIELD CUSTOM_FILTERS}}</div></div>'
-                        },
-                        { name: 'documento', displayName: '# Documento', width: '15%', enableCellEdit: false, headerTooltip: 'Documento # de factura del provedor', cellClass: 'cellToolTip' },
-                        { name: 'ordenCompra', displayName: 'Orden de compra', width: '13%', enableCellEdit: false, cellTemplate: '<div class="urlTabla" ng-class="col.colIndex()" ><a tooltip="Ver en digitalización" class="urlTabla" href="http://192.168.20.9:3200/?id={{row.entity.ordenCompra}}&employee=' + $scope.idEmpleado + '" target="_new">{{row.entity.ordenCompra}}</a></div>' },
-                        { name: 'monto', displayName: 'Monto', width: '15%', cellFilter: 'currency', enableCellEdit: false },
-                        { name: 'saldo', displayName: 'Saldo', width: '15%', cellFilter: 'currency', enableCellEdit: false }, {
-                            field: 'Pagar',
-                            displayName: 'Pagar (total)',
-                            width: '10%',
-                            cellFilter: 'currency',
-                            enableCellEdit: ($rootScope.currentIdOp == 1) ? false : true,
-                            editableCellTemplate: '<div><form name="inputForm"><input type="number" ng-class="\'colt\' + col.uid" ui-grid-editor ng-model="MODEL_COL_FIELD"></form></div>'
-                        },
-                        { name: 'cuentaPagadora', width: '10%', displayName: 'Banco Origen', enableCellEdit: false },
-                        { name: 'cuenta', width: '15%', displayName: '# Cuenta', enableCellEdit: false },
-                        { name: 'fechaPromesaPago', displayName: 'Fecha Promesa de Pago', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '15%' }, {
-                            name: 'referencia',
-                            displayName: 'Referencia',
-                            width: '10%',
-                            visible: true,
-                            editableCellTemplate: "<div><form name=\"inputForm\"><input type=\"INPUT_TYPE\"  ui-grid-editor ng-model=\"MODEL_COL_FIELD\"  minlength=3 maxlength=30 required><div ng-show=\"!inputForm.$valid\"><span class=\"error\">La referencia debe tener al menos 5 caracteres</span></div></form></div>"
-                        },
-                        { name: 'tipo', width: '15%', displayName: 'Tipo', enableCellEdit: false },
-                        { name: 'tipodocto', width: '15%', displayName: 'Tipo Documento', enableCellEdit: false },
-                        { name: 'cartera', width: '15%', displayName: 'Cartera', enableCellEdit: false },
-                        { name: 'moneda', width: '10%', displayName: 'Moneda', enableCellEdit: false },
-                        { name: 'numeroSerie', width: '20%', displayName: 'N Serie', enableCellEdit: false },
-                        { name: 'facturaProveedor', width: '20%', displayName: 'Factura Proveedor', enableCellEdit: false },
-                        { name: 'fechaVencimiento', displayName: 'Fecha de Vencimiento', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '17%', enableCellEdit: false },
-                        { name: 'fechaRecepcion', displayName: 'Fecha Recepción', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '17%', enableCellEdit: false },
-                        { name: 'fechaFactura', displayName: 'Fecha Factura', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '17%', enableCellEdit: false }, {
-                            field: 'saldoPorcentaje',
-                            displayName: 'Porcentaje %',
-                            width: '10%',
-                            cellFilter: 'number: 6',
-                            enableCellEdit: false
-                        },
-                        { name: 'estatus', displayName: 'Estatus', width: '10%', enableCellEdit: false },
-                        { name: 'anticipo', displayName: 'Anticipo', width: '10%', enableCellEdit: false },
-                        { name: 'anticipoAplicado', displayName: 'Anticipo Aplicado', width: '15%', enableCellEdit: false },
-                        { name: 'documentoPagable', width: '15%', displayName: 'Estatus del Documento', visible: false, enableCellEdit: false },
-                        { name: 'ordenBloqueada', displayName: 'Bloqueada', width: '20%', enableCellEdit: false },
-                        { name: 'fechaPago', displayName: 'fechaPago', width: '20%', visible: false, enableCellEdit: false },
-                        { name: 'estGrid', width: '15%', displayName: 'Estatus Grid', enableCellEdit: false },
-                        { name: 'seleccionable', displayName: 'seleccionable', width: '20%', enableCellEdit: false, visible: false },
-                        { name: 'cuentaDestino', displayName: 'Cuenta Destino', width: '20%', enableCellEdit: false },
-                        { name: 'idEstatus', displayName: 'idEstatus', width: '20%', enableCellEdit: false, visible: true },
-                        { name: 'tipoCartera', displayName: 'tipoCartera', width: '20%', enableCellEdit: false, visible: true }
-                    ]};
+                    { name: 'documento', displayName: '# Documento', width: '15%', enableCellEdit: false, headerTooltip: 'Documento # de factura del provedor', cellClass: 'cellToolTip' },
+                    { name: 'ordenCompra', displayName: 'Orden de compra', width: '13%', enableCellEdit: false, cellTemplate: '<div class="urlTabla" ng-class="col.colIndex()" ><a tooltip="Ver en digitalización" class="urlTabla" href="http://192.168.20.9:3200/?id={{row.entity.ordenCompra}}&employee=' + $scope.idEmpleado + '" target="_new">{{row.entity.ordenCompra}}</a></div>' },
+                    { name: 'monto', displayName: 'Monto', width: '15%', cellFilter: 'currency', enableCellEdit: false },
+                    { name: 'saldo', displayName: 'Saldo', width: '15%', cellFilter: 'currency', enableCellEdit: false }, {
+                        field: 'Pagar',
+                        displayName: 'Pagar (total)',
+                        width: '10%',
+                        cellFilter: 'currency',
+                        enableCellEdit: ($rootScope.currentIdOp == 1) ? false : true,
+                        editableCellTemplate: '<div><form name="inputForm"><input type="number" ng-class="\'colt\' + col.uid" ui-grid-editor ng-model="MODEL_COL_FIELD"></form></div>'
+                    },
+                    { name: 'cuentaPagadora', width: '10%', displayName: 'Banco Origen', enableCellEdit: false },
+                    { name: 'cuenta', width: '15%', displayName: '# Cuenta', enableCellEdit: false },
+                    { name: 'fechaPromesaPago', displayName: 'Fecha Promesa de Pago', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '15%' }, {
+                        name: 'referencia',
+                        displayName: 'Referencia',
+                        width: '10%',
+                        visible: true,
+                        editableCellTemplate: "<div><form name=\"inputForm\"><input type=\"INPUT_TYPE\"  ui-grid-editor ng-model=\"MODEL_COL_FIELD\"  minlength=3 maxlength=30 required><div ng-show=\"!inputForm.$valid\"><span class=\"error\">La referencia debe tener al menos 5 caracteres</span></div></form></div>"
+                    },
+                    { name: 'tipo', width: '15%', displayName: 'Tipo', enableCellEdit: false },
+                    { name: 'tipodocto', width: '15%', displayName: 'Tipo Documento', enableCellEdit: false },
+                    { name: 'cartera', width: '15%', displayName: 'Cartera', enableCellEdit: false },
+                    { name: 'moneda', width: '10%', displayName: 'Moneda', enableCellEdit: false },
+                    { name: 'numeroSerie', width: '20%', displayName: 'N Serie', enableCellEdit: false },
+                    { name: 'facturaProveedor', width: '20%', displayName: 'Factura Proveedor', enableCellEdit: false },
+                    { name: 'fechaVencimiento', displayName: 'Fecha de Vencimiento', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '17%', enableCellEdit: false },
+                    { name: 'fechaRecepcion', displayName: 'Fecha Recepción', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '17%', enableCellEdit: false },
+                    { name: 'fechaFactura', displayName: 'Fecha Factura', type: 'date', cellFilter: 'date:"dd/MM/yyyy"', width: '17%', enableCellEdit: false }, {
+                        field: 'saldoPorcentaje',
+                        displayName: 'Porcentaje %',
+                        width: '10%',
+                        cellFilter: 'number: 6',
+                        enableCellEdit: false
+                    },
+                    { name: 'estatus', displayName: 'Estatus', width: '10%', enableCellEdit: false },
+                    { name: 'anticipo', displayName: 'Anticipo', width: '10%', enableCellEdit: false },
+                    { name: 'anticipoAplicado', displayName: 'Anticipo Aplicado', width: '15%', enableCellEdit: false },
+                    { name: 'documentoPagable', width: '15%', displayName: 'Estatus del Documento', visible: false, enableCellEdit: false },
+                    { name: 'ordenBloqueada', displayName: 'Bloqueada', width: '20%', enableCellEdit: false },
+                    { name: 'fechaPago', displayName: 'fechaPago', width: '20%', visible: false, enableCellEdit: false },
+                    { name: 'estGrid', width: '15%', displayName: 'Estatus Grid', enableCellEdit: false },
+                    { name: 'seleccionable', displayName: 'seleccionable', width: '20%', enableCellEdit: false, visible: false },
+                    { name: 'cuentaDestino', displayName: 'Cuenta Destino', width: '20%', enableCellEdit: false },
+                    { name: 'idEstatus', displayName: 'idEstatus', width: '20%', enableCellEdit: false, visible: true },
+                    { name: 'tipoCartera', displayName: 'tipoCartera', width: '20%', enableCellEdit: false, visible: true }
+                ]
+            };
 
-                   
-                    
+
+
 
         }
 
@@ -1734,122 +1733,121 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
 
                     var pasaxegresos = true;
                     angular.forEach($rootScope.egresos, function(egreso, key) {
-                        if (egreso.excedente < $rootScope.montominimo)
-                        {
+                        if (egreso.excedente < $rootScope.montominimo) {
                             pasaxegresos = false;
-                             alertFactory.warning('Existe una cuenta con saldo menor al mínimo');
-                             $('#btnGuardando').button('reset');
+                            alertFactory.warning('Existe una cuenta con saldo menor al mínimo');
+                            $('#btnGuardando').button('reset');
                         }
-                     });
+                    });
 
 
-                    if(pasaxegresos)
+                    if (pasaxegresos)
 
                     {
-                    pagoRepository.getPagosPadre($rootScope.idEmpresa, $rootScope.currentEmployee, $rootScope.formData.nombreLoteNuevo, $rootScope.idLotePadre, EsPagoDirecto)
-                        .then(function successCallback(response) {
-                            $rootScope.idLotePadre = response.data;
-                            var array = [];
-                            var count = 0;
-                            rows.forEach(function(row, i) {
-                                var elemento = {};
-                                elemento.pal_id_lote_pago = $rootScope.idLotePadre; //response.data;
-                                elemento.pad_polTipo = row.polTipo; //entity.polTipo;
-                                elemento.pad_polAnnio = row.annio;
-                                elemento.pad_polMes = row.polMes;
-                                elemento.pad_polConsecutivo = row.polConsecutivo;
-                                elemento.pad_polMovimiento = row.polMovimiento;
-                                elemento.pad_fechaPromesaPago = (row.fechaPromesaPago == '' ? '1900-01-01T00:00:00' : row.fechaPromesaPago);
+                        pagoRepository.getPagosPadre($rootScope.idEmpresa, $rootScope.currentEmployee, $rootScope.formData.nombreLoteNuevo, $rootScope.idLotePadre, EsPagoDirecto)
+                            .then(function successCallback(response) {
+                                $rootScope.idLotePadre = response.data;
+                                var array = [];
+                                var count = 0;
+                                rows.forEach(function(row, i) {
+                                    var elemento = {};
+                                    elemento.pal_id_lote_pago = $rootScope.idLotePadre; //response.data;
+                                    elemento.pad_polTipo = row.polTipo; //entity.polTipo;
+                                    elemento.pad_polAnnio = row.annio;
+                                    elemento.pad_polMes = row.polMes;
+                                    elemento.pad_polConsecutivo = row.polConsecutivo;
+                                    elemento.pad_polMovimiento = row.polMovimiento;
+                                    elemento.pad_fechaPromesaPago = (row.fechaPromesaPago == '' ? '1900-01-01T00:00:00' : row.fechaPromesaPago);
 
-                                elemento.pad_saldo = row.Pagar; //row.saldo;//
+                                    elemento.pad_saldo = row.Pagar; //row.saldo;//
 
-                                if ((row.referencia == null) || (row.referencia == undefined) || (row.referencia == "")) {
-                                    row.referencia = "AUT";
-                                }
-                                elemento.pad_documento = row.documento;
-                                elemento.pad_polReferencia = row.referencia; //FAL 09052015 mandar referencia
-                                elemento.tab_revision = 1;
-                                array.push(elemento);
-                            });
-                            var jsIngresos = angular.toJson($rootScope.ingresos); //delete $scope.ingresos['$$hashKey'];
-                            var jsTransf = angular.toJson($scope.transferencias);
-                            var jsEgresos = angular.toJson($rootScope.egresos);
-                            pagoRepository.setDatos(array, $rootScope.currentEmployee, $rootScope.idLotePadre, jsIngresos, jsTransf, $scope.caja, $scope.cobrar, jsEgresos, ($rootScope.estatusLote == 0) ? 1 : 2)
-                                .then(function successCallback(response) {
-                                    alertFactory.success('Se guardaron los datos.');
-                                    $rootScope.estatusLote = 1;
-                                    angular.forEach($rootScope.noLotes.data, function(lote, key) {
-                                        if (lote.idLotePago == $scope.idLote) {
-                                            lote.idLotePago = $rootScope.idLotePadre;
-                                            lote.estatus = 1;
-                                        }
-                                    });
-                                    $('#btnGuardando').button('reset');
-                                    if (opcion == 2) { //aprobacion
-                                        pagoRepository.setAprobacion(1, valor, $rootScope.idEmpresa, $rootScope.idLotePadre, $rootScope.currentEmployee, $rootScope.idAprobador, $rootScope.idAprobacion, $rootScope.idNotify, $rootScope.formData.Observacion)
-                                            .then(function successCallback(response) {
-                                                if (valor == 3) {
-                                                    alertFactory.success('Se aprobo el lote con exito');
-                                                    $('#btnAprobar').button('reset');
-                                                } else //rechazado
-                                                {
-                                                    alertFactory.success('Se rechazo el lote con exito');
-                                                    $('#btnRechazar').button('reset');
-                                                }
-                                                $rootScope.idOperacion = 0;
-                                                setTimeout(function() { window.close(); }, 3500);
-                                                $('#btnAprobar').prop('disabled', true);
-                                                $('#btnRechazar').prop('disabled', true);
-                                            }, function errorCallback(response) {
-                                                if (valor == 3) {
-                                                    alertFactory.error('Error al aprobar');
-                                                    $('#btnAprobar').button('reset');
-                                                } else //rechazado
-                                                {
-                                                    alertFactory.error('Error al rechazar');
-                                                    $('#btnRechazar').button('reset');
-                                                }
-                                            });
+                                    if ((row.referencia == null) || (row.referencia == undefined) || (row.referencia == "")) {
+                                        row.referencia = "AUT";
                                     }
-                                    if (opcion == 3) { //aprobacion
-                                        pagoRepository.setAplicacion($rootScope.idEmpresa, $rootScope.idLotePadre, $rootScope.currentEmployee)
-                                            .then(function successCallback(response) {
-                                                if (valor == 3) {
-                                                    alertFactory.success('Se aprobo el lote con exito');
-                                                    $('#btnAprobar').button('reset');
-                                                } else //rechazado
-                                                {
-                                                    alertFactory.success('Se rechazo el lote con exito');
-                                                    $('#btnRechazar').button('reset');
-                                                }
-                                                $rootScope.idOperacion = 0;
-                                                setTimeout(function() { window.close(); }, 3500);
-                                                $('#btnAprobar').prop('disabled', true);
-                                                $('#btnRechazar').prop('disabled', true);
-                                            }, function errorCallback(response) {
-                                                if (valor == 3) {
-                                                    alertFactory.error('Error al aprobar');
-                                                    $('#btnAprobar').button('reset');
-                                                } else //rechazado
-                                                {
-                                                    alertFactory.error('Error al rechazar');
-                                                    $('#btnRechazar').button('reset');
-                                                }
-                                            });
-                                    }
-                                }, function errorCallback(response) {
-                                    alertFactory.error('Error al guardar Datos');
-                                    $('#btnGuardando').button('reset');
-                                    $('#btnAprobar').button('reset');
+                                    elemento.pad_documento = row.documento;
+                                    elemento.pad_polReferencia = row.referencia; //FAL 09052015 mandar referencia
+                                    elemento.tab_revision = 1;
+                                    array.push(elemento);
                                 });
-                            $('#btnguardando').button('reset');
-                        }, function errorCallback(response) {
-                            alertFactory.error('Error al insertar en tabla padre.');
-                            $('#btnguardando').button('reset');
-                        });
+                                var jsIngresos = angular.toJson($rootScope.ingresos); //delete $scope.ingresos['$$hashKey'];
+                                var jsTransf = angular.toJson($scope.transferencias);
+                                var jsEgresos = angular.toJson($rootScope.egresos);
+                                pagoRepository.setDatos(array, $rootScope.currentEmployee, $rootScope.idLotePadre, jsIngresos, jsTransf, $scope.caja, $scope.cobrar, jsEgresos, ($rootScope.estatusLote == 0) ? 1 : 2)
+                                    .then(function successCallback(response) {
+                                        alertFactory.success('Se guardaron los datos.');
+                                        $rootScope.estatusLote = 1;
+                                        angular.forEach($rootScope.noLotes.data, function(lote, key) {
+                                            if (lote.idLotePago == $scope.idLote) {
+                                                lote.idLotePago = $rootScope.idLotePadre;
+                                                lote.estatus = 1;
+                                            }
+                                        });
+                                        $('#btnGuardando').button('reset');
+                                        if (opcion == 2) { //aprobacion
+                                            pagoRepository.setAprobacion(1, valor, $rootScope.idEmpresa, $rootScope.idLotePadre, $rootScope.currentEmployee, $rootScope.idAprobador, $rootScope.idAprobacion, $rootScope.idNotify, $rootScope.formData.Observacion)
+                                                .then(function successCallback(response) {
+                                                    if (valor == 3) {
+                                                        alertFactory.success('Se aprobo el lote con exito');
+                                                        $('#btnAprobar').button('reset');
+                                                    } else //rechazado
+                                                    {
+                                                        alertFactory.success('Se rechazo el lote con exito');
+                                                        $('#btnRechazar').button('reset');
+                                                    }
+                                                    $rootScope.idOperacion = 0;
+                                                    setTimeout(function() { window.close(); }, 3500);
+                                                    $('#btnAprobar').prop('disabled', true);
+                                                    $('#btnRechazar').prop('disabled', true);
+                                                }, function errorCallback(response) {
+                                                    if (valor == 3) {
+                                                        alertFactory.error('Error al aprobar');
+                                                        $('#btnAprobar').button('reset');
+                                                    } else //rechazado
+                                                    {
+                                                        alertFactory.error('Error al rechazar');
+                                                        $('#btnRechazar').button('reset');
+                                                    }
+                                                });
+                                        }
+                                        if (opcion == 3) { //aprobacion
+                                            pagoRepository.setAplicacion($rootScope.idEmpresa, $rootScope.idLotePadre, $rootScope.currentEmployee)
+                                                .then(function successCallback(response) {
+                                                    if (valor == 3) {
+                                                        alertFactory.success('Se aprobo el lote con exito');
+                                                        $('#btnAprobar').button('reset');
+                                                    } else //rechazado
+                                                    {
+                                                        alertFactory.success('Se rechazo el lote con exito');
+                                                        $('#btnRechazar').button('reset');
+                                                    }
+                                                    $rootScope.idOperacion = 0;
+                                                    setTimeout(function() { window.close(); }, 3500);
+                                                    $('#btnAprobar').prop('disabled', true);
+                                                    $('#btnRechazar').prop('disabled', true);
+                                                }, function errorCallback(response) {
+                                                    if (valor == 3) {
+                                                        alertFactory.error('Error al aprobar');
+                                                        $('#btnAprobar').button('reset');
+                                                    } else //rechazado
+                                                    {
+                                                        alertFactory.error('Error al rechazar');
+                                                        $('#btnRechazar').button('reset');
+                                                    }
+                                                });
+                                        }
+                                    }, function errorCallback(response) {
+                                        alertFactory.error('Error al guardar Datos');
+                                        $('#btnGuardando').button('reset');
+                                        $('#btnAprobar').button('reset');
+                                    });
+                                $('#btnguardando').button('reset');
+                            }, function errorCallback(response) {
+                                alertFactory.error('Error al insertar en tabla padre.');
+                                $('#btnguardando').button('reset');
+                            });
 
 
-                        };
+                    };
 
 
                 }
@@ -1859,7 +1857,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             Funciones de guardado de datos
             END
         ****************************************************************************************************************/
-       
+
 
         $scope.addTransferencia = function() {
             var index = $scope.transferencias.length;

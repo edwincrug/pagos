@@ -5,7 +5,7 @@
 // -- Modificó:
 // -- Fecha:
 // -- =============================================
-registrationModule.controller("transferenciaController", function($scope, $http, $interval, uiGridGroupingConstants, uiGridConstants, $filter, $rootScope, localStorageService, alertFactory, transferenciaRepository, pagoRepository, stats, $window) {
+registrationModule.controller("transferenciaController", function($scope, $http, $interval, uiGridGroupingConstants, uiGridConstants, $filter, $rootScope, localStorageService, alertFactory, transferenciaRepository, pagoRepository, stats, $window,$location) {
     $scope.editatransferencia = true;
 
     $scope.gridTransferenciaoptions = {
@@ -349,6 +349,12 @@ registrationModule.controller("transferenciaController", function($scope, $http,
 
     }
 
+    
+
+    $scope.redirectLote = function(idLote) {
+        $location.path('/'+idLote);                
+    }
+
 
     $scope.changeFieldsLote = function() {
 
@@ -361,7 +367,7 @@ registrationModule.controller("transferenciaController", function($scope, $http,
             { name: 'estatus', displayName: 'estatus', visible: false },
             { name: 'totalPagar', displayName: 'totalPagar' },
             { name: 'pal_esAplicacionDirect', displayName: 'pal_esAplicacionDirect', visible: false },
-            { name: 'buscar', displayName: '', width: '5%', cellTemplate: '<div ng-switch on="row.entity.estatus"><button class="btn btn-error" ng-switch-when="2" style="disabled=true"><span class="glyphicon glyphicon-search" ></span></button><button class="btn btn-warning"  ng-switch-default  ng-click="grid.appScope.TraeTransferencia(row.entity.idLotePago)"><span class="glyphicon glyphicon-search" ></span></button></div>' },
+            { name: 'buscar', displayName: '', width: '5%', cellTemplate: '<div ng-switch on="row.entity.estatus"><button class="btn btn-error" ng-switch-when="2" style="disabled=true"><span class="glyphicon glyphicon-search" ></span></button><button class="btn btn-warning"  ng-switch-default  ng-click="grid.appScope.redirectLote(row.entity.idLotePago)"><span class="glyphicon glyphicon-search" ></span></button></div>' },
 
         ];
     }

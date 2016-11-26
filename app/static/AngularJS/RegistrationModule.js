@@ -12,12 +12,17 @@
         controller: 'transferenciaController'
     });
 
+    $routeProvider.when('/:idLote', {
+        templateUrl: '/AngularJS/Templates/Pago.html',
+        controller: 'pagoController'
+    });
+
     $routeProvider.when('/cuentas', {
         templateUrl: '/AngularJS/Templates/CuentasProveedor.html',
         controller: 'CuentasProveedorController'
     });
 
-     $routeProvider.when('/loteAdmin', {
+    $routeProvider.when('/loteAdmin', {
         templateUrl: '/AngularJS/Templates/LotesAdmin.html',
         controller: 'lotesadminController'
     });
