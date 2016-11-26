@@ -102,6 +102,13 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
 
                 }
             }
+            /********************/
+
+            if (getParameterByName('transfer') != '') {
+                console.log("hola estoy llegando desde otro lado");
+
+            return;
+            }
 
             /***********************************************************/
             $scope.transferencias = [{ bancoOrigen: '', bancoDestino: '', importe: 0, disponibleOrigen: 0, index: 0 }];
