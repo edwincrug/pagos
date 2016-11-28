@@ -352,6 +352,7 @@ registrationModule.controller("transferenciaController", function($scope, $http,
     
 
     $scope.redirectLote = function(idLote) {
+        console.log(idLote);
         $location.path('/'+idLote);                
     }
 
@@ -367,7 +368,7 @@ registrationModule.controller("transferenciaController", function($scope, $http,
             { name: 'estatus', displayName: 'estatus', visible: false },
             { name: 'totalPagar', displayName: 'totalPagar' },
             { name: 'pal_esAplicacionDirect', displayName: 'pal_esAplicacionDirect', visible: false },
-            { name: 'buscar', displayName: '', width: '5%', cellTemplate: '<div ng-switch on="row.entity.estatus"><button class="btn btn-error" ng-switch-when="2" style="disabled=true"><span class="glyphicon glyphicon-search" ></span></button><button class="btn btn-warning"  ng-switch-default  ng-click="grid.appScope.redirectLote(row.entity.idLotePago)"><span class="glyphicon glyphicon-search" ></span></button></div>' },
+            { name: 'buscar', displayName: '', width: '5%', cellTemplate: '<div ><button class="btn btn-warning"    ng-click="grid.appScope.redirectLote(row.entity.idLotePago)"><span class="glyphicon glyphicon-search" ></span></button></div>' },
 
         ];
     }
