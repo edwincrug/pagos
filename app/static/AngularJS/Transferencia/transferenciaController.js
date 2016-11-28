@@ -5,7 +5,7 @@
 // -- Modificó:
 // -- Fecha:
 // -- =============================================
-registrationModule.controller("transferenciaController", function($scope, $http, $interval, uiGridGroupingConstants, uiGridConstants, $filter, $rootScope, localStorageService, alertFactory, transferenciaRepository, pagoRepository, stats, $window,$location) {
+registrationModule.controller("transferenciaController", function($scope, $http, $interval, uiGridGroupingConstants, uiGridConstants, $filter, $rootScope, localStorageService, alertFactory, transferenciaRepository, pagoRepository, stats, $window, $location) {
     $scope.editatransferencia = true;
 
     $scope.gridTransferenciaoptions = {
@@ -117,7 +117,7 @@ registrationModule.controller("transferenciaController", function($scope, $http,
 
                 //$scope.TraeTransferenciaUpdate($scope.traeTransferenciaxEmpresa.emp_idempresa);
                 $scope.performSearch();
-                
+
 
             }, function errorCallback(response) {
 
@@ -241,15 +241,11 @@ registrationModule.controller("transferenciaController", function($scope, $http,
 
     $scope.BuscarxFecha = function(idEmpresa, fechaini, fechafin) {
 
-
         var fecha_ini = $scope.formatDate(fechaini);
         var fecha_fin = $scope.formatDate(fechafin);
 
-
-        pagoRepository.getLotesxFecha(idEmpresa, $rootScope.idUsuario, fecha_ini, fecha_fin)
-
-
-        .then(function successCallback(response) {
+        transferenciaRepository.getTransferenciaxFecha(idEmpresa, fecha_ini, fecha_fin).
+        then(function successCallback(response) {
             $scope.gridTransferenciaoptions.data = response.data;
 
             if (response.data.length == 0) {
@@ -349,11 +345,11 @@ registrationModule.controller("transferenciaController", function($scope, $http,
 
     }
 
-    
+
 
     $scope.redirectLote = function(idLote) {
         console.log(idLote);
-        $location.path('/'+idLote);                
+        $location.path('/' + idLote);
     }
 
 
