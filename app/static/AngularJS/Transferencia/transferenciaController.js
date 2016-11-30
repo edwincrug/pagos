@@ -311,8 +311,8 @@ registrationModule.controller("transferenciaController", function($scope, $http,
 
     $scope.searchType = [
         { idType: 1, description: "Busqueda Tranferencias Activas", showPanelDate: false },
-        { idType: 2, description: "Busqueda Por Fechas", showPanelDate: true },
-        { idType: 3, description: "Busqueda Por Lotes", showPanelDate: true }
+        { idType: 2, description: "Busqueda Por Fechas", showPanelDate: true }
+        //{ idType: 3, description: "Busqueda Por Lotes", showPanelDate: true }
     ];
 
 

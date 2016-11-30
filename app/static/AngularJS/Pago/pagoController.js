@@ -9,11 +9,14 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
 
         //$scope.idCuenta = 4;
         $rootScope.idUsuario = 15;
+        $rootScope.idEmpresa = 4;
         //LQMA 04032016
         if ($rootScope.currentEmployee == null) {
             $rootScope.currentEmployee = 15; //25:1;
+            $rootScope.idEmpresa = 4;
         } else {
             $rootScope.idUsuario = $rootScope.currentEmployee;
+            $rootScope.idEmpresa = 4;
         }
         $rootScope.currentId = null;
         $rootScope.currentIdOp = null;
@@ -102,16 +105,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
 
                 }
             }
-            /********************/
 
-            if ($routeParams.idLote != '') {
-
-                var idLote = $routeParams.idLote;
-                $scope.ConsultaLoteObtieneBusqueda(idLote, 0, 0);
-                return;
-            }
-
-            /***********************************************************/
             $scope.transferencias = [{ bancoOrigen: '', bancoDestino: '', importe: 0, disponibleOrigen: 0, index: 0 }];
             $rootScope.idOperacion = 0;
             if (getParameterByName('idOperacion') != '') {
@@ -168,6 +162,14 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                         function errorCallback(response) {
                             alertFactory.error('Error al obtener el Lote');
                         });
+                setTimeout(function() {
+                    if ($rootScope.idNotify != '') {
+
+                        $('#inicioModal').modal('hide');
+                    };
+                }, 3000);
+
+
             }
 
             $scope.traeTrasferencias = false;
@@ -512,7 +514,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                 ConfiguraGrid();
                 ConfiguraGridxvencer();
 
-                $scope.llenagridxvencer($rootScope.idEmpresa);
+
                 //LQMA 10032016
                 $rootScope.NuevoLote = true;
                 //LQMA add 08042016
@@ -582,6 +584,8 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
 
 
         $rootScope.ConsultaLoteObtieneBusqueda = function(Lote, index, esAplicacionDirecta) {
+
+            $scope.llenagridxvencer($rootScope.idEmpresa)
             $scope.hidebuscando = true;
             $('#inicioModal').modal('hide');
             $scope.idLote = Lote.idLotePago;
@@ -686,9 +690,11 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             }
         }; //FIN inicia Lote
         $scope.ProgramacionPagos = function() {
+            ConfiguraGridxvencer();
             $scope.ObtieneLotes(0);
             //LQMA 15032016
             $scope.LlenaIngresos();
+
             $rootScope.accionPagina = true;
             setTimeout(function() {
                 $("#btnSelectAll").click();
@@ -726,7 +732,6 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             $rootScope.refPlanta = $rootScope.escenarios.TipoRefPlanta;
             $rootScope.refpdBanco = $rootScope.escenarios.tipoRefBanco;
             $rootScope.grdPagoDirecto = [];
-            $rootScope.grdPagoxvencer = [];
             var j = 0;
             var tamdata = $scope.data.length;
             for (var i = 0; i < tamdata; i++) {
@@ -783,26 +788,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                 //FAL17052016 Valido si lleva numero de serie y si es de lenght = 17 lo pango en referencia.
                 $scope.carteraVencida = $scope.carteraVencida + $scope.data[i].saldo;
 
-                $scope.llenagridxvencer = function(idempresa) {
 
-                    setTimeout(function() {
-
-                        pagoRepository.getDatosxvencer(idempresa)
-                            .then(function successCallback(response) {
-
-                                $scope.gridXvencer.data = response.data;
-
-                            }, function errorCallback(response) {
-
-                                $scope.gridXvencer.data = [];
-
-                            });
-
-
-                    }, 500);
-
-
-                }
 
 
             }
@@ -842,10 +828,25 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             $rootScope.blTotales = true;
             $rootScope.idOperacion = 0;
             //FAL grid  x vencer
-
+            //$scope.llenagridxvencer
 
 
         };
+
+        $scope.llenagridxvencer = function(idempresa) {
+
+            pagoRepository.getDatosxvencer(idempresa)
+                .then(function successCallback(response) {
+
+                    $scope.gridXvencer.data = response.data;
+
+                }, function errorCallback(response) {
+
+                    $scope.gridXvencer.data = [];
+
+                });
+        };
+
         //LQMA ADD 08042016 Cuando ya existe un lote.
         var llenaLoteConsultaSuccessCallback = function(data, status, headers, config) {
             $rootScope.grdBancos = [];
@@ -917,6 +918,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
             $scope.noPagable = $scope.carteraVencida - $scope.cantidadTotal;
 
             $scope.gridOptions.data = data;
+            $scope.gridXvencer.data = data;
             $rootScope.blTotales = false;
         };
         var setGroupValues = function(columns, rows) {
@@ -1577,6 +1579,8 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
         $rootScope.ConsultaLoteObtiene = function(Lote, index, esAplicacionDirecta) {
                 //alertFactory.info('Consulta de Lote ' + index);
 
+                $scope.llenagridxvencer($rootScope.idEmpresa)
+
                 $scope.hidebuscando = false;
                 $scope.idLote = Lote.idLotePago;
                 $rootScope.grdnoPagable = 0;
@@ -2057,6 +2061,12 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                 return total;
             } //get total end
             //LQMA 10032016
+
+        $rootScope.BuscadorLotes = function() {
+            $window.location.href = '/'
+        }
+
+
         $rootScope.CrearNuevoLote = function() {
                 $('#closeMenu').click();
                 $rootScope.ProgPago = true;

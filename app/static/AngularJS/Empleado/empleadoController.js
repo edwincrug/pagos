@@ -23,7 +23,6 @@ registrationModule.controller("empleadoController", function ($scope, $filter, $
 			    alertFactory.success('Datos de empleado obtenidos.');
 
   			}, function errorCallback(response) {
-
 			    alertFactory.error('Error al obtener los datos de empleado.');
   			}
   		);
