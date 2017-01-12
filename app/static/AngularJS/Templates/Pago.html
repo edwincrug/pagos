@@ -373,7 +373,7 @@
                         A pagar
                     </div>
                     <div class="sumMonto montoFinal blueInfo">
-                        <span id="mano" ng-click="Filtrar('pago',29,'A pagar')">{{grdApagar | currency}}
+                        <span id="mano" ng-click="Filtrar('pago',30,'A pagar')">{{grdApagar | currency}}
                     </span>
                     </div>
                 </div>
@@ -391,27 +391,27 @@
                         /
                     </div>
                     <div class="clsNoPagable">
-                        <span class="clsDetailLabel">Pagable</span> <span id="mano" class="clsDetailText blueInfo" ng-click="Filtrar('False',30,'Pagables')">{{GranTotalPagable | currency}}
+                        <span class="clsDetailLabel">Pagable</span> <span id="mano" class="clsDetailText blueInfo" ng-click="Filtrar('False',31,'Pagables')">{{GranTotalPagable | currency}}
                         </span>
                     </div>
                     <div class="clsNoPagable separadorNoPagable">
                         /
                     </div>
                     <div class="clsNoPagable">
-                        <span class="clsDetailLabel">No pagable</span> <span id="mano" class="clsDetailText blueInfo" ng-click="Filtrar('True',30,'No Pagables')">{{grdnoPagable | currency}}
+                        <span class="clsDetailLabel">No pagable</span> <span id="mano" class="clsDetailText blueInfo" ng-click="Filtrar('True',31,'No Pagables')">{{grdnoPagable | currency}}
                         </span>
                     </div>
                     <div class="clsNoPagable separadorNoPagable">
                         /
                     </div>
                     <div class="clsNoPagable">
-                        <span class="clsDetailLabel">No Incluido</span> <span id="mano" class="clsDetailText blueInfo" ng-click="Filtrar('Permitido',29,'No incluidos')">  {{ grdNoIncluido | currency }}</span>
+                        <span class="clsDetailLabel">No Incluido</span> <span id="mano" class="clsDetailText blueInfo" ng-click="Filtrar('Permitido',30,'No incluidos')">  {{ grdNoIncluido | currency }}</span>
                     </div>
                     <div class="clsNoPagable separadorNoPagable">
                         /
                     </div>
                     <div class="clsNoPagable">
-                        <span class="clsDetailLabel">Reprogramado</span> <span id="mano" class="clsDetailText blueInfo" ng-click="Filtrar('Pago Reprogramado',29,'Pago Reprogramado')">
+                        <span class="clsDetailLabel">Reprogramado</span> <span id="mano" class="clsDetailText blueInfo" ng-click="Filtrar('Pago Reprogramado',30,'Pago Reprogramado')">
                         {{ grdReprogramado | currency }}
                           </span>
                     </div>
@@ -506,29 +506,10 @@
             <span class="colText ">3.- Cartera por vencer </span>
         </div>
         
-        <div id="contenedor">
+        <div id="contenedor" ng-hide="hidenotifi">
             <div id="grid2" ui-grid="gridXvencer" ui-grid-grouping ui-grid-edit ui-grid-selection ui-grid-cellNav  class="gridStylexvencer"></div>
         </div>
-        
-      <!--   <table class="table">
-        <thead>
-            <tr>
-                <th>Número de Lote</th>
-                <th>Banco Origen</th>
-                <th>Banco Destino</th>
-
-            </tr>
-        </thead>
-        <tbody>
-            <tr ng-repeat="vencer in grdPagoxvencer">
-                <td>{{vencer.proveedor}}</td>
-                <td>{{vencer.saldo}}</td>
-                <td>{{vencer.documento}}</td>
-            </tr>
-          </tbody>
-    </table> -->
-        
-
+  
     </section>
 
 

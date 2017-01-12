@@ -45,6 +45,7 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
         $rootScope.buscarLotes = false;
         $rootScope.buscarTrasferencias = false;
         $scope.hidebuscando = false;
+        $scope.hidenotifi = false;
 
         $rootScope.montominimo = 0;
 
@@ -74,8 +75,6 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                 return false;
             return true;
         }
-
-
 
         $scope.init = function() {
             $scope.caja = 0;
@@ -164,10 +163,10 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                         });
                 setTimeout(function() {
                     if ($rootScope.idNotify != '') {
-
                         $('#inicioModal').modal('hide');
+                    $scope.hidenotifi = true;
                     };
-                }, 3000);
+                }, 5000);
 
 
             }
@@ -967,16 +966,17 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                         displayName: 'Grupo',
                         enableCellEdit: false
                     }, {
-                        name: 'proveedor',
+                        name: 'idProveedor',
                         grouping: { groupPriority: 1 },
                         sort: { priority: 1, direction: 'asc' },
-                        width: '20%',
-                        name: 'proveedor',
+                        width: '5%',
+                        displayName: 'Clave',
                         enableCellEdit: false,
                         cellTemplate: '<div><div ng-if="!col.grouping || col.grouping.groupPriority === undefined || col.grouping.groupPriority === null || ( row.groupHeader && col.grouping.groupPriority === row.treeLevel )" class="ui-grid-cell-contents" title="TOOLTIP">{{COL_FIELD CUSTOM_FILTERS}}</div></div>'
                     },
+                    { name: 'proveedor', displayName: 'Proveedor', width: '15%', enableCellEdit: false, headerTooltip: 'Nombre del provedor', cellClass: 'cellToolTip' },
                     { name: 'documento', displayName: '# Documento', width: '15%', enableCellEdit: false, headerTooltip: 'Documento # de factura del provedor', cellClass: 'cellToolTip' },
-                    { name: 'ordenCompra', displayName: 'Orden de compra', width: '13%', enableCellEdit: false, cellTemplate: '<div class="urlTabla" ng-class="col.colIndex()" ><a tooltip="Ver en digitalización" class="urlTabla" href="http://192.168.20.9:3200/?id={{row.entity.ordenCompra}}&employee=' + $scope.idEmpleado + '" target="_new">{{row.entity.ordenCompra}}</a></div>' },
+                    { name: 'ordenCompra', displayName: 'Orden de compra', width: '13%', enableCellEdit: false, cellTemplate: '<div class="urlTabla" ng-class="col.colIndex()" ><a tooltip="Ver en digitalización" class="urlTabla" href="http://192.168.20.9:3200/?id={{row.entity.ordenCompra}}&employee=' + $scope.idEmpleado + '&proceso=1" target="_new">{{row.entity.ordenCompra}}</a></div>' },
                     { name: 'monto', displayName: 'Monto', width: '15%', cellFilter: 'currency', enableCellEdit: false },
                     { name: 'saldo', displayName: 'Saldo', width: '15%', cellFilter: 'currency', enableCellEdit: false }, {
                         field: 'Pagar',
@@ -1356,16 +1356,17 @@ registrationModule.controller("pagoController", function($scope, $http, $interva
                         displayName: 'Grupo',
                         enableCellEdit: false
                     }, {
-                        name: 'proveedor',
+                        name: 'idProveedor',
                         grouping: { groupPriority: 1 },
                         sort: { priority: 1, direction: 'asc' },
-                        width: '20%',
-                        name: 'proveedor',
+                        width: '5%',
+                        displayName: 'Clave',
                         enableCellEdit: false,
                         cellTemplate: '<div><div ng-if="!col.grouping || col.grouping.groupPriority === undefined || col.grouping.groupPriority === null || ( row.groupHeader && col.grouping.groupPriority === row.treeLevel )" class="ui-grid-cell-contents" title="TOOLTIP">{{COL_FIELD CUSTOM_FILTERS}}</div></div>'
                     },
+                    { name: 'proveedor', displayName: 'Proveedor', width: '15%', enableCellEdit: false, headerTooltip: 'Nombre del provedor', cellClass: 'cellToolTip' },
                     { name: 'documento', displayName: '# Documento', width: '15%', enableCellEdit: false, headerTooltip: 'Documento # de factura del provedor', cellClass: 'cellToolTip' },
-                    { name: 'ordenCompra', displayName: 'Orden de compra', width: '13%', enableCellEdit: false, cellTemplate: '<div class="urlTabla" ng-class="col.colIndex()" ><a tooltip="Ver en digitalización" class="urlTabla" href="http://192.168.20.9:3200/?id={{row.entity.ordenCompra}}&employee=' + $scope.idEmpleado + '" target="_new">{{row.entity.ordenCompra}}</a></div>' },
+                    { name: 'ordenCompra', displayName: 'Orden de compra', width: '13%', enableCellEdit: false, cellTemplate: '<div class="urlTabla" ng-class="col.colIndex()" ><a tooltip="Ver en digitalización" class="urlTabla" href="http://192.168.20.9:3200/?id={{row.entity.ordenCompra}}&employee=' + $scope.idEmpleado + '&proceso=1" target="_new">{{row.entity.ordenCompra}}</a></div>' },
                     { name: 'monto', displayName: 'Monto', width: '15%', cellFilter: 'currency', enableCellEdit: false },
                     { name: 'saldo', displayName: 'Saldo', width: '15%', cellFilter: 'currency', enableCellEdit: false }, {
                         field: 'Pagar',
